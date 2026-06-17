@@ -17,5 +17,6 @@ export interface Product {
   pros: string[]
   cons: string[]
   affiliateUrl: string
-  buttonText: string
+  buttonText: string;
+  highlight?: string;
 }

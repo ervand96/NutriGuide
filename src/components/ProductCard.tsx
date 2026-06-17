@@ -16,7 +16,7 @@ function Stars({ rating }: { rating: number }) {
 
 export default function ProductCard({ product }: Props) {
   return (
-    <div className={`bg-white rounded-2xl p-7 mb-7 relative border-2 ${product.highlight ? 'border-forest-500' : 'border-gray-100'}`}>
+    <div className={`bg-white rounded-2xl p-7 mb-7 relative border-2 ${product?.highlight ? 'border-forest-500' : 'border-gray-100'}`}>
       {/* Rank badge */}
       <div className="absolute -top-4 left-6 bg-forest-500 text-white font-body font-bold text-xs px-4 py-1.5 rounded-full">
         #{product.rank} {product.badge}
