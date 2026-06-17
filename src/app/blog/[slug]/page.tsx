@@ -15,7 +15,7 @@ const sampleProducts: Product[] = [
     description: 'High-quality whey protein that keeps you full and helps preserve muscle while losing fat. 21g protein per serving with minimal calories.',
     pros: ['Excellent protein quality', 'Great value for money', '50+ flavors available'],
     cons: ['Contains dairy — not suitable for vegans'],
-    affiliateUrl: 'https://www.myprotein.com/?ref=YOUR_ID',
+    affiliateUrl: 'https://www.myprotein.com/referrals.list?applyCode=ERVAND-R5',
     buttonText: 'Check Price on MyProtein',
   },
   {
