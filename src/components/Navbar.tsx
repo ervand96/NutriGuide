@@ -28,7 +28,7 @@ export default function Navbar() {
           ))}
         </div>
         <Link
-          href="category/reviews"
+          href="/category/reviews"
           className="bg-leaf-500 hover:bg-leaf-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors no-underline"
         >
           Best Picks →

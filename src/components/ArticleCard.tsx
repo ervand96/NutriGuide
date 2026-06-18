@@ -8,16 +8,18 @@ export default function ArticleCard({ article }: { article: Article }) {
     Reviews: "bg-amber-50 text-amber-700",
     Tips: "bg-purple-50 text-purple-700",
   };
-
   return (
-    <Link href={`/blog/${article.slug}`} className="no-underline">
+    <Link
+      href={`/category/${article.category.toLowerCase()}/${article.slug}`}
+      className="no-underline"
+    >
       <div className="card cursor-pointer h-full flex flex-col">
         <span
           className={`inline-block text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4 ${categoryColors[article.category] || "bg-gray-50 text-gray-600"}`}
         >
           {article.category}
         </span>
-        <h3 className="font-display font-bold text-lg leading-snug text-bark mb-3 flex-1">
+        <h3 className="font-display font-bold text-lg leading-snug text-gray-800 mb-3 flex-1">
           {article.title}
         </h3>
         <p className="text-gray-500 text-sm leading-relaxed mb-4">

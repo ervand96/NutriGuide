@@ -4,68 +4,107 @@ import matter from "gray-matter";
 
 const postsDirectory = path.join(process.cwd(), "src/content/posts");
 
-// безопасный массив (чтобы не падал .map)
+const categories = ["diets", "reviews", "supplements"];
+
+const ALLOWED_CATEGORIES = ["Diets", "Reviews", "Supplements", "Tips"];
+
+// ─────────────────────────────
+// SAFE HELPERS
+// ─────────────────────────────
 function safeArray(value) {
-  if (!value) return [];
-  if (Array.isArray(value)) return value;
-  return [];
+  return Array.isArray(value) ? value : [];
 }
 
-// безопасная дата
 function safeDate(date) {
   if (!date) return new Date().toISOString().split("T")[0];
   return String(date);
 }
 
+function safeCategory(cat) {
+  return ALLOWED_CATEGORIES.includes(cat) ? cat : "Diets";
+}
+
 // ─────────────────────────────
-// GET ALL POSTS (BLOG PAGE)
+// READ ALL FILES
+// ─────────────────────────────
+function getAllFiles(dir, files = []) {
+  const items = fs.readdirSync(dir);
+
+  for (const item of items) {
+    const fullPath = path.join(dir, item);
+
+    if (fs.statSync(fullPath).isDirectory()) {
+      getAllFiles(fullPath, files);
+    } else if (item.endsWith(".md")) {
+      files.push(fullPath);
+    }
+  }
+
+  return files;
+}
+
+// ─────────────────────────────
+// GET ALL POSTS
 // ─────────────────────────────
 export function getAllPosts() {
-  const files = fs.readdirSync(postsDirectory);
+  let all = [];
 
-  return files.map((file) => {
-    const slug = file.replace(".md", "");
-    const filePath = path.join(postsDirectory, file);
-    const content = fs.readFileSync(filePath, "utf8");
+  for (const cat of categories) {
+    const dir = path.join(postsDirectory, cat);
 
-    const { data, content: body } = matter(content);
+    if (!fs.existsSync(dir)) continue;
+
+    const files = fs.readdirSync(dir);
+
+    for (const file of files) {
+      const filePath = path.join(dir, file);
+
+      const raw = fs.readFileSync(filePath, "utf8");
+
+      const { data, content } = matter(raw);
+
+      all.push({
+        slug: file.replace(".md", ""),
+        category: safeCategory(data.category || cat),
+        title: data.title || file.replace(".md", ""),
+        description: data.description || content.slice(0, 120),
+        readTime: data.readTime || "5 min read",
+        date: safeDate(data.date),
+        content,
+        products: safeArray(data.products),
+      });
+    }
+  }
+
+  return all.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
+}
+
+// ─────────────────────────────
+// GET SINGLE POST
+// ─────────────────────────────
+export function getPostBySlug(slug) {
+  for (const cat of categories) {
+    const filePath = path.join(postsDirectory, cat, `${slug}.md`);
+
+    if (!fs.existsSync(filePath)) continue;
+
+    const raw = fs.readFileSync(filePath, "utf8");
+
+    const { data, content } = matter(raw);
 
     return {
       slug,
       title: data.title || slug,
-      description: data.description || body.slice(0, 120),
-      category: data.category || "Diets",
+      description: data.description || content.slice(0, 120),
+      category: safeCategory(data.category),
       date: safeDate(data.date),
       readTime: data.readTime || "5 min read",
-      content: body,
-
+      content,
       products: safeArray(data.products),
     };
-  });
-}
-
-// ─────────────────────────────
-// GET SINGLE POST (/[slug])
-// ─────────────────────────────
-export function getPostBySlug(slug) {
-  const filePath = path.join(postsDirectory, `${slug}.md`);
-
-  if (!fs.existsSync(filePath)) {
-    return null;
   }
 
-  const content = fs.readFileSync(filePath, "utf8");
-  const { data, content: body } = matter(content);
-
-  return {
-    slug,
-    title: data.title || slug,
-    description: data.description || body.slice(0, 120),
-    category: data.category || "Diets",
-    date: safeDate(data.date),
-    readTime: data.readTime || "5 min read",
-    content: body,
-
-    products: safeArray(data.products),
-  };
+  return null;
 }
