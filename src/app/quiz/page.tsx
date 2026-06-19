@@ -1,174 +1,193 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
+import { useState } from "react";
+import Link from "next/link";
 
 interface Question {
-  id: number
-  question: string
-  options: { label: string; value: string; emoji: string }[]
+  id: number;
+  question: string;
+  options: { label: string; value: string; emoji: string }[];
 }
 
 interface Result {
-  diet: string
-  emoji: string
-  description: string
-  pros: string[]
-  affiliateLabel: string
-  affiliateUrl: string
-  slug: string
+  diet: string;
+  emoji: string;
+  description: string;
+  pros: string[];
+  affiliateLabel: string;
+  affiliateUrl: string;
+  category: string;
+  slug: string;
 }
 
 const questions: Question[] = [
   {
     id: 1,
-    question: 'What is your main goal?',
+    question: "What is your main goal?",
     options: [
-      { label: 'Lose weight fast',       value: 'lose_fast',  emoji: '⚡' },
-      { label: 'Lose weight steadily',   value: 'lose_slow',  emoji: '📉' },
-      { label: 'Build healthy habits',   value: 'habits',     emoji: '🌱' },
-      { label: 'Improve energy & mood',  value: 'energy',     emoji: '✨' },
+      { label: "Lose weight fast", value: "lose_fast", emoji: "⚡" },
+      { label: "Lose weight steadily", value: "lose_slow", emoji: "📉" },
+      { label: "Build healthy habits", value: "habits", emoji: "🌱" },
+      { label: "Improve energy & mood", value: "energy", emoji: "✨" },
     ],
   },
   {
     id: 2,
-    question: 'How do you feel about carbs?',
+    question: "How do you feel about carbs?",
     options: [
-      { label: 'I can cut them completely', value: 'no_carbs',    emoji: '🚫' },
-      { label: 'I want to reduce them',     value: 'less_carbs',  emoji: '📊' },
-      { label: 'I love carbs, keep some',   value: 'some_carbs',  emoji: '🍞' },
-      { label: 'Carbs are fine for me',     value: 'carbs_ok',    emoji: '✅' },
+      { label: "I can cut them completely", value: "no_carbs", emoji: "🚫" },
+      { label: "I want to reduce them", value: "less_carbs", emoji: "📊" },
+      { label: "I love carbs, keep some", value: "some_carbs", emoji: "🍞" },
+      { label: "Carbs are fine for me", value: "carbs_ok", emoji: "✅" },
     ],
   },
   {
     id: 3,
-    question: 'How much time can you spend on meal prep?',
+    question: "How much time can you spend on meal prep?",
     options: [
-      { label: 'Minimal — keep it simple', value: 'minimal', emoji: '⏱' },
-      { label: '30 min per day',           value: 'medium',  emoji: '🍳' },
-      { label: 'I enjoy cooking',          value: 'enjoy',   emoji: '👨‍🍳' },
-      { label: 'I prefer meal delivery',   value: 'delivery',emoji: '📦' },
+      { label: "Minimal — keep it simple", value: "minimal", emoji: "⏱" },
+      { label: "30 min per day", value: "medium", emoji: "🍳" },
+      { label: "I enjoy cooking", value: "enjoy", emoji: "👨‍🍳" },
+      { label: "I prefer meal delivery", value: "delivery", emoji: "📦" },
     ],
   },
   {
     id: 4,
-    question: 'Do you exercise regularly?',
+    question: "Do you exercise regularly?",
     options: [
-      { label: 'Not yet, just starting',   value: 'none',    emoji: '🛋️' },
-      { label: '1–2 times a week',         value: 'light',   emoji: '🚶' },
-      { label: '3–4 times a week',         value: 'moderate',emoji: '🏃' },
-      { label: 'Almost every day',         value: 'active',  emoji: '💪' },
+      { label: "Not yet, just starting", value: "none", emoji: "🛋️" },
+      { label: "1–2 times a week", value: "light", emoji: "🚶" },
+      { label: "3–4 times a week", value: "moderate", emoji: "🏃" },
+      { label: "Almost every day", value: "active", emoji: "💪" },
     ],
   },
   {
     id: 5,
-    question: 'Have you tried dieting before?',
+    question: "Have you tried dieting before?",
     options: [
-      { label: 'No, this is my first time', value: 'first',   emoji: '👋' },
-      { label: 'Yes, but nothing stuck',    value: 'failed',  emoji: '😅' },
-      { label: 'Yes, had some success',     value: 'partial', emoji: '📈' },
-      { label: 'Yes, I know what works',    value: 'veteran', emoji: '🎯' },
+      { label: "No, this is my first time", value: "first", emoji: "👋" },
+      { label: "Yes, but nothing stuck", value: "failed", emoji: "😅" },
+      { label: "Yes, had some success", value: "partial", emoji: "📈" },
+      { label: "Yes, I know what works", value: "veteran", emoji: "🎯" },
     ],
   },
-]
+];
 
 const results: Record<string, Result> = {
   keto: {
-    diet: 'Keto Diet',
-    emoji: '🥑',
-    description: 'You\'re a great fit for keto. It\'s a high-fat, low-carb diet that switches your body into fat-burning mode. Great for fast, visible results.',
-    pros: ['Fast weight loss', 'Reduces hunger', 'Boosts mental clarity'],
-    affiliateLabel: 'Get a Free Keto Meal Plan on Diet Doctor',
-    affiliateUrl: 'https://www.dietdoctor.com/?ref=YOUR_ID',
-    slug: 'best-keto-diet-2026',
+    diet: "Keto Diet",
+    emoji: "🥑",
+    description:
+      "You're a great fit for keto. It's a high-fat, low-carb diet that switches your body into fat-burning mode. Great for fast, visible results.",
+    pros: ["Fast weight loss", "Reduces hunger", "Boosts mental clarity"],
+    affiliateLabel: "Get a Free Keto Meal Plan on Diet Doctor",
+    affiliateUrl: "https://www.dietdoctor.com/?ref=YOUR_ID",
+    category: "diets",
+    slug: "best-keto-diet-2026",
   },
   intermittent: {
-    diet: 'Intermittent Fasting',
-    emoji: '⏰',
-    description: 'Intermittent fasting fits your lifestyle perfectly. You eat within a specific time window — no calorie counting, no complicated meal prep.',
-    pros: ['No food restrictions', 'Easy to maintain', 'Improves metabolism'],
-    affiliateLabel: 'Try Noom — Best App for IF',
-    affiliateUrl: 'https://www.noom.com/?ref=YOUR_ID',
-    slug: 'intermittent-fasting-guide',
+    diet: "Intermittent Fasting",
+    emoji: "⏰",
+    description:
+      "Intermittent fasting fits your lifestyle perfectly. You eat within a specific time window — no calorie counting, no complicated meal prep.",
+    pros: ["No food restrictions", "Easy to maintain", "Improves metabolism"],
+    affiliateLabel: "Try Noom — Best App for IF",
+    affiliateUrl: "https://www.noom.com/?ref=YOUR_ID",
+    category: "diets",
+    slug: "intermittent-fasting-guide",
   },
   mediterranean: {
-    diet: 'Mediterranean Diet',
-    emoji: '🫒',
-    description: 'The Mediterranean diet is the world\'s healthiest. Lots of vegetables, olive oil, fish, and whole grains. Sustainable and delicious.',
-    pros: ['Proven long-term results', 'Heart-healthy', 'No strict restrictions'],
-    affiliateLabel: 'Get Mediterranean Recipes on iHerb',
-    affiliateUrl: 'https://www.iherb.com/?rcode=YOUR_CODE',
-    slug: 'mediterranean-diet-meal-plan',
+    diet: "Mediterranean Diet",
+    emoji: "🫒",
+    description:
+      "The Mediterranean diet is the world's healthiest. Lots of vegetables, olive oil, fish, and whole grains. Sustainable and delicious.",
+    pros: [
+      "Proven long-term results",
+      "Heart-healthy",
+      "No strict restrictions",
+    ],
+    affiliateLabel: "Get Mediterranean Recipes on iHerb",
+    affiliateUrl: "/go/iherb?source=mediterranean",
+    category: "diets",
+    slug: "mediterranean-diet-meal-plan",
   },
   noom: {
-    diet: 'Noom Program',
-    emoji: '🧠',
-    description: 'Based on your answers, you need more than a diet — you need a system. Noom uses psychology to change how you think about food.',
-    pros: ['Real human coaches', 'Psychology-based', 'Tracks habits, not just calories'],
-    affiliateLabel: 'Try Noom Free for 14 Days',
-    affiliateUrl: 'https://www.noom.com/?ref=YOUR_ID',
-    slug: 'noom-review-2026',
+    diet: "Noom Program",
+    emoji: "🧠",
+    description:
+      "Based on your answers, you need more than a diet — you need a system. Noom uses psychology to change how you think about food.",
+    pros: [
+      "Real human coaches",
+      "Psychology-based",
+      "Tracks habits, not just calories",
+    ],
+    affiliateLabel: "Try Noom Free for 14 Days",
+    affiliateUrl: "https://www.noom.com/?ref=YOUR_ID",
+    category: "reviews",
+    slug: "noom-review-2026",
   },
-}
+};
 
 function getResult(answers: string[]): Result {
-  const noCarbs  = answers.includes('no_carbs')
-  const loseFast = answers.includes('lose_fast')
-  const habits   = answers.includes('habits') || answers.includes('failed')
-  const delivery = answers.includes('delivery')
+  const noCarbs = answers.includes("no_carbs");
+  const loseFast = answers.includes("lose_fast");
+  const habits = answers.includes("habits") || answers.includes("failed");
+  const delivery = answers.includes("delivery");
 
-  if (noCarbs && loseFast) return results.keto
-  if (habits || delivery)  return results.noom
-  if (answers.includes('some_carbs') || answers.includes('carbs_ok')) return results.mediterranean
-  return results.intermittent
+  if (noCarbs && loseFast) return results.keto;
+  if (habits || delivery) return results.noom;
+  if (answers.includes("some_carbs") || answers.includes("carbs_ok"))
+    return results.mediterranean;
+  return results.intermittent;
 }
 
 export default function QuizPage() {
-  const [current, setCurrent]   = useState(0)
-  const [answers, setAnswers]   = useState<string[]>([])
-  const [selected, setSelected] = useState<string | null>(null)
-  const [done, setDone]         = useState(false)
+  const [current, setCurrent] = useState(0);
+  const [answers, setAnswers] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
 
-  const question = questions[current]
-  const result   = done ? getResult(answers) : null
-  const progress = Math.round((current / questions.length) * 100)
+  const question = questions[current];
+  const result = done ? getResult(answers) : null;
+  const progress = Math.round((current / questions.length) * 100);
 
   function handleSelect(value: string) {
-    setSelected(value)
+    setSelected(value);
   }
 
   function handleNext() {
-    if (!selected) return
-    const newAnswers = [...answers, selected]
-    setAnswers(newAnswers)
-    setSelected(null)
+    if (!selected) return;
+    const newAnswers = [...answers, selected];
+    setAnswers(newAnswers);
+    setSelected(null);
     if (current + 1 >= questions.length) {
-      setDone(true)
+      setDone(true);
     } else {
-      setCurrent(c => c + 1)
+      setCurrent((c) => c + 1);
     }
   }
 
   function handleRestart() {
-    setCurrent(0)
-    setAnswers([])
-    setSelected(null)
-    setDone(false)
+    setCurrent(0);
+    setAnswers([]);
+    setSelected(null);
+    setDone(false);
   }
 
   return (
     <div className="min-h-screen bg-cream flex flex-col">
-
       {/* Nav */}
       <nav className="bg-white border-b border-gray-100 px-6 h-16 flex items-center">
-        <Link href="/" className="font-display font-black text-xl text-leaf-500 no-underline">
+        <Link
+          href="/"
+          className="font-display font-black text-xl text-leaf-500 no-underline"
+        >
           🍎 NutriGuide
         </Link>
       </nav>
 
       <div className="flex-1 flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-2xl">
-
           {!done ? (
             <>
               {/* Header */}
@@ -184,7 +203,9 @@ export default function QuizPage() {
               {/* Progress */}
               <div className="mb-8">
                 <div className="flex justify-between text-xs text-gray-400 mb-2">
-                  <span>Question {current + 1} of {questions.length}</span>
+                  <span>
+                    Question {current + 1} of {questions.length}
+                  </span>
                   <span>{progress}% complete</span>
                 </div>
                 <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -202,18 +223,21 @@ export default function QuizPage() {
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-                  {question.options.map(opt => (
+                  {question.options.map((opt) => (
                     <button
                       key={opt.value}
                       onClick={() => handleSelect(opt.value)}
                       className={`flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition-all duration-150 cursor-pointer
-                        ${selected === opt.value
-                          ? 'border-leaf-500 bg-leaf-50 text-leaf-700'
-                          : 'border-gray-100 bg-gray-50 hover:border-leaf-200 hover:bg-leaf-50 text-bark'
+                        ${
+                          selected === opt.value
+                            ? "border-leaf-500 bg-leaf-50 text-leaf-700"
+                            : "border-gray-100 bg-gray-50 hover:border-leaf-200 hover:bg-leaf-50 text-bark"
                         }`}
                     >
                       <span className="text-2xl">{opt.emoji}</span>
-                      <span className="font-medium text-sm leading-snug">{opt.label}</span>
+                      <span className="font-medium text-sm leading-snug">
+                        {opt.label}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -222,12 +246,15 @@ export default function QuizPage() {
                   onClick={handleNext}
                   disabled={!selected}
                   className={`w-full py-4 rounded-xl font-bold text-base transition-all duration-200
-                    ${selected
-                      ? 'bg-leaf-500 hover:bg-leaf-600 text-white cursor-pointer'
-                      : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                    ${
+                      selected
+                        ? "bg-leaf-500 hover:bg-leaf-600 text-white cursor-pointer"
+                        : "bg-gray-100 text-gray-300 cursor-not-allowed"
                     }`}
                 >
-                  {current + 1 === questions.length ? 'See My Result →' : 'Next Question →'}
+                  {current + 1 === questions.length
+                    ? "See My Result →"
+                    : "Next Question →"}
                 </button>
               </div>
             </>
@@ -235,18 +262,26 @@ export default function QuizPage() {
             /* RESULT */
             <div className="text-center">
               <div className="text-7xl mb-4">{result.emoji}</div>
-              <p className="text-leaf-500 text-xs font-bold tracking-[3px] uppercase mb-2">Your Match</p>
-              <h1 className="font-display font-black text-5xl text-bark mb-4">{result.diet}</h1>
+              <p className="text-leaf-500 text-xs font-bold tracking-[3px] uppercase mb-2">
+                Your Match
+              </p>
+              <h1 className="font-display font-black text-5xl text-bark mb-4">
+                {result.diet}
+              </h1>
               <p className="text-gray-500 text-lg leading-relaxed max-w-lg mx-auto mb-8">
                 {result.description}
               </p>
 
               {/* Pros */}
               <div className="bg-white border border-gray-100 rounded-2xl p-6 mb-6 text-left max-w-md mx-auto">
-                <div className="text-xs font-bold text-leaf-500 uppercase tracking-widest mb-4">Why it works for you</div>
-                {result.pros.map(pro => (
+                <div className="text-xs font-bold text-leaf-500 uppercase tracking-widest mb-4">
+                  Why it works for you
+                </div>
+                {result.pros.map((pro) => (
                   <div key={pro} className="flex items-center gap-3 mb-3">
-                    <div className="w-5 h-5 rounded-full bg-leaf-50 flex items-center justify-center text-leaf-500 text-xs flex-shrink-0">✓</div>
+                    <div className="w-5 h-5 rounded-full bg-leaf-50 flex items-center justify-center text-leaf-500 text-xs flex-shrink-0">
+                      ✓
+                    </div>
                     <span className="text-gray-600 text-sm">{pro}</span>
                   </div>
                 ))}
@@ -263,7 +298,7 @@ export default function QuizPage() {
               </a>
 
               <Link
-                href={`/blog/${result.slug}`}
+                href={`/category/${result.category}/${result.slug}`}
                 className="block text-center text-leaf-500 font-semibold text-sm hover:underline no-underline max-w-md mx-auto mb-8"
               >
                 Read our full {result.diet} guide →
@@ -277,9 +312,8 @@ export default function QuizPage() {
               </button>
             </div>
           ) : null}
-
         </div>
       </div>
     </div>
-  )
+  );
 }

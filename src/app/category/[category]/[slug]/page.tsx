@@ -3,8 +3,51 @@ import Footer from "@/components/Footer";
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "@/lib/posts";
 import ProductCard from "@/components/ProductCard";
+import { remark } from "remark";
+import remarkHtml from "remark-html";
+import type { Metadata } from "next";
 
-export default function ArticlePage({
+export async function generateMetadata({
+  params,
+}: {
+  params: { category: string; slug: string };
+}): Promise<Metadata> {
+  const post = getPostBySlug(params.slug);
+
+  if (!post) {
+    return {};
+  }
+
+  return {
+    title: post.title,
+    description: post.description,
+    alternates: {
+      canonical: `https://www.nutriguide.com/category/${params.category}/${params.slug}`,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      url: `https://www.nutriguide.com/category/${params.category}/${params.slug}`,
+      type: "article",
+      images: [
+        {
+          url: `https://www.nutriguide.com/og/${params.slug}`,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [`https://www.nutriguide.com/og/${params.slug}`],
+    },
+  };
+}
+
+export default async function ArticlePage({
   params,
 }: {
   params: { category: string; slug: string };
@@ -19,9 +62,84 @@ export default function ArticlePage({
     return notFound();
   }
 
+  // Конвертируем markdown статьи (post.content) в HTML —
+  // раньше этот текст вообще никуда не выводился.
+  const contentHtml = (
+    await remark().use(remarkHtml).process(post.content)
+  ).toString();
+
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://www.nutriguide.com",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: post.category,
+          item: `https://www.nutriguide.com/category/${params.category}`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: post.title,
+          item: `https://www.nutriguide.com/category/${params.category}/${params.slug}`,
+        },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: post.title,
+      description: post.description,
+      datePublished: post.date,
+      dateModified: post.date,
+      author: {
+        "@type": "Organization",
+        name: "NutriGuide",
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "NutriGuide",
+      },
+      mainEntityOfPage: {
+        "@type": "WebPage",
+        "@id": `https://www.nutriguide.com/category/${params.category}/${params.slug}`,
+      },
+      image: `https://www.nutriguide.com/og/${params.slug}`,
+    },
+    ...(post.products ?? []).map((product: any) => ({
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.name,
+      },
+      offers: {
+        "@type": "Offer",
+        url: product.affiliateUrl,
+        price: product.price?.replace(/[^0-9.]/g, "") || "0",
+        priceCurrency: "USD",
+      },
+    })),
+  ];
+
   return (
     <>
       <Navbar />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       <main className="max-w-3xl mx-auto px-6 py-14">
         {/* HEADER */}
@@ -38,6 +156,10 @@ export default function ArticlePage({
             ⏱ {post.readTime} · Updated {post.date}
           </div>
         </div>
+        {/* PRODUCTS */}
+        {(post.products ?? []).map((product: any) => (
+          <ProductCard key={product.rank} product={product} />
+        ))}
 
         {/* DESCRIPTION */}
         <p className="text-lg text-gray-600 leading-relaxed mb-8 font-body">
@@ -57,10 +179,11 @@ export default function ArticlePage({
           </ul>
         </div>
 
-        {/* PRODUCTS */}
-        {(post.products ?? []).map((product: any) => (
-          <ProductCard key={product.rank} product={product} />
-        ))}
+        {/* FULL ARTICLE CONTENT (раньше не рендерился вообще) */}
+        <div
+          className="article-content mb-10"
+          dangerouslySetInnerHTML={{ __html: contentHtml }}
+        />
 
         {/* DISCLAIMER */}
         <div className="mt-12 bg-gray-50 border border-gray-100 rounded-xl p-5">

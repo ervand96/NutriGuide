@@ -64,10 +64,10 @@ export default function Home() {
                 Browse Reviews →
               </Link>
               <Link
-                href="/category/diets"
+                href="/quiz"
                 className="border border-white/40 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/10 transition-colors no-underline"
               >
-                Start with Keto
+                Take 2-Minute Quiz 
               </Link>
             </div>
           </div>
