@@ -30,17 +30,24 @@ export default function Footer() {
             <div>
               <div className="font-bold text-sm mb-3 text-bark">Legal</div>
               <div className="flex flex-col gap-2">
-                {["Privacy Policy", "Disclaimer", "Affiliate Disclosure"].map(
-                  (item) => (
-                    <a
-                      key={item}
-                      href="#"
-                      className="text-gray-400 hover:text-leaf-500 text-sm transition-colors no-underline"
-                    >
-                      {item}
-                    </a>
-                  ),
-                )}
+                <a
+                  href="/privacy-policy"
+                  className="text-gray-400 hover:text-leaf-500 text-sm transition-colors no-underline"
+                >
+                  Privacy Policy
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-leaf-500 text-sm transition-colors no-underline"
+                >
+                  Disclaimer
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-leaf-500 text-sm transition-colors no-underline"
+                >
+                  Affiliate Disclosure
+                </a>
               </div>
             </div>
           </div>

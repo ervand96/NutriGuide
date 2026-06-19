@@ -7,6 +7,9 @@ import { remark } from "remark";
 import remarkHtml from "remark-html";
 import type { Metadata } from "next";
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://nutri-guide-indol.vercel.app";
+
 export async function generateMetadata({
   params,
 }: {
@@ -18,20 +21,22 @@ export async function generateMetadata({
     return {};
   }
 
+  const articleUrl = `${siteUrl}/category/${params.category}/${params.slug}`;
+
   return {
     title: post.title,
     description: post.description,
     alternates: {
-      canonical: `https://www.nutriguide.com/category/${params.category}/${params.slug}`,
+      canonical: articleUrl,
     },
     openGraph: {
       title: post.title,
       description: post.description,
-      url: `https://www.nutriguide.com/category/${params.category}/${params.slug}`,
+      url: articleUrl,
       type: "article",
       images: [
         {
-          url: `https://www.nutriguide.com/og/${params.slug}`,
+          url: `${siteUrl}/og/${params.slug}`,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -42,7 +47,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      images: [`https://www.nutriguide.com/og/${params.slug}`],
+      images: [`${siteUrl}/og/${params.slug}`],
     },
   };
 }
@@ -56,17 +61,16 @@ export default async function ArticlePage({
 
   if (!post) return notFound();
 
-  // 🔥 защита от неправильной категории
-
   if (post.category.toLowerCase() !== params.category.toLowerCase()) {
     return notFound();
   }
 
-  // Конвертируем markdown статьи (post.content) в HTML —
-  // раньше этот текст вообще никуда не выводился.
   const contentHtml = (
     await remark().use(remarkHtml).process(post.content)
   ).toString();
+
+  const articleUrl = `${siteUrl}/category/${params.category}/${params.slug}`;
+  const categoryUrl = `${siteUrl}/category/${params.category}`;
 
   const jsonLd = [
     {
@@ -77,19 +81,19 @@ export default async function ArticlePage({
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://www.nutriguide.com",
+          item: siteUrl,
         },
         {
           "@type": "ListItem",
           position: 2,
           name: post.category,
-          item: `https://www.nutriguide.com/category/${params.category}`,
+          item: categoryUrl,
         },
         {
           "@type": "ListItem",
           position: 3,
           name: post.title,
-          item: `https://www.nutriguide.com/category/${params.category}/${params.slug}`,
+          item: articleUrl,
         },
       ],
     },
@@ -110,9 +114,9 @@ export default async function ArticlePage({
       },
       mainEntityOfPage: {
         "@type": "WebPage",
-        "@id": `https://www.nutriguide.com/category/${params.category}/${params.slug}`,
+        "@id": articleUrl,
       },
-      image: `https://www.nutriguide.com/og/${params.slug}`,
+      image: `${siteUrl}/og/${params.slug}`,
     },
     ...(post.products ?? []).map((product: any) => ({
       "@context": "https://schema.org",
@@ -142,7 +146,20 @@ export default async function ArticlePage({
       />
 
       <main className="max-w-3xl mx-auto px-6 py-14">
-        {/* HEADER */}
+        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-gray-500">
+          <div className="flex flex-wrap items-center gap-2">
+            <a href="/" className="hover:text-leaf-500">
+              Home
+            </a>
+            <span>/</span>
+            <a href={categoryUrl} className="hover:text-leaf-500">
+              {post.category}
+            </a>
+            <span>/</span>
+            <span className="text-gray-700">{post.title}</span>
+          </div>
+        </nav>
+
         <div className="mb-10">
           <span className="category-badge mb-4 inline-block">
             {post.category}
@@ -156,17 +173,15 @@ export default async function ArticlePage({
             ⏱ {post.readTime} · Updated {post.date}
           </div>
         </div>
-        {/* PRODUCTS */}
+
         {(post.products ?? []).map((product: any) => (
           <ProductCard key={product.rank} product={product} />
         ))}
 
-        {/* DESCRIPTION */}
         <p className="text-lg text-gray-600 leading-relaxed mb-8 font-body">
           {post.description}
         </p>
 
-        {/* QUICK ANSWER */}
         <div className="bg-leaf-50 border border-leaf-100 rounded-2xl p-6 mb-10">
           <div className="font-bold text-leaf-600 text-sm uppercase tracking-wider mb-3">
             ⚡ Quick Answer
@@ -179,13 +194,11 @@ export default async function ArticlePage({
           </ul>
         </div>
 
-        {/* FULL ARTICLE CONTENT (раньше не рендерился вообще) */}
         <div
           className="article-content mb-10"
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
 
-        {/* DISCLAIMER */}
         <div className="mt-12 bg-gray-50 border border-gray-100 rounded-xl p-5">
           <p className="text-xs text-gray-400 leading-relaxed">
             <strong className="text-gray-500">Affiliate Disclosure:</strong>{" "}

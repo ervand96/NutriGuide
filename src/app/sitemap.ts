@@ -1,21 +1,23 @@
 import { getAllPosts } from "@/lib/posts";
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://nutri-guide-indol.vercel.app";
+
 export default function sitemap() {
-  const baseUrl = "https://www.nutriguide.com";
   const posts = getAllPosts();
 
   const postEntries = posts.map((post) => ({
-    url: `${baseUrl}/category/${post.category.toLowerCase()}/${post.slug}`,
+    url: `${siteUrl}/category/${post.category.toLowerCase()}/${post.slug}`,
     lastModified: new Date(post.date),
   }));
 
   return [
     {
-      url: baseUrl,
+      url: siteUrl,
       lastModified: new Date(),
     },
     {
-      url: `${baseUrl}/quiz`,
+      url: `${siteUrl}/quiz`,
       lastModified: new Date(),
     },
     ...postEntries,

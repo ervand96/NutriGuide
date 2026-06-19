@@ -29,7 +29,7 @@ export async function GET(req: Request) {
     fs.writeFileSync(file, JSON.stringify(clicks, null, 2));
   } catch {}
 
-  const targetUrl = `https://www.myprotein.com/c/myreferrals/?ref=${MY_PROTEIN}`;
+  const targetUrl = `https://www.myprotein.com/c/referrals/?applyCode=${MY_PROTEIN}`;
   const response = NextResponse.redirect(targetUrl);
 
   response.cookies.set("nutriguide_ref_source", source, {

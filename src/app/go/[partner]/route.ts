@@ -39,7 +39,7 @@ export async function GET(
   } catch {}
 
   const targetUrl = isMyProtein
-    ? `https://www.myprotein.com/c/myreferrals/?ref=${MY_PROTEIN}`
+    ? `https://www.myprotein.com/c/referrals/?applyCode=${MY_PROTEIN}`
     : query
       ? `https://www.iherb.com/search?kw=${encodeURIComponent(query)}&rcode=${IHERB_CODE}`
       : `https://www.iherb.com/?rcode=${IHERB_CODE}`;

@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://nutri-guide-indol.vercel.app";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.nutriguide.com"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "NutriGuide — Honest Diet & Supplement Reviews",
     template: "%s | NutriGuide",
@@ -17,7 +20,7 @@ export const metadata: Metadata = {
     "weight loss tips",
   ],
   alternates: {
-    canonical: "https://www.nutriguide.com",
+    canonical: siteUrl,
   },
   robots: {
     index: true,
@@ -26,14 +29,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://www.nutriguide.com",
+    url: siteUrl,
     siteName: "NutriGuide",
     title: "NutriGuide — Honest Diet & Supplement Reviews",
     description:
       "Science-backed reviews of diets, supplements, and nutrition programs to help you make the right choice.",
     images: [
       {
-        url: "https://www.nutriguide.com/og/default",
+        url: `${siteUrl}/og/default`,
         width: 1200,
         height: 630,
         alt: "NutriGuide nutrition reviews",
