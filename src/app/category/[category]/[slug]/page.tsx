@@ -1,8 +1,8 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Navbar from "../../../../components/Navbar";
+import Footer from "../../../../components/Footer";
 import { notFound } from "next/navigation";
-import { getPostBySlug } from "@/lib/posts";
-import ProductCard from "@/components/ProductCard";
+import { getPostBySlug } from "../../../../lib/posts";
+import ProductCard from "../../../../components/ProductCard";
 import { remark } from "remark";
 import remarkHtml from "remark-html";
 import type { Metadata } from "next";

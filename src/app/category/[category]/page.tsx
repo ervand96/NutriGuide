@@ -1,7 +1,7 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ArticleCard from "@/components/ArticleCard";
-import { getAllPosts } from "@/lib/posts";
+import Navbar from "../../../components/Navbar";
+import Footer from "../../../components/Footer";
+import ArticleCard from "../../../components/ArticleCard";
+import { getAllPosts } from "../../../lib/posts";
 
 export default function CategoryPage({
   params,
