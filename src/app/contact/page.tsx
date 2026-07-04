@@ -22,12 +22,12 @@ export default function ContactPage() {
             Contact Us
           </h1>
           <p className="text-gray-500 text-lg max-w-xl">
-            Questions about a review, a partnership inquiry, or just want to
-            say hi? Reach out — we read every message.
+            Questions about a review, a partnership inquiry, or just want to say
+            hi? Reach out — we read every message.
           </p>
         </div>
 
-        <div className="bg-leaf-50 border border-leaf-100 rounded-2xl p-8 max-w-lg">
+        <div className="bg-leaf-50 border border-leaf-100 rounded-2xl p-8 max-w-xl">
           <div className="text-xs font-bold text-leaf-600 uppercase tracking-widest mb-3">
             Email us directly
           </div>
