@@ -10,7 +10,9 @@ const BASE_URL =
   "https://nutri-guide-indol.vercel.app";
 const BOARD_ID = process.env.PINTEREST_BOARD_ID || "";
 const BOARD_NAME = process.env.PINTEREST_BOARD || "Nutrition Guides";
-const ACCESS_TOKEN = process.env.PINTEREST_ACCESS_TOKEN || "";
+const ACCESS_TOKEN =
+  process.env.PINTEREST_ACCESS_TOKEN ||
+  "";
 const POST_INTERVAL_MS = Number(process.env.PINTEREST_POST_INTERVAL_MS || 3000);
 const DRY_RUN = process.env.PINTEREST_DRY_RUN !== "false";
 
@@ -66,6 +68,56 @@ function buildPinPayload(post) {
   };
 }
 
+async function fetchPinterestJson(endpoint, options = {}) {
+  const response = await fetch(`https://api.pinterest.com${endpoint}`, {
+    ...options,
+    headers: {
+      Authorization: `Bearer ${ACCESS_TOKEN}`,
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(
+      `Pinterest API error ${response.status} for ${endpoint}: ${JSON.stringify(data)}`,
+    );
+  }
+
+  return data;
+}
+
+async function resolveBoardId() {
+  if (BOARD_ID) {
+    return BOARD_ID;
+  }
+
+  if (!ACCESS_TOKEN) {
+    throw new Error(
+      "Pinterest access token is missing. Set PINTEREST_ACCESS_TOKEN before running the script.",
+    );
+  }
+
+  const data = await fetchPinterestJson("/v5/boards");
+  const items = Array.isArray(data) ? data : data.items || [];
+  const matchedBoard = items.find(
+    (board) =>
+      board.name === BOARD_NAME ||
+      board.title === BOARD_NAME ||
+      board.id === BOARD_NAME,
+  );
+
+  if (!matchedBoard) {
+    throw new Error(
+      `Could not find a Pinterest board matching "${BOARD_NAME}". Please set PINTEREST_BOARD_ID explicitly or confirm the board name.`,
+    );
+  }
+
+  return matchedBoard.id;
+}
+
 async function postToPinterest(pin) {
   if (!ACCESS_TOKEN) {
     console.warn("No Pinterest access token found. Skipping actual post.");
@@ -106,7 +158,14 @@ async function postToPinterest(pin) {
 
 async function run() {
   const posts = loadPosts().slice(0, 12);
-  const payload = posts.map(buildPinPayload);
+  const resolvedBoardId = await resolveBoardId();
+  const payload = posts.map((post) => {
+    const pin = buildPinPayload(post);
+    return {
+      ...pin,
+      board_id: resolvedBoardId,
+    };
+  });
 
   const outputPath = path.join(
     process.cwd(),
@@ -118,6 +177,7 @@ async function run() {
   console.log(
     `Generated ${payload.length} Pinterest payloads in ${outputPath}`,
   );
+  console.log(`Using Pinterest board: ${BOARD_NAME} (${resolvedBoardId})`);
 
   if (DRY_RUN) {
     console.log("Dry run enabled. No posts were submitted to Pinterest.");

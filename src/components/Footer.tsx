@@ -1,3 +1,5 @@
+import AffiliateButton from "./AffiliateButton";
+
 export default function Footer() {
   return (
     <footer className="bg-white border-t border-gray-100 mt-24">
@@ -7,10 +9,28 @@ export default function Footer() {
             <div className="font-display font-black text-xl text-leaf-500 mb-2">
               🍎 NutriGuide
             </div>
-            <p className="text-gray-400 text-sm max-w-xs">
+            <p className="text-gray-400 text-sm max-w-xs mb-4">
               Honest, science-backed nutrition reviews to help you make better
               choices.
             </p>
+            <div className="flex flex-wrap gap-3">
+              <AffiliateButton
+                partner="iherb"
+                source="footer"
+                variant="outline"
+                className="!px-4 !py-2 text-sm"
+              >
+                🌿 iHerb Deals
+              </AffiliateButton>
+              <AffiliateButton
+                partner="myprotein"
+                source="footer"
+                variant="outline"
+                className="!px-4 !py-2 text-sm"
+              >
+                🥤 MyProtein Deals
+              </AffiliateButton>
+            </div>
           </div>
           <div className="flex gap-16">
             <div>
