@@ -13,9 +13,9 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 no-underline">
           <img
-            src="/logo.jpg"
+            src="/logo.svg"
             alt="NutriGuide logo"
-            className="h-9 w-9 object-contain rounded-md"
+            className="h-9 w-9 object-contain"
           />
           <span className="font-display font-black text-xl text-leaf-500 tracking-tight">
             NutriGuide

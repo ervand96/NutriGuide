@@ -6,8 +6,11 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row justify-between gap-8 mb-8">
           <div>
-            <div className="font-display font-black text-xl text-leaf-500 mb-2">
-              🍎 NutriGuide
+            <div className="flex items-center gap-2 mb-2">
+              <img src="/logo.svg" alt="NutriGuide logo" className="h-7 w-7" />
+              <span className="font-display font-black text-xl text-leaf-500">
+                NutriGuide
+              </span>
             </div>
             <p className="text-gray-400 text-sm max-w-xs mb-4">
               Honest, science-backed nutrition reviews to help you make better
