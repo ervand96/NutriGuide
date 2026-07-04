@@ -51,6 +51,23 @@ export default function Footer() {
               </div>
             </div>
             <div>
+              <div className="font-bold text-sm mb-3 text-bark">Company</div>
+              <div className="flex flex-col gap-2">
+                <a
+                  href="/about"
+                  className="text-gray-400 hover:text-leaf-500 text-sm transition-colors no-underline"
+                >
+                  About Us
+                </a>
+                <a
+                  href="/contact"
+                  className="text-gray-400 hover:text-leaf-500 text-sm transition-colors no-underline"
+                >
+                  Contact
+                </a>
+              </div>
+            </div>
+            <div>
               <div className="font-bold text-sm mb-3 text-bark">Legal</div>
               <div className="flex flex-col gap-2">
                 <a
@@ -60,13 +77,7 @@ export default function Footer() {
                   Privacy Policy
                 </a>
                 <a
-                  href="#"
-                  className="text-gray-400 hover:text-leaf-500 text-sm transition-colors no-underline"
-                >
-                  Disclaimer
-                </a>
-                <a
-                  href="#"
+                  href="/affiliate-disclosure"
                   className="text-gray-400 hover:text-leaf-500 text-sm transition-colors no-underline"
                 >
                   Affiliate Disclosure

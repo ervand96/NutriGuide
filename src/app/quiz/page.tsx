@@ -16,8 +16,8 @@ interface Result {
   pros: string[];
   affiliateLabel: string;
   affiliateUrl: string;
-  category: string;
-  slug: string;
+  moreLabel: string;
+  moreHref: string;
 }
 
 const questions: Question[] = [
@@ -80,10 +80,10 @@ const results: Record<string, Result> = {
     description:
       "You're a great fit for keto. It's a high-fat, low-carb diet that switches your body into fat-burning mode. Great for fast, visible results.",
     pros: ["Fast weight loss", "Reduces hunger", "Boosts mental clarity"],
-    affiliateLabel: "Get a Free Keto Meal Plan on Diet Doctor",
-    affiliateUrl: "https://www.dietdoctor.com/?ref=YOUR_ID",
-    category: "diets",
-    slug: "best-keto-diet-2026",
+    affiliateLabel: "Shop Keto-Friendly Products on iHerb",
+    affiliateUrl: "/go/iherb?source=quiz-keto&q=keto",
+    moreLabel: "Explore all Diet guides",
+    moreHref: "/category/diets",
   },
   intermittent: {
     diet: "Intermittent Fasting",
@@ -92,9 +92,9 @@ const results: Record<string, Result> = {
       "Intermittent fasting fits your lifestyle perfectly. You eat within a specific time window — no calorie counting, no complicated meal prep.",
     pros: ["No food restrictions", "Easy to maintain", "Improves metabolism"],
     affiliateLabel: "Try Noom — Best App for IF",
-    affiliateUrl: "https://www.noom.com/?ref=YOUR_ID",
-    category: "diets",
-    slug: "intermittent-fasting-guide",
+    affiliateUrl: "/go/noom?source=quiz-if",
+    moreLabel: "Explore all Diet guides",
+    moreHref: "/category/diets",
   },
   mediterranean: {
     diet: "Mediterranean Diet",
@@ -106,10 +106,11 @@ const results: Record<string, Result> = {
       "Heart-healthy",
       "No strict restrictions",
     ],
-    affiliateLabel: "Get Mediterranean Recipes on iHerb",
-    affiliateUrl: "/go/iherb?source=mediterranean",
-    category: "diets",
-    slug: "mediterranean-diet-meal-plan",
+    affiliateLabel: "Shop Mediterranean Diet Essentials on iHerb",
+    affiliateUrl: "/go/iherb?source=quiz-mediterranean",
+    moreLabel: "Read our Mediterranean Diet guide",
+    moreHref:
+      "/category/diets/the-mediterranean-diet-your-path-to-a-healthier-happier-life-03601",
   },
   noom: {
     diet: "Noom Program",
@@ -122,9 +123,9 @@ const results: Record<string, Result> = {
       "Tracks habits, not just calories",
     ],
     affiliateLabel: "Try Noom Free for 14 Days",
-    affiliateUrl: "https://www.noom.com/?ref=YOUR_ID",
-    category: "reviews",
-    slug: "noom-review-2026",
+    affiliateUrl: "/go/noom?source=quiz-noom",
+    moreLabel: "Explore all Reviews",
+    moreHref: "/category/reviews",
   },
 };
 
@@ -180,9 +181,12 @@ export default function QuizPage() {
       <nav className="bg-white border-b border-gray-100 px-6 h-16 flex items-center">
         <Link
           href="/"
-          className="font-display font-black text-xl text-leaf-500 no-underline"
+          className="flex items-center gap-2 no-underline"
         >
-          🍎 NutriGuide
+          <img src="/logo.svg" alt="NutriGuide logo" className="h-8 w-8" />
+          <span className="font-display font-black text-xl text-leaf-500">
+            NutriGuide
+          </span>
         </Link>
       </nav>
 
@@ -298,10 +302,10 @@ export default function QuizPage() {
               </a>
 
               <Link
-                href={`/category/${result.category}/${result.slug}`}
+                href={result.moreHref}
                 className="block text-center text-leaf-500 font-semibold text-sm hover:underline no-underline max-w-md mx-auto mb-8"
               >
-                Read our full {result.diet} guide →
+                {result.moreLabel} →
               </Link>
 
               <button
