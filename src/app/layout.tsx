@@ -32,6 +32,9 @@ export const metadata: Metadata = {
     shortcut: "/logo.svg",
     apple: "/logo.svg",
   },
+  verification: {
+    google: "uqylzVectumXuyrmQ6We8IjpAhHXvYQrvdxS-0_HZ0I",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
