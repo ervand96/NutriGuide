@@ -24,6 +24,28 @@ function safeCategory(cat) {
   return ALLOWED_CATEGORIES.includes(cat) ? cat : "Diets";
 }
 
+import {
+  partnerForProduct,
+  buttonTextForPartner,
+} from "./affiliate.js";
+
+function normalizeProduct(product, slug, category) {
+  if (!product || typeof product !== "object") return product;
+
+  const partner = partnerForProduct(product.name || "", category);
+  const affiliateUrl = `/go/${partner}?source=${encodeURIComponent(slug)}&q=${encodeURIComponent(product.name || "")}`;
+
+  return {
+    ...product,
+    affiliateUrl,
+    buttonText: buttonTextForPartner(partner),
+  };
+}
+
+function normalizeProducts(products, slug, category) {
+  return safeArray(products).map((p) => normalizeProduct(p, slug, category));
+}
+
 // ─────────────────────────────
 // READ ALL FILES
 // ─────────────────────────────
@@ -72,7 +94,7 @@ export function getAllPosts() {
         date: safeDate(data.date),
         featured: Boolean(data.featured),
         content,
-        products: safeArray(data.products),
+        products: normalizeProducts(data.products, file.replace(".md", ""), safeCategory(data.category || cat)),
       });
     }
   }
@@ -104,7 +126,7 @@ export function getPostBySlug(slug) {
       readTime: data.readTime || "5 min read",
       featured: Boolean(data.featured),
       content,
-      products: safeArray(data.products),
+      products: normalizeProducts(data.products, slug, safeCategory(data.category)),
     };
   }
 

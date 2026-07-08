@@ -1,6 +1,7 @@
 import Navbar from "../../../../components/Navbar";
 import Footer from "../../../../components/Footer";
 import RelatedArticles from "../../../../components/RelatedArticles";
+import ArticleShopCta from "../../../../components/ArticleShopCta";
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "../../../../lib/posts";
 import ProductCard from "../../../../components/ProductCard";
@@ -221,6 +222,8 @@ export default async function ArticlePage({
           className="article-content mb-10"
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
+
+        <ArticleShopCta slug={params.slug} />
 
         {products.length > 0 && (
           <section className="mb-10">

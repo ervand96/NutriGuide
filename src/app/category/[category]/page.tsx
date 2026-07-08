@@ -1,11 +1,34 @@
 import Navbar from "../../../components/Navbar";
 import Footer from "../../../components/Footer";
 import ArticleCard from "../../../components/ArticleCard";
+import OfferStrip from "../../../components/OfferStrip";
+import AffiliateButton from "../../../components/AffiliateButton";
 import { getAllPosts } from "../../../lib/posts";
 import type { Metadata } from "next";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || "https://nutri-guide-indol.vercel.app";
+
+const categoryShop: Record<
+  string,
+  { partner: "iherb" | "myprotein"; query: string; label: string }
+> = {
+  diets: {
+    partner: "iherb",
+    query: "diet supplements fiber omega",
+    label: "Shop Diet Essentials on iHerb",
+  },
+  reviews: {
+    partner: "myprotein",
+    query: "best sellers protein",
+    label: "Shop Top Rated on MyProtein",
+  },
+  supplements: {
+    partner: "iherb",
+    query: "vitamins minerals supplements",
+    label: "Shop Supplements on iHerb",
+  },
+};
 
 const categoryMeta: Record<
   string,
@@ -58,18 +81,34 @@ export default function CategoryPage({
     (post) => post.category.toLowerCase() === params.category.toLowerCase(),
   );
   const meta = categoryMeta[params.category.toLowerCase()];
+  const shop = categoryShop[params.category.toLowerCase()];
 
   return (
     <>
       <Navbar />
+      <OfferStrip source={`category-${params.category}`} />
       <main className="max-w-6xl mx-auto px-6 py-16">
-        <h1 className="font-display font-black text-4xl mb-2 capitalize">
-          {params.category}
-        </h1>
-        <p className="text-gray-500 mb-12 max-w-2xl">
-          {meta?.description ||
-            `All articles in ${params.category}`}
-        </p>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div>
+            <h1 className="font-display font-black text-4xl mb-2 capitalize">
+              {params.category}
+            </h1>
+            <p className="text-gray-500 max-w-2xl">
+              {meta?.description ||
+                `All articles in ${params.category}`}
+            </p>
+          </div>
+          {shop && (
+            <AffiliateButton
+              partner={shop.partner}
+              source={`category-hero-${params.category}`}
+              query={shop.query}
+              className="shrink-0"
+            >
+              {shop.label} →
+            </AffiliateButton>
+          )}
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {posts.map((post) => (

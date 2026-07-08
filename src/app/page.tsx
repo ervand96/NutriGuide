@@ -2,7 +2,11 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ArticleCard from "@/components/ArticleCard";
 import AffiliateButton from "@/components/AffiliateButton";
+import ShopByGoal from "@/components/ShopByGoal";
+import StoreGuide from "@/components/StoreGuide";
+import OfferStrip from "@/components/OfferStrip";
 import { getAllPosts } from "@/lib/posts";
+import { partnerForProduct, buttonTextForPartner } from "@/lib/affiliate.js";
 import Link from "next/link";
 
 const categories = [
@@ -72,24 +76,28 @@ const dietComparison = [
     difficulty: "Easy",
     bestFor: "Long-term heart health",
     avgCost: "$",
+    href: "/category/diets/the-mediterranean-diet-your-path-to-a-healthier-happier-life-03601",
   },
   {
     name: "Keto",
     difficulty: "Hard",
     bestFor: "Fast initial weight loss",
     avgCost: "$$",
+    shop: { partner: "iherb" as const, q: "keto supplements", source: "diet-table-keto" },
   },
   {
     name: "Intermittent Fasting",
     difficulty: "Medium",
     bestFor: "Simplicity, no food rules",
     avgCost: "$",
+    shop: { partner: "iherb" as const, q: "intermittent fasting", source: "diet-table-if" },
   },
   {
-    name: "Paleo",
+    name: "High Protein",
     difficulty: "Medium",
-    bestFor: "Cutting processed food",
+    bestFor: "Muscle & satiety",
     avgCost: "$$",
+    shop: { partner: "myprotein" as const, q: "whey protein", source: "diet-table-protein" },
   },
 ];
 
@@ -181,6 +189,9 @@ export default function Home() {
               <AffiliateButton partner="iherb" source="hero" variant="ghost">
                 🌿 Shop iHerb Deals →
               </AffiliateButton>
+              <AffiliateButton partner="myprotein" source="hero" variant="ghost">
+                🥤 Shop MyProtein →
+              </AffiliateButton>
             </div>
           </div>
         </section>
@@ -198,6 +209,10 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        <OfferStrip source="home-top" />
+
+        <ShopByGoal />
 
         {/* CATEGORIES */}
         <section className="max-w-6xl mx-auto px-6 py-16">
@@ -231,10 +246,15 @@ export default function Home() {
               individual picks our writers currently recommend first.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {topProducts.map((p, i) => (
+              {topProducts.map((p, i) => {
+                const partner = partnerForProduct(p.name || "", p.postCategory);
+                const buyUrl =
+                  p.affiliateUrl ||
+                  `/go/${partner}?source=top-products&q=${encodeURIComponent(p.name || "")}`;
+                return (
                 <div
                   key={`${p.postSlug}-${i}`}
-                  className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col"
+                  className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col hover:border-leaf-200 hover:shadow-sm transition-all"
                 >
                   <div className="flex items-start justify-between mb-3">
                     {p.badge && (
@@ -266,15 +286,16 @@ export default function Home() {
                     </Link>
                   </div>
                   <Link
-                    href={p.affiliateUrl || "/go/iherb?source=top-products"}
+                    href={buyUrl}
                     target="_blank"
                     rel="nofollow sponsored noopener"
                     className="no-underline text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold px-4 py-3 rounded-xl transition-colors"
                   >
-                    {p.buttonText || "Check Price →"}
+                    {p.buttonText || buttonTextForPartner(partner)}
                   </Link>
                 </div>
-              ))}
+              );
+              })}
             </div>
           </section>
         )}
@@ -348,6 +369,8 @@ export default function Home() {
           </div>
         </section>
 
+        <StoreGuide />
+
         {/* WHY TRUST US */}
         <section className="max-w-6xl mx-auto px-6 pb-16">
           <h2 className="font-display font-black text-3xl mb-2">
@@ -403,6 +426,9 @@ export default function Home() {
                   <th className="px-6 py-4 font-display font-bold text-bark text-sm">
                     Typical Cost
                   </th>
+                  <th className="px-6 py-4 font-display font-bold text-bark text-sm">
+                    Shop
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -412,7 +438,13 @@ export default function Home() {
                     className={i % 2 === 0 ? "bg-white" : "bg-gray-50/50"}
                   >
                     <td className="px-6 py-4 font-bold text-bark text-sm">
-                      {d.name}
+                      {"href" in d && d.href ? (
+                        <Link href={d.href} className="text-leaf-600 hover:underline no-underline">
+                          {d.name}
+                        </Link>
+                      ) : (
+                        d.name
+                      )}
                     </td>
                     <td className="px-6 py-4 text-gray-500 text-sm">
                       {d.difficulty}
@@ -422,6 +454,22 @@ export default function Home() {
                     </td>
                     <td className="px-6 py-4 text-gray-500 text-sm">
                       {d.avgCost}
+                    </td>
+                    <td className="px-6 py-4 text-sm">
+                      {"shop" in d && d.shop ? (
+                        <Link
+                          href={`/go/${d.shop.partner}?source=${d.shop.source}&q=${encodeURIComponent(d.shop.q)}`}
+                          target="_blank"
+                          rel="nofollow sponsored noopener"
+                          className="text-leaf-600 font-semibold hover:underline no-underline whitespace-nowrap"
+                        >
+                          Shop →
+                        </Link>
+                      ) : (
+                        <Link href="/quiz" className="text-leaf-600 font-semibold no-underline">
+                          Quiz →
+                        </Link>
+                      )}
                     </td>
                   </tr>
                 ))}

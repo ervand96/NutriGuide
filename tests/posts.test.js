@@ -28,6 +28,21 @@ describe("posts", () => {
     assert.equal(found.title, first.title);
   });
 
+  it("normalizes protein products to myprotein affiliate URLs", () => {
+    const posts = getAllPosts();
+    const proteinPost = posts.find((p) =>
+      p.products?.some((pr) =>
+        /whey|creatine|myprotein/i.test(pr.name || ""),
+      ),
+    );
+    if (proteinPost) {
+      const protein = proteinPost.products.find((pr) =>
+        /whey|creatine|myprotein/i.test(pr.name || ""),
+      );
+      assert.match(protein.affiliateUrl, /^\/go\/myprotein/);
+    }
+  });
+
   it("product affiliate URLs only use iherb or myprotein", () => {
     for (const post of getAllPosts()) {
       for (const p of post.products || []) {

@@ -1,5 +1,7 @@
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
+import StoreGuide from "../../components/StoreGuide";
+import OfferStrip from "../../components/OfferStrip";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -70,6 +72,8 @@ export default function AboutPage() {
           </p>
         </div>
       </main>
+      <StoreGuide />
+      <OfferStrip source="about" />
       <Footer />
     </>
   );
