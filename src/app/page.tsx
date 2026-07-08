@@ -249,10 +249,11 @@ export default function Home() {
 
         {/* TOP RATED PRODUCTS */}
         {topProducts.length > 0 && (
-          <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+          <section className="bg-white border-y border-gray-100 py-12 sm:py-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <ProductShelf
               title="Top Rated Products"
-              subtitle="Swipe to browse — like a store shelf. Tap to buy on iHerb or MyProtein."
+              subtitle="Browse our top picks — tap any card to shop on iHerb or MyProtein."
               products={topProducts.map((p, i) => ({
                 rank: i + 1,
                 name: p.name || "",
@@ -271,6 +272,7 @@ export default function Home() {
               compact
               className="-mx-0"
             />
+            </div>
           </section>
         )}
 

@@ -43,7 +43,7 @@ export default function ProductShelfCard({ product, slug, compact }: Props) {
         product.highlight
           ? "border-leaf-400 ring-2 ring-leaf-100"
           : "border-gray-100"
-      } ${compact ? "w-[168px]" : "w-[200px] sm:w-[220px]"}`}
+      } ${compact ? "w-[168px] md:w-full" : "w-[200px] sm:w-[220px] md:w-full"}`}
     >
       <Link
         href={shop.primaryHref}
@@ -81,7 +81,7 @@ export default function ProductShelfCard({ product, slug, compact }: Props) {
         </div>
       </Link>
 
-      <div className="p-3 flex flex-col flex-1">
+      <div className="p-3 md:p-4 flex flex-col flex-1">
         <Link
           href={shop.secondaryHref}
           target="_blank"
@@ -97,7 +97,7 @@ export default function ProductShelfCard({ product, slug, compact }: Props) {
           rel="nofollow sponsored noopener"
           className="no-underline flex-1"
         >
-          <h3 className="font-body font-semibold text-sm text-bark leading-snug line-clamp-3 mb-2 hover:text-leaf-600 transition-colors">
+          <h3 className="font-body font-semibold text-sm md:text-[15px] text-bark leading-snug line-clamp-3 mb-2 hover:text-leaf-600 transition-colors">
             {title}
           </h3>
         </Link>

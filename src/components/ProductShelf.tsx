@@ -44,7 +44,7 @@ export default function ProductShelf({
         </span>
       </div>
 
-      <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide">
+      <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6 md:gap-4 md:overflow-visible md:pb-0 md:snap-none">
         {sorted.map((product, i) => (
           <ProductShelfCard
             key={`${slugPrefix}-${product.rank}-${i}`}
@@ -56,12 +56,12 @@ export default function ProductShelf({
       </div>
 
       {showStoreButtons && (
-        <div className="mt-4 flex flex-col sm:flex-row gap-2 sm:gap-3">
+        <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
           <AffiliateButton
             partner="iherb"
             source={`shelf-${slugPrefix}`}
             query={sorted[0]?.name?.split(",")[0]}
-            className="flex-1 !py-3 !text-sm"
+            className="sm:w-auto sm:min-w-[220px] !py-3 !text-sm !px-8"
           >
             🌿 View all on iHerb →
           </AffiliateButton>
@@ -69,7 +69,7 @@ export default function ProductShelf({
             partner="myprotein"
             source={`shelf-${slugPrefix}`}
             variant="outline"
-            className="flex-1 !py-3 !text-sm"
+            className="sm:w-auto sm:min-w-[220px] !py-3 !text-sm !px-8"
           >
             🥤 View all on MyProtein →
           </AffiliateButton>
