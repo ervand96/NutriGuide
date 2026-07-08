@@ -70,6 +70,7 @@ export function getAllPosts() {
         description: data.description || content.slice(0, 120),
         readTime: data.readTime || "5 min read",
         date: safeDate(data.date),
+        featured: Boolean(data.featured),
         content,
         products: safeArray(data.products),
       });
@@ -101,6 +102,7 @@ export function getPostBySlug(slug) {
       category: safeCategory(data.category),
       date: safeDate(data.date),
       readTime: data.readTime || "5 min read",
+      featured: Boolean(data.featured),
       content,
       products: safeArray(data.products),
     };

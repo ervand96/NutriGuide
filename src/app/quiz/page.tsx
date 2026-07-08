@@ -91,8 +91,8 @@ const results: Record<string, Result> = {
     description:
       "Intermittent fasting fits your lifestyle perfectly. You eat within a specific time window — no calorie counting, no complicated meal prep.",
     pros: ["No food restrictions", "Easy to maintain", "Improves metabolism"],
-    affiliateLabel: "Try Noom — Best App for IF",
-    affiliateUrl: "/go/noom?source=quiz-if",
+    affiliateLabel: "Shop IF Essentials on iHerb",
+    affiliateUrl: "/go/iherb?source=quiz-if&q=intermittent+fasting",
     moreLabel: "Explore all Diet guides",
     moreHref: "/category/diets",
   },
@@ -112,20 +112,20 @@ const results: Record<string, Result> = {
     moreHref:
       "/category/diets/the-mediterranean-diet-your-path-to-a-healthier-happier-life-03601",
   },
-  noom: {
-    diet: "Noom Program",
-    emoji: "🧠",
+  paleo: {
+    diet: "High-Protein Plan",
+    emoji: "💪",
     description:
-      "Based on your answers, you need more than a diet — you need a system. Noom uses psychology to change how you think about food.",
+      "Based on your answers, you need structure plus quality protein. A high-protein approach with MyProtein supplements can help you build habits that stick.",
     pros: [
-      "Real human coaches",
-      "Psychology-based",
-      "Tracks habits, not just calories",
+      "Supports muscle & satiety",
+      "Flexible meal choices",
+      "Affordable sports nutrition",
     ],
-    affiliateLabel: "Try Noom Free for 14 Days",
-    affiliateUrl: "/go/noom?source=quiz-noom",
-    moreLabel: "Explore all Reviews",
-    moreHref: "/category/reviews",
+    affiliateLabel: "Shop MyProtein — Exclusive Code Applied",
+    affiliateUrl: "/go/myprotein?source=quiz-protein",
+    moreLabel: "Explore all Supplement guides",
+    moreHref: "/category/supplements",
   },
 };
 
@@ -136,7 +136,7 @@ function getResult(answers: string[]): Result {
   const delivery = answers.includes("delivery");
 
   if (noCarbs && loseFast) return results.keto;
-  if (habits || delivery) return results.noom;
+  if (habits || delivery) return results.paleo;
   if (answers.includes("some_carbs") || answers.includes("carbs_ok"))
     return results.mediterranean;
   return results.intermittent;
@@ -147,6 +147,9 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<string[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailSaved, setEmailSaved] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
 
   const question = questions[current];
   const result = done ? getResult(answers) : null;
@@ -173,6 +176,23 @@ export default function QuizPage() {
     setAnswers([]);
     setSelected(null);
     setDone(false);
+    setEmail("");
+    setEmailSaved(false);
+  }
+
+  async function handleSaveEmail() {
+    if (!email || !result) return;
+    setEmailLoading(true);
+    try {
+      const res = await fetch("/api/quiz-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, diet: result.diet }),
+      });
+      if (res.ok) setEmailSaved(true);
+    } finally {
+      setEmailLoading(false);
+    }
   }
 
   return (
@@ -289,6 +309,39 @@ export default function QuizPage() {
                     <span className="text-gray-600 text-sm">{pro}</span>
                   </div>
                 ))}
+              </div>
+
+              {/* Email capture */}
+              <div className="bg-leaf-50 border border-leaf-100 rounded-2xl p-6 mb-6 max-w-md mx-auto text-left">
+                <div className="text-xs font-bold text-leaf-600 uppercase tracking-widest mb-2">
+                  Get your plan by email
+                </div>
+                <p className="text-gray-500 text-sm mb-3">
+                  Optional — we&apos;ll send tips matched to {result.diet}.
+                </p>
+                {emailSaved ? (
+                  <p className="text-leaf-600 text-sm font-semibold">
+                    ✓ Saved! Check your inbox soon.
+                  </p>
+                ) : (
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      placeholder="you@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleSaveEmail}
+                      disabled={emailLoading || !email.includes("@")}
+                      className="bg-leaf-500 hover:bg-leaf-600 disabled:bg-gray-200 text-white font-bold px-4 py-3 rounded-xl text-sm"
+                    >
+                      {emailLoading ? "…" : "Send"}
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* CTA */}

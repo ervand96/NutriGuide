@@ -33,31 +33,20 @@ export default function AffiliateDisclosurePage() {
             We Use Affiliate Links
           </h2>
           <p>
-            Some links on NutriGuide — including links to iHerb, MyProtein,
-            Amazon, Noom, and HelloFresh — are affiliate links. If you click
-            one of these links and make a purchase or sign up, we may earn a
-            commission. This comes at no additional cost to you; prices are
-            the same whether or not you use our link.
+            Some links on NutriGuide — including links to iHerb and MyProtein —
+            are affiliate links. If you click one of these links and make a
+            purchase, we may earn a commission. This comes at no additional
+            cost to you; prices are the same whether or not you use our link.
           </p>
 
           <h2 className="text-2xl font-bold text-bark pt-2">
-            This Doesn't Change Our Recommendations
+            Our Partner Stores
           </h2>
           <p>
-            No brand can pay us for a better review or a higher ranking. We
-            choose what to feature based on ingredient quality, third-party
-            testing where available, pricing, and user feedback — the same
-            criteria we'd use if there were no affiliate program at all.
-          </p>
-
-          <h2 className="text-2xl font-bold text-bark pt-2">
-            Amazon Associates Disclosure
-          </h2>
-          <p>
-            NutriGuide is a participant in the Amazon Services LLC Associates
-            Program, an affiliate advertising program designed to provide a
-            means for sites to earn advertising fees by advertising and
-            linking to Amazon.com.
+            NutriGuide focuses on two trusted retailers: iHerb for vitamins,
+            supplements, and natural wellness products, and MyProtein for
+            protein powders and sports nutrition. We only link to stores we
+            personally recommend.
           </p>
 
           <h2 className="text-2xl font-bold text-bark pt-2">Questions?</h2>

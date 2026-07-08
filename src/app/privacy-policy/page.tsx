@@ -93,7 +93,7 @@ export default function PrivacyPolicyPage() {
             <h2 className="text-2xl font-bold text-bark">7. Contact Us</h2>
             <p>
               If you have questions about this Privacy Policy, please contact us
-              through the site contact form or support channel associated with
+              through our contact page at /contact or by emailing us directly.
               the website.
             </p>
           </section>

@@ -5,13 +5,6 @@ import AffiliateButton from "@/components/AffiliateButton";
 import { getAllPosts } from "@/lib/posts";
 import Link from "next/link";
 
-const stats = [
-  { value: "100+", label: "Reviews published" },
-  { value: "50k", label: "Readers per month" },
-  { value: "100%", label: "Independent opinions" },
-  { value: "0", label: "Paid placements" },
-];
-
 const categories = [
   {
     href: "/category/diets",
@@ -47,27 +40,6 @@ const deals = [
     title: "MyProtein",
     desc: "Protein powders, snacks & sports nutrition. Our code is pre-applied automatically when you click through.",
     tag: "Exclusive code applied",
-  },
-  {
-    partner: "amazon" as const,
-    emoji: "📦",
-    title: "Amazon",
-    desc: "Search any supplement or kitchen gadget we recommend directly on Amazon, with fast shipping and easy returns.",
-    tag: "Prime eligible",
-  },
-  {
-    partner: "noom" as const,
-    emoji: "🧠",
-    title: "Noom",
-    desc: "Psychology-based weight loss coaching app. Good fit if diets alone haven't worked and you want behavior-change support.",
-    tag: "Free trial",
-  },
-  {
-    partner: "hellofresh" as const,
-    emoji: "🍲",
-    title: "HelloFresh",
-    desc: "Pre-portioned meal kits so you can eat healthier without planning or grocery shopping every week.",
-    tag: "Discount on first box",
   },
 ];
 
@@ -140,7 +112,27 @@ export default function Home() {
   const allPosts = getAllPosts().sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
-  const posts = allPosts.slice(0, 6);
+
+  const featuredPosts = allPosts.filter((p) => p.featured).slice(0, 3);
+  const rest = allPosts.filter((p) => !featuredPosts.some((f) => f.slug === p.slug));
+  const posts = [...featuredPosts, ...rest].slice(0, 6);
+
+  const stats = [
+    { value: String(allPosts.length), label: "Reviews published" },
+    { value: "2", label: "Partner stores" },
+    { value: "100%", label: "Independent opinions" },
+    { value: "0", label: "Paid placements" },
+  ];
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
 
   const topProducts = allPosts
     .flatMap((post) =>
@@ -152,6 +144,10 @@ export default function Home() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <Navbar />
       <main>
         {/* HERO */}
@@ -339,7 +335,7 @@ export default function Home() {
               </p>
             </div>
             <Link
-              href="/category/diets"
+              href="/category/reviews"
               className="text-leaf-500 font-bold text-sm hover:underline no-underline"
             >
               View all →

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import AffiliateButton from "./AffiliateButton";
 
@@ -5,9 +8,12 @@ const links = [
   { href: "/category/diets", label: "Diets" },
   { href: "/category/reviews", label: "Reviews" },
   { href: "/category/supplements", label: "Supplements" },
+  { href: "/quiz", label: "Quiz" },
 ];
 
 export default function Navbar() {
+  const [open, setOpen] = useState(false);
+
   return (
     <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -21,6 +27,7 @@ export default function Navbar() {
             NutriGuide
           </span>
         </Link>
+
         <div className="hidden md:flex gap-8">
           {links.map((l) => (
             <Link
@@ -32,7 +39,8 @@ export default function Navbar() {
             </Link>
           ))}
         </div>
-        <div className="flex items-center gap-3">
+
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link
             href="/category/reviews"
             className="hidden sm:inline-flex text-gray-500 hover:text-leaf-500 text-sm font-bold no-underline"
@@ -42,12 +50,50 @@ export default function Navbar() {
           <AffiliateButton
             partner="iherb"
             source="navbar"
-            className="!px-4 !py-2 text-sm"
+            className="!px-3 !py-2 text-xs sm:!text-sm"
           >
-            Shop iHerb Deals →
+            iHerb →
           </AffiliateButton>
+          <AffiliateButton
+            partner="myprotein"
+            source="navbar"
+            variant="outline"
+            className="hidden sm:inline-flex !px-3 !py-2 !text-sm"
+          >
+            MyProtein →
+          </AffiliateButton>
+          <button
+            type="button"
+            className="md:hidden p-2 text-gray-600"
+            aria-label="Toggle menu"
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? "✕" : "☰"}
+          </button>
         </div>
       </div>
+
+      {open && (
+        <div className="md:hidden border-t border-gray-100 bg-white px-6 py-4 flex flex-col gap-3">
+          {links.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="text-gray-600 font-medium no-underline py-1"
+              onClick={() => setOpen(false)}
+            >
+              {l.label}
+            </Link>
+          ))}
+          <AffiliateButton
+            partner="myprotein"
+            source="navbar-mobile"
+            className="w-full !text-sm"
+          >
+            Shop MyProtein →
+          </AffiliateButton>
+        </div>
+      )}
     </nav>
   );
 }

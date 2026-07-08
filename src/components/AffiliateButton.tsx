@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-type Partner = "iherb" | "myprotein" | "amazon" | "noom" | "hellofresh";
+type Partner = "iherb" | "myprotein";
 
 export default function AffiliateButton({
   partner,

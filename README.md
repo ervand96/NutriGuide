@@ -1,6 +1,8 @@
-# 🍎 NutriGuide — Affiliate Site Starter
+# NutriGuide
 
-Next.js 14 + TypeScript + Tailwind CSS
+Affiliate nutrition site — honest diet & supplement reviews. Monetized via **iHerb** and **MyProtein** only.
+
+**Live:** https://nutri-guide-indol.vercel.app
 
 ---
 
@@ -8,18 +10,10 @@ Next.js 14 + TypeScript + Tailwind CSS
 
 ```bash
 npm install
-npm run dev
-# → http://localhost:3000
+npm run dev          # → http://localhost:3000
+npm test             # unit + integration tests
+npm run generate     # create 3 articles via Cursor AI agent
 ```
-
-## Deploy to Vercel (free)
-
-```bash
-npm install -g vercel
-vercel
-```
-
-Done! Your site is live.
 
 ---
 
@@ -28,47 +22,82 @@ Done! Your site is live.
 ```
 src/
 ├── app/
-│   ├── page.tsx              ← Homepage
-│   ├── blog/
-│   │   ├── page.tsx          ← All articles list
-│   │   └── [slug]/page.tsx   ← Individual article (with affiliate products)
-│   ├── reviews/page.tsx      ← Reviews page
-│   └── diets/page.tsx        ← Diets page
+│   ├── page.tsx                          # Homepage
+│   ├── quiz/page.tsx                     # Diet quiz + email capture
+│   ├── category/[category]/              # Category listing
+│   ├── category/[category]/[slug]/       # Article pages
+│   └── go/[partner]/                     # Affiliate redirects (iherb, myprotein)
+├── content/posts/
+│   ├── diets/ | reviews/ | supplements/  # Markdown articles + YAML frontmatter
 ├── components/
-│   ├── Navbar.tsx
-│   ├── Footer.tsx
-│   └── ArticleCard.tsx
 ├── lib/
-│   └── articles.ts           ← Add your articles here
-└── types/
-    └── index.ts              ← TypeScript types
+│   ├── posts.js                          # Content loader
+│   ├── affiliate.js                      # Partner URL builder
+│   └── affiliate-clicks.js               # Click/lead tracking (KV + logs)
+└── scripts/
+    ├── generate-post.js                  # Batch content generator
+    └── lib/ai-agent.js                   # Cursor SDK multi-step writer
 ```
 
 ---
 
-## How to Add a New Article
+## Environment Variables
 
-1. Add it to `src/lib/articles.ts`
-2. Create `src/app/blog/YOUR-SLUG/page.tsx`
-3. Copy the template from `src/app/blog/[slug]/page.tsx`
-4. Replace affiliate links with your real links
+Copy `.env.example` → `.env`:
 
----
-
-## Affiliate Programs to Register (all free)
-
-| Program | Commission | Link |
-|---------|-----------|------|
-| Amazon Associates | 4-8% | associates.amazon.com |
-| MyProtein | 8-10% | myprotein.com/affiliates |
-| iHerb | 5-10% | iherb.com/affiliates |
-| Noom | $35-45/signup | impact.com → search "Noom" |
-| HelloFresh | $30-40/signup | hellofresh.com/affiliates |
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `IHERB_RCODE` | Yes | iHerb affiliate code |
+| `MY_PROTEIN_RCODE` | Yes | MyProtein referral code |
+| `NEXT_PUBLIC_SITE_URL` | Yes | Canonical URL (sitemap, OG) |
+| `CURSOR_API_KEY` | For generate | Cursor SDK — [dashboard/integrations](https://cursor.com/dashboard/integrations) |
+| `KV_REST_API_URL` | Production | Vercel KV / Upstash — persistent click analytics |
+| `KV_REST_API_TOKEN` | Production | KV auth token |
+| `PINTEREST_*` | Optional | Pinterest auto-pins |
 
 ---
 
-## Monthly Costs
+## Content Generation
 
-- Domain: ~$10/year (namecheap.com)
-- Hosting: $0 (Vercel free tier)
-- **Total: ~$10/year**
+Uses **Cursor SDK** (Composer) — 4 small agent calls per article (~700+ words + 3 products):
+
+```bash
+npm run generate              # Diets + Reviews + Supplements
+npm run generate Reviews      # one category only
+```
+
+Products auto-link to `/go/iherb` or `/go/myprotein` based on product name/category.
+
+---
+
+## Affiliate Programs
+
+| Store | Commission | Sign up |
+|-------|-----------|---------|
+| iHerb | 5–10% | [iherb.com/info/affiliates](https://www.iherb.com/info/affiliates) |
+| MyProtein | 8–10% | [myprotein.com/referrals](https://www.myprotein.com/c/referrals/) |
+
+All links must go through `/go/iherb` or `/go/myprotein` — never direct retailer URLs in content.
+
+---
+
+## Deploy (Vercel)
+
+```bash
+vercel --prod
+```
+
+Set env vars in Vercel Dashboard. For click tracking in production, connect **Vercel KV** (or Upstash Redis) and add `KV_REST_API_URL` + `KV_REST_API_TOKEN`.
+
+---
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Development server |
+| `npm run build` | Production build |
+| `npm test` | All tests |
+| `npm run test:unit` | Unit tests only (fast) |
+| `npm run generate` | AI content batch |
+| `npm run pinterest:auto` | Pinterest pin automation |

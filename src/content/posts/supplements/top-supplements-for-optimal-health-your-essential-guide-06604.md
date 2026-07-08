@@ -48,7 +48,7 @@ Protein is an essential macronutrient vital for muscle repair and growth, enzyme
 *   **Cons:** Price can be higher than some alternatives, contains artificial sweeteners.
 *   **Why we love it:** It consistently delivers on taste, quality, and effectiveness, making it a reliable choice for anyone looking to increase their protein intake.
 
-Ready to fuel your muscles? [Check Price on iHerb](https://www.iherb.com/optimum-nutrition)
+Ready to fuel your muscles? [Check Price on iHerb](/go/iherb?source=top-supplements-guide&q=optimum+nutrition+whey)
 
 #### 2. Omega-3 Fish Oil: Essential for Heart, Brain, and Beyond
 Omega-3 fatty acids, particularly EPA (eicosapentaenoic acid) and DHA (docosahexaenoic acid), are polyunsaturated fats crucial for numerous bodily functions. Since our bodies cannot produce these essential fats, we must obtain them through diet or supplementation. Omega-3s are well-known for their anti-inflammatory properties and their role in supporting heart health, brain function, and joint mobility.
@@ -63,7 +63,7 @@ Omega-3 fatty acids, particularly EPA (eicosapentaenoic acid) and DHA (docosahex
 *   **Cons:** Capsule size can be large for some, commands a premium price point.
 *   **Why we love it:** If purity and potency are your top priorities for an omega-3 supplement, Nordic Naturals sets the standard.
 
-Enhance your health with pure Omega-3s. [Check Price on iHerb](https://www.iherb.com/nordic-naturals)
+Enhance your health with pure Omega-3s. [Check Price on iHerb](/go/iherb?source=top-supplements-guide&q=nordic+naturals+omega+3)
 
 #### 3. Multivitamin: Your Daily Nutritional Safety Net
 Even with a healthy diet, it can be challenging to obtain optimal levels of all essential vitamins and minerals consistently. A high-quality multivitamin acts as an insurance policy, helping to fill common nutritional gaps and support overall health, energy levels, and immune function. It ensures your body has the micronutrients it needs for various metabolic processes.
@@ -78,7 +78,7 @@ Even with a healthy diet, it can be challenging to obtain optimal levels of all 
 *   **Cons:** Requires two capsules daily, may be a higher price than very basic multivitamins.
 *   **Why we love it:** For those seeking a robust, all-in-one daily nutrient boost beyond the bare minimum, Life Extension offers an excellent, research-backed solution.
 
-Secure your daily nutrients. [Check Price on iHerb](https://www.iherb.com/life-extension)
+Secure your daily nutrients. [Check Price on iHerb](/go/iherb?source=top-supplements-guide&q=life+extension+multivitamin)
 
 ### Important Note: Always Consult a Professional
 

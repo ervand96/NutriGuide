@@ -1,5 +1,6 @@
 import Navbar from "../../../../components/Navbar";
 import Footer from "../../../../components/Footer";
+import RelatedArticles from "../../../../components/RelatedArticles";
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "../../../../lib/posts";
 import ProductCard from "../../../../components/ProductCard";
@@ -52,6 +53,29 @@ export async function generateMetadata({
   };
 }
 
+function quickAnswerLines(products: any[]) {
+  if (!products?.length) {
+    return [
+      "🥇 Compare top-rated picks in our product cards below",
+      "💰 Check iHerb and MyProtein for current prices",
+      "🧠 Read the full guide before starting any supplement",
+    ];
+  }
+  const sorted = [...products].sort(
+    (a, b) => (a.rank || 99) - (b.rank || 99),
+  );
+  const lines: string[] = [];
+  const top = sorted.find((p) => p.highlight) || sorted[0];
+  if (top) lines.push(`🥇 Best Overall: ${top.name}${top.badge ? ` (${top.badge})` : ""}`);
+  const budget = sorted.find((p) =>
+    String(p.badge || "").toLowerCase().includes("budget"),
+  );
+  if (budget) lines.push(`💰 Best Budget: ${budget.name}`);
+  else if (sorted[1]) lines.push(`💰 Also consider: ${sorted[1].name}`);
+  lines.push("🧠 Always consult a healthcare professional before starting");
+  return lines;
+}
+
 export default async function ArticlePage({
   params,
 }: {
@@ -71,6 +95,8 @@ export default async function ArticlePage({
 
   const articleUrl = `${siteUrl}/category/${params.category}/${params.slug}`;
   const categoryUrl = `${siteUrl}/category/${params.category}`;
+  const products = post.products ?? [];
+  const quickLines = quickAnswerLines(products);
 
   const jsonLd = [
     {
@@ -118,7 +144,7 @@ export default async function ArticlePage({
       },
       image: `${siteUrl}/og/${params.slug}`,
     },
-    ...(post.products ?? []).map((product: any) => ({
+    ...products.map((product: any) => ({
       "@context": "https://schema.org",
       "@type": "Product",
       name: product.name,
@@ -129,7 +155,9 @@ export default async function ArticlePage({
       },
       offers: {
         "@type": "Offer",
-        url: product.affiliateUrl,
+        url: product.affiliateUrl?.startsWith("http")
+          ? product.affiliateUrl
+          : `${siteUrl}${product.affiliateUrl}`,
         price: product.price?.replace(/[^0-9.]/g, "") || "0",
         priceCurrency: "USD",
       },
@@ -174,10 +202,6 @@ export default async function ArticlePage({
           </div>
         </div>
 
-        {(post.products ?? []).map((product: any) => (
-          <ProductCard key={product.rank} product={product} />
-        ))}
-
         <p className="text-lg text-gray-600 leading-relaxed mb-8 font-body">
           {post.description}
         </p>
@@ -186,11 +210,10 @@ export default async function ArticlePage({
           <div className="font-bold text-leaf-600 text-sm uppercase tracking-wider mb-3">
             ⚡ Quick Answer
           </div>
-
           <ul className="space-y-1 text-sm text-gray-600">
-            <li>🥇 Best Overall option</li>
-            <li>💰 Best Budget option</li>
-            <li>🧠 Best Strategy option</li>
+            {quickLines.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
           </ul>
         </div>
 
@@ -199,10 +222,27 @@ export default async function ArticlePage({
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
 
+        {products.length > 0 && (
+          <section className="mb-10">
+            <h2 className="font-display font-black text-2xl mb-6">
+              Our Top Picks
+            </h2>
+            {products.map((product: any) => (
+              <ProductCard key={product.rank} product={product} />
+            ))}
+          </section>
+        )}
+
+        <RelatedArticles
+          currentSlug={post.slug}
+          category={post.category}
+        />
+
         <div className="mt-12 bg-gray-50 border border-gray-100 rounded-xl p-5">
           <p className="text-xs text-gray-400 leading-relaxed">
             <strong className="text-gray-500">Affiliate Disclosure:</strong>{" "}
-            This article may contain affiliate links.
+            This article may contain affiliate links to iHerb and MyProtein.
+            We may earn a commission at no extra cost to you.
           </p>
         </div>
       </main>
