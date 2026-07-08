@@ -1,13 +1,16 @@
 import Link from "next/link";
 import { Product } from "@/types";
-import { shopLinksForProduct } from "@/lib/affiliate.js";
+import ProductShelfCard from "./ProductShelfCard";
+import AffiliateButton from "./AffiliateButton";
 
 export default function ArticleTopPicks({
   products,
   slug,
+  category = "Supplements",
 }: {
   products: Product[];
   slug: string;
+  category?: string;
 }) {
   if (!products?.length) return null;
 
@@ -16,82 +19,57 @@ export default function ArticleTopPicks({
   );
 
   return (
-    <section className="mb-8 sm:mb-10">
-      <div className="flex items-center justify-between gap-3 mb-4">
-        <h2 className="font-display font-black text-xl sm:text-2xl text-bark">
-          Top Picks & Prices
-        </h2>
-        <span className="text-gray-400 text-xs sm:text-sm shrink-0">
-          {sorted.length} product{sorted.length > 1 ? "s" : ""}
+    <section className="mb-8 sm:mb-10 -mx-4 sm:mx-0">
+      <div className="px-4 sm:px-0 flex items-end justify-between gap-3 mb-4">
+        <div>
+          <h2 className="font-display font-black text-xl sm:text-2xl text-bark">
+            Shop Our Top Picks
+          </h2>
+          <p className="text-gray-500 text-sm mt-1">
+            Swipe to compare — prices & ratings at a glance
+          </p>
+        </div>
+        <span className="text-leaf-600 text-xs font-bold bg-leaf-50 px-2 py-1 rounded-full shrink-0">
+          {sorted.length} picks
         </span>
       </div>
 
-      <div className="flex flex-col gap-3">
-        {sorted.map((product) => {
-          const source = `top-strip-${slug}-${product.rank}`;
-          const shop = shopLinksForProduct(product, source);
-          return (
-            <div
-              key={product.rank}
-              className={`bg-white border-2 rounded-2xl p-4 sm:p-5 ${
-                product.highlight
-                  ? "border-leaf-500 shadow-sm shadow-leaf-100"
-                  : "border-gray-100"
-              }`}
-            >
-              <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2 mb-1">
-                    <span className="text-xs font-bold bg-leaf-500 text-white px-2 py-0.5 rounded-full">
-                      #{product.rank}
-                    </span>
-                    {product.badge && (
-                      <span className="text-xs font-bold text-leaf-600 bg-leaf-50 px-2 py-0.5 rounded-full">
-                        {product.badge}
-                      </span>
-                    )}
-                    {product.rating && (
-                      <span className="text-amber-500 text-xs font-bold">
-                        ★ {product.rating}
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="font-display font-bold text-sm sm:text-base text-bark leading-snug">
-                    {product.name}
-                  </h3>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="text-xs text-gray-400 uppercase tracking-wide mb-0.5">
-                    From
-                  </div>
-                  <div className="font-display font-black text-2xl sm:text-3xl text-leaf-600 leading-none">
-                    {product.price}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Link
-                  href={shop.primaryHref}
-                  target="_blank"
-                  rel="nofollow sponsored noopener"
-                  className="no-underline flex-1 text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold py-3 rounded-xl text-sm transition-colors active:scale-[0.98]"
-                >
-                  {shop.primaryLabel}
-                </Link>
-                <Link
-                  href={shop.secondaryHref}
-                  target="_blank"
-                  rel="nofollow sponsored noopener"
-                  className="no-underline flex-1 text-center border-2 border-leaf-500 text-leaf-600 hover:bg-leaf-50 font-bold py-3 rounded-xl text-sm transition-colors active:scale-[0.98]"
-                >
-                  {shop.secondaryLabel}
-                </Link>
-              </div>
-            </div>
-          );
-        })}
+      {/* Horizontal shelf — iHerb-style scroll */}
+      <div className="flex gap-3 overflow-x-auto pb-2 px-4 sm:px-0 snap-x snap-mandatory scrollbar-hide">
+        {sorted.map((product) => (
+          <ProductShelfCard
+            key={product.rank}
+            product={product}
+            slug={slug}
+          />
+        ))}
       </div>
+
+      <div className="px-4 sm:px-0 mt-4 flex flex-col sm:flex-row gap-2 sm:gap-3">
+        <AffiliateButton
+          partner="iherb"
+          source={`shelf-all-${slug}`}
+          query={sorted[0]?.name?.split(",")[0]}
+          className="flex-1 !py-3 !text-sm"
+        >
+          🌿 View all on iHerb →
+        </AffiliateButton>
+        <AffiliateButton
+          partner="myprotein"
+          source={`shelf-all-${slug}`}
+          variant="outline"
+          className="flex-1 !py-3 !text-sm"
+        >
+          🥤 View all on MyProtein →
+        </AffiliateButton>
+      </div>
+
+      <p className="px-4 sm:px-0 text-center text-gray-400 text-xs mt-3">
+        Affiliate links — we may earn a commission at no extra cost to you.{" "}
+        <Link href="/affiliate-disclosure" className="text-leaf-600 no-underline hover:underline">
+          Disclosure
+        </Link>
+      </p>
     </section>
   );
 }

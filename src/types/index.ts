@@ -18,5 +18,5 @@ export interface Product {
   cons: string[]
   affiliateUrl: string
   buttonText: string;
-  highlight?: string;
+  highlight?: boolean | string;
 }

@@ -9,8 +9,8 @@ import AnimateOnScroll from "@/components/AnimateOnScroll";
 import StarterStacks from "@/components/StarterStacks";
 import StorePicker from "@/components/StorePicker";
 import DietComparisonCards from "@/components/DietComparisonCards";
+import ProductShelfCard from "@/components/ProductShelfCard";
 import { getAllPosts } from "@/lib/posts";
-import { partnerForProduct, buttonTextForPartner } from "@/lib/affiliate.js";
 import Link from "next/link";
 
 const categories = [
@@ -253,65 +253,32 @@ export default function Home() {
             <h2 className="font-display font-black text-3xl mb-2">
               Top Rated Products
             </h2>
-            <p className="text-gray-400 mb-8 max-w-2xl">
-              Pulled from our latest reviews, ranked by rating — the
-              individual picks our writers currently recommend first.
+            <p className="text-gray-400 mb-6 sm:mb-8 max-w-2xl text-sm sm:text-base">
+              Swipe to browse — like a store shelf. Tap to buy on iHerb or MyProtein.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide -mx-1 px-1">
               {topProducts.map((p, i) => {
-                const partner = partnerForProduct(p.name || "", p.postCategory);
-                const buyUrl =
-                  p.affiliateUrl ||
-                  `/go/${partner}?source=top-products&q=${encodeURIComponent(p.name || "")}`;
+                const product = {
+                  rank: i + 1,
+                  name: p.name || "",
+                  badge: p.badge || "",
+                  rating: p.rating || 4.5,
+                  price: p.price || "",
+                  description: p.description || "",
+                  pros: [],
+                  cons: [],
+                  affiliateUrl: p.affiliateUrl || "",
+                  buttonText: p.buttonText || "",
+                  highlight: i === 0,
+                };
                 return (
-                <div
-                  key={`${p.postSlug}-${i}`}
-                  className="bg-white border border-gray-100 rounded-2xl p-5 sm:p-6 flex flex-col hover:border-leaf-200 hover:shadow-sm transition-all"
-                >
-                  <div className="flex items-start justify-between gap-3 mb-3 pb-3 border-b border-gray-50">
-                    <div className="flex flex-wrap gap-2">
-                      {p.badge && (
-                        <span className="inline-block bg-leaf-100 text-leaf-700 text-xs font-bold px-2 py-1 rounded-full">
-                          {p.badge}
-                        </span>
-                      )}
-                      {p.rating && (
-                        <span className="text-amber-500 text-sm font-bold">
-                          ★ {p.rating}
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-right shrink-0">
-                      <div className="text-[10px] text-gray-400 uppercase tracking-wide">
-                        From
-                      </div>
-                      <span className="font-display font-black text-xl sm:text-2xl text-leaf-600 leading-none">
-                        {p.price}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="font-display font-bold text-base sm:text-lg text-bark mb-2 leading-snug">
-                    {p.name}
-                  </div>
-                  <p className="text-gray-500 text-sm leading-relaxed mb-4 flex-1">
-                    {p.description}
-                  </p>
-                  <Link
-                    href={`/category/${p.postCategory.toLowerCase()}/${p.postSlug}`}
-                    className="text-gray-400 hover:text-leaf-500 text-xs no-underline mb-3"
-                  >
-                    Read full review →
-                  </Link>
-                  <Link
-                    href={buyUrl}
-                    target="_blank"
-                    rel="nofollow sponsored noopener"
-                    className="no-underline text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold px-4 py-3 rounded-xl transition-colors"
-                  >
-                    {p.buttonText || buttonTextForPartner(partner)}
-                  </Link>
-                </div>
-              );
+                  <ProductShelfCard
+                    key={`${p.postSlug}-${i}`}
+                    product={product}
+                    slug={`home-${p.postSlug}`}
+                    compact
+                  />
+                );
               })}
             </div>
           </section>
