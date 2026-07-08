@@ -52,6 +52,47 @@ export function buttonTextForPartner(partner) {
     : "Check Price on iHerb";
 }
 
+export function alternatePartner(partner) {
+  return partner === "myprotein" ? "iherb" : "myprotein";
+}
+
+/** Parse /go/[partner] URL from product affiliate links */
+export function parseGoLink(href = "") {
+  const path = String(href).split("?")[0] || "";
+  const partner = path.includes("myprotein") ? "myprotein" : "iherb";
+  let query = "";
+  try {
+    const params = new URL(href, "https://nutriguide.local").searchParams;
+    query = params.get("q") || "";
+  } catch {
+    query = "";
+  }
+  return { partner, query };
+}
+
+export function shopLinksForProduct(product, source = "product-card") {
+  const href = product.affiliateUrl || "";
+  const parsed = href.startsWith("/go/") ? parseGoLink(href) : null;
+  const primary = parsed?.partner || partnerForProduct(product.name || "", "");
+  const query =
+    parsed?.query ||
+    (product.name ? product.name.split(",")[0].trim() : "");
+  const secondary = alternatePartner(primary);
+  const q = query ? `&q=${encodeURIComponent(query)}` : "";
+  return {
+    primary,
+    secondary,
+    query,
+    primaryHref: href || `/go/${primary}?source=${source}${q}`,
+    secondaryHref: `/go/${secondary}?source=${source}-alt${q}`,
+    primaryLabel: product.buttonText || buttonTextForPartner(primary),
+    secondaryLabel:
+      secondary === "myprotein"
+        ? "Also check MyProtein →"
+        : "Also check iHerb →",
+  };
+}
+
 export function appendUtm(url, source, partner) {
   const u = new URL(url);
   u.searchParams.set("utm_source", "nutriguide");

@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Product } from "@/types";
+import { shopLinksForProduct } from "@/lib/affiliate.js";
 
 interface Props {
   product: Product;
+  slug?: string;
 }
 
 function Stars({ rating }: { rating: number }) {
@@ -15,9 +17,10 @@ function Stars({ rating }: { rating: number }) {
   );
 }
 
-export default function ProductCard({ product }: Props) {
+export default function ProductCard({ product, slug = "product" }: Props) {
   const isHighlighted = product.highlight ?? false;
-  const href = product.affiliateUrl || "/go/iherb?source=product-card";
+  const source = `product-${slug}-${product.rank}`;
+  const shop = shopLinksForProduct(product, source);
 
   return (
     <div
@@ -64,14 +67,25 @@ export default function ProductCard({ product }: Props) {
             ))}
           </div>
         </div>
-        <Link
-          href={href}
-          target="_blank"
-          rel="nofollow sponsored noopener"
-          className="no-underline block w-full text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold px-6 py-4 rounded-xl transition-all duration-200 active:scale-[0.98]"
-        >
-          {product.buttonText || "Check Price →"}
-        </Link>
+
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+          <Link
+            href={shop.primaryHref}
+            target="_blank"
+            rel="nofollow sponsored noopener"
+            className="no-underline flex-1 text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold px-4 py-3.5 sm:py-4 rounded-xl transition-all duration-200 active:scale-[0.98] text-sm sm:text-base"
+          >
+            {shop.primaryLabel}
+          </Link>
+          <Link
+            href={shop.secondaryHref}
+            target="_blank"
+            rel="nofollow sponsored noopener"
+            className="no-underline flex-1 text-center border-2 border-leaf-500 text-leaf-600 hover:bg-leaf-50 font-bold px-4 py-3.5 sm:py-4 rounded-xl transition-all duration-200 active:scale-[0.98] text-sm sm:text-base"
+          >
+            {shop.secondaryLabel}
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import Navbar from "../../../../components/Navbar";
 import Footer from "../../../../components/Footer";
 import RelatedArticles from "../../../../components/RelatedArticles";
 import ArticleShopCta from "../../../../components/ArticleShopCta";
+import ArticleBottomShop from "../../../../components/ArticleBottomShop";
 import MobileShopBar from "../../../../components/MobileShopBar";
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "../../../../lib/posts";
@@ -232,10 +233,16 @@ export default async function ArticlePage({
               Our Top Picks
             </h2>
             {products.map((product: any) => (
-              <ProductCard key={product.rank} product={product} />
+              <ProductCard
+                key={product.rank}
+                product={product}
+                slug={params.slug}
+              />
             ))}
           </section>
         )}
+
+        <ArticleBottomShop slug={params.slug} category={post.category} />
 
         <RelatedArticles
           currentSlug={post.slug}
