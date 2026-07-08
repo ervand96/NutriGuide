@@ -87,13 +87,13 @@ export default function CategoryPage({
     <>
       <Navbar />
       <OfferStrip source={`category-${params.category}`} />
-      <main className="max-w-6xl mx-auto px-6 py-16">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-8 sm:mb-12">
           <div>
-            <h1 className="font-display font-black text-4xl mb-2 capitalize">
+            <h1 className="font-display font-black text-3xl sm:text-4xl mb-2 capitalize">
               {params.category}
             </h1>
-            <p className="text-gray-500 max-w-2xl">
+            <p className="text-gray-500 max-w-2xl text-sm sm:text-base">
               {meta?.description ||
                 `All articles in ${params.category}`}
             </p>
@@ -103,14 +103,14 @@ export default function CategoryPage({
               partner={shop.partner}
               source={`category-hero-${params.category}`}
               query={shop.query}
-              className="shrink-0"
+              className="w-full md:w-auto shrink-0 !py-3"
             >
               {shop.label} →
             </AffiliateButton>
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {posts.map((post) => (
             <ArticleCard key={post.slug} article={post} />
           ))}

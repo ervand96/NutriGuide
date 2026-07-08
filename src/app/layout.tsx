@@ -1,6 +1,20 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#2D7A3A",
+};
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || "https://nutri-guide-indol.vercel.app";
@@ -69,8 +83,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className={inter.variable}>
+      <body className="font-body">
         {children}
         <Analytics />
       </body>

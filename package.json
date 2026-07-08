@@ -10,7 +10,8 @@
     "test": "node --test tests/*.test.js",
     "test:unit": "node --test tests/posts.test.js tests/affiliate.test.js",
     "generate": "node scripts/generate-post.js",
-    "pinterest:auto": "node scripts/pinterest-auto.js"
+    "pinterest:auto": "node scripts/pinterest-auto.js",
+    "reddit:post": "node scripts/reddit-publish.js"
   },
   "dependencies": {
     "@cursor/sdk": "^1.0.23",

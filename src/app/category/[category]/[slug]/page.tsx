@@ -2,6 +2,7 @@ import Navbar from "../../../../components/Navbar";
 import Footer from "../../../../components/Footer";
 import RelatedArticles from "../../../../components/RelatedArticles";
 import ArticleShopCta from "../../../../components/ArticleShopCta";
+import MobileShopBar from "../../../../components/MobileShopBar";
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "../../../../lib/posts";
 import ProductCard from "../../../../components/ProductCard";
@@ -174,9 +175,9 @@ export default async function ArticlePage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <main className="max-w-3xl mx-auto px-6 py-14">
-        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-gray-500">
-          <div className="flex flex-wrap items-center gap-2">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14 pb-24 md:pb-14">
+        <nav aria-label="Breadcrumb" className="mb-4 sm:mb-6 text-xs sm:text-sm text-gray-500">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <a href="/" className="hover:text-leaf-500">
               Home
             </a>
@@ -185,16 +186,16 @@ export default async function ArticlePage({
               {post.category}
             </a>
             <span>/</span>
-            <span className="text-gray-700">{post.title}</span>
+            <span className="text-gray-700 line-clamp-2">{post.title}</span>
           </div>
         </nav>
 
-        <div className="mb-10">
-          <span className="category-badge mb-4 inline-block">
+        <div className="mb-8 sm:mb-10">
+          <span className="category-badge mb-3 sm:mb-4 inline-block">
             {post.category}
           </span>
 
-          <h1 className="font-display font-black text-4xl md:text-5xl leading-none tracking-tight text-bark mb-4">
+          <h1 className="font-display font-black text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight tracking-tight text-bark mb-3 sm:mb-4">
             {post.title}
           </h1>
 
@@ -203,7 +204,7 @@ export default async function ArticlePage({
           </div>
         </div>
 
-        <p className="text-lg text-gray-600 leading-relaxed mb-8 font-body">
+        <p className="text-base sm:text-lg text-gray-600 leading-relaxed mb-6 sm:mb-8 font-body">
           {post.description}
         </p>
 
@@ -250,6 +251,7 @@ export default async function ArticlePage({
         </div>
       </main>
 
+      <MobileShopBar slug={params.slug} category={post.category} />
       <Footer />
     </>
   );

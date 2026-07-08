@@ -6,25 +6,25 @@ export default function OfferStrip({
   source?: string;
 }) {
   return (
-    <section className="bg-bark text-white py-8 px-6">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+    <section className="bg-bark text-white py-6 sm:py-8 px-4 sm:px-6">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6">
         <div>
           <div className="text-leaf-300 text-xs font-bold uppercase tracking-widest mb-1">
             Exclusive offers
           </div>
-          <div className="font-display font-bold text-xl">
+          <div className="font-display font-bold text-lg sm:text-xl">
             Shop supplements with our tracked discount links
           </div>
-          <p className="text-white/60 text-sm mt-1">
+          <p className="text-white/60 text-xs sm:text-sm mt-1">
             iHerb vitamins & wellness · MyProtein protein & sports nutrition
           </p>
         </div>
-        <div className="flex flex-wrap gap-3 shrink-0">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full md:w-auto shrink-0">
           <AffiliateButton
             partner="iherb"
             source={`${source}-iherb`}
             variant="solid"
-            className="!bg-leaf-500 hover:!bg-leaf-600"
+            className="!bg-leaf-500 hover:!bg-leaf-600 w-full sm:w-auto"
           >
             🌿 iHerb Deals
           </AffiliateButton>
@@ -32,7 +32,7 @@ export default function OfferStrip({
             partner="myprotein"
             source={`${source}-myprotein`}
             variant="outline"
-            className="!border-white/40 !text-white hover:!bg-white/10 !bg-transparent"
+            className="!border-white/40 !text-white hover:!bg-white/10 !bg-transparent w-full sm:w-auto"
           >
             🥤 MyProtein Code
           </AffiliateButton>

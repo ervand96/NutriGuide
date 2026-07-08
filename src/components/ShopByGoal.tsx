@@ -54,7 +54,7 @@ const goals = [
 
 export default function ShopByGoal() {
   return (
-    <section className="max-w-6xl mx-auto px-6 py-16">
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
       <h2 className="font-display font-black text-3xl mb-2">
         Shop by Goal
       </h2>

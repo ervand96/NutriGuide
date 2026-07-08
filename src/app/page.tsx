@@ -5,6 +5,10 @@ import AffiliateButton from "@/components/AffiliateButton";
 import ShopByGoal from "@/components/ShopByGoal";
 import StoreGuide from "@/components/StoreGuide";
 import OfferStrip from "@/components/OfferStrip";
+import AnimateOnScroll from "@/components/AnimateOnScroll";
+import StarterStacks from "@/components/StarterStacks";
+import StorePicker from "@/components/StorePicker";
+import DietComparisonCards from "@/components/DietComparisonCards";
 import { getAllPosts } from "@/lib/posts";
 import { partnerForProduct, buttonTextForPartner } from "@/lib/affiliate.js";
 import Link from "next/link";
@@ -159,37 +163,37 @@ export default function Home() {
       <Navbar />
       <main>
         {/* HERO */}
-        <section className="bg-gradient-to-br from-leaf-500 to-leaf-700 text-white py-24 px-6">
+        <section className="bg-gradient-to-br from-leaf-500 via-leaf-600 to-leaf-700 hero-shimmer text-white py-16 sm:py-20 md:py-24 px-4 sm:px-6">
           <div className="max-w-3xl mx-auto text-center">
-            <p className="text-leaf-100 text-xs font-bold tracking-[4px] uppercase mb-6">
+            <p className="text-leaf-100 text-xs font-bold tracking-[3px] sm:tracking-[4px] uppercase mb-4 sm:mb-6 animate-on-scroll is-visible animate-fade-up">
               Trusted Nutrition Reviews
             </p>
-            <h1 className="font-display font-black text-5xl md:text-6xl leading-none tracking-tight mb-6">
+            <h1 className="font-display font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight mb-4 sm:mb-6">
               Find the Diet That
               <br />
               <span className="text-green-200">Actually Works</span>
             </h1>
-            <p className="text-white/80 text-xl leading-relaxed max-w-xl mx-auto mb-10">
+            <p className="text-white/80 text-base sm:text-lg md:text-xl leading-relaxed max-w-xl mx-auto mb-8 sm:mb-10 px-2">
               Science-backed reviews of diets, supplements, and programs — so
               you stop guessing and start seeing results.
             </p>
-            <div className="flex flex-wrap gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center max-w-lg sm:max-w-none mx-auto">
               <Link
                 href="/category/reviews"
-                className="bg-white text-leaf-600 font-bold px-8 py-4 rounded-xl hover:bg-green-50 transition-colors no-underline"
+                className="bg-white text-leaf-600 font-bold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:bg-green-50 transition-all duration-200 no-underline cta-pulse active:scale-[0.98]"
               >
                 Browse Reviews →
               </Link>
               <Link
                 href="/quiz"
-                className="border border-white/40 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/10 transition-colors no-underline"
+                className="border border-white/40 text-white font-bold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:bg-white/10 transition-colors no-underline"
               >
                 Take 2-Minute Quiz
               </Link>
-              <AffiliateButton partner="iherb" source="hero" variant="ghost">
+              <AffiliateButton partner="iherb" source="hero" variant="ghost" className="!py-3.5">
                 🌿 Shop iHerb Deals →
               </AffiliateButton>
-              <AffiliateButton partner="myprotein" source="hero" variant="ghost">
+              <AffiliateButton partner="myprotein" source="hero" variant="ghost" className="!py-3.5">
                 🥤 Shop MyProtein →
               </AffiliateButton>
             </div>
@@ -214,23 +218,31 @@ export default function Home() {
 
         <ShopByGoal />
 
+        <StorePicker />
+
+        <StarterStacks />
+
         {/* CATEGORIES */}
-        <section className="max-w-6xl mx-auto px-6 py-16">
-          <h2 className="font-display font-black text-3xl mb-2">
-            Browse by Topic
-          </h2>
-          <p className="text-gray-400 mb-8">Pick what you're looking for</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {categories.map((cat) => (
-              <Link key={cat.href} href={cat.href} className="no-underline">
-                <div className="bg-leaf-50 border border-leaf-100 rounded-2xl p-6 hover:bg-leaf-100 transition-colors cursor-pointer">
-                  <div className="text-4xl mb-3">{cat.emoji}</div>
-                  <div className="font-display font-bold text-xl text-bark mb-1">
-                    {cat.title}
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+          <AnimateOnScroll animation="fade-up">
+            <h2 className="font-display font-black text-2xl sm:text-3xl mb-2">
+              Browse by Topic
+            </h2>
+            <p className="text-gray-400 mb-6 sm:mb-8">Pick what you&apos;re looking for</p>
+          </AnimateOnScroll>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+            {categories.map((cat, i) => (
+              <AnimateOnScroll key={cat.href} animation="fade-up" delay={i * 80}>
+                <Link href={cat.href} className="no-underline block h-full">
+                  <div className="bg-leaf-50 border border-leaf-100 rounded-2xl p-5 sm:p-6 hover:bg-leaf-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer h-full">
+                    <div className="text-3xl sm:text-4xl mb-3">{cat.emoji}</div>
+                    <div className="font-display font-bold text-lg sm:text-xl text-bark mb-1">
+                      {cat.title}
+                    </div>
+                    <div className="text-gray-500 text-sm">{cat.desc}</div>
                   </div>
-                  <div className="text-gray-500 text-sm">{cat.desc}</div>
-                </div>
-              </Link>
+                </Link>
+              </AnimateOnScroll>
             ))}
           </div>
         </section>
@@ -301,17 +313,19 @@ export default function Home() {
         )}
 
         {/* FEATURED DEALS */}
-        <section className="bg-leaf-50/60 py-16 px-6">
+        <section className="bg-leaf-50/60 py-12 sm:py-16 px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
-            <h2 className="font-display font-black text-3xl mb-2">
-              Featured Deals
-            </h2>
-            <p className="text-gray-500 mb-8 max-w-2xl">
-              Our current top picks for where to actually buy your
-              supplements and nutrition products, with the best discount we
-              could find.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <AnimateOnScroll animation="fade-up">
+              <h2 className="font-display font-black text-2xl sm:text-3xl mb-2">
+                Featured Deals
+              </h2>
+              <p className="text-gray-500 mb-6 sm:mb-8 max-w-2xl text-sm sm:text-base">
+                Our current top picks for where to actually buy your
+                supplements and nutrition products, with the best discount we
+                could find.
+              </p>
+            </AnimateOnScroll>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {deals.map((d) => (
                 <div
                   key={d.partner}
@@ -345,19 +359,19 @@ export default function Home() {
         </section>
 
         {/* LATEST ARTICLES */}
-        <section className="max-w-6xl mx-auto px-6 py-16">
-          <div className="flex items-end justify-between mb-8">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
             <div>
-              <h2 className="font-display font-black text-3xl mb-1">
+              <h2 className="font-display font-black text-2xl sm:text-3xl mb-1">
                 Latest Articles
               </h2>
-              <p className="text-gray-400">
+              <p className="text-gray-400 text-sm sm:text-base">
                 Honest guides to help you eat better
               </p>
             </div>
             <Link
               href="/category/reviews"
-              className="text-leaf-500 font-bold text-sm hover:underline no-underline"
+              className="text-leaf-500 font-bold text-sm hover:underline no-underline shrink-0"
             >
               View all →
             </Link>
@@ -402,15 +416,20 @@ export default function Home() {
         </section>
 
         {/* DIET COMPARISON */}
-        <section className="max-w-6xl mx-auto px-6 pb-16">
-          <h2 className="font-display font-black text-3xl mb-2">
-            Compare Popular Diets at a Glance
-          </h2>
-          <p className="text-gray-400 mb-8 max-w-2xl">
-            A quick-reference overview. Read the full guide for each before
-            starting — individual results vary.
-          </p>
-          <div className="overflow-x-auto rounded-2xl border border-gray-100">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+          <AnimateOnScroll animation="fade-up">
+            <h2 className="font-display font-black text-2xl sm:text-3xl mb-2">
+              Compare Popular Diets at a Glance
+            </h2>
+            <p className="text-gray-400 mb-6 sm:mb-8 max-w-2xl text-sm sm:text-base">
+              A quick-reference overview. Read the full guide for each before
+              starting — individual results vary.
+            </p>
+          </AnimateOnScroll>
+
+          <DietComparisonCards diets={dietComparison} />
+
+          <div className="hidden md:block overflow-x-auto rounded-2xl border border-gray-100 mt-0">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-leaf-50">
@@ -499,17 +518,18 @@ export default function Home() {
         </section>
 
         {/* CTA BANNER */}
-        <section className="max-w-6xl mx-auto px-6 pb-16">
-          <div className="bg-bark rounded-3xl p-10 text-white text-center">
-            <h2 className="font-display font-black text-3xl mb-3">
-              Not sure where to start?
-            </h2>
-            <p className="text-white/70 mb-6 max-w-md mx-auto">
-              Take our 2-minute quiz and we'll match you with the best diet
-              for your goals and lifestyle — or jump straight to our top
-              supplement picks.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+          <AnimateOnScroll animation="scale-in">
+            <div className="bg-bark rounded-2xl sm:rounded-3xl p-6 sm:p-10 text-white text-center">
+              <h2 className="font-display font-black text-2xl sm:text-3xl mb-3">
+                Not sure where to start?
+              </h2>
+              <p className="text-white/70 mb-6 max-w-md mx-auto text-sm sm:text-base">
+                Take our 2-minute quiz and we&apos;ll match you with the best diet
+                for your goals and lifestyle — or jump straight to our top
+                supplement picks.
+              </p>
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center">
               <Link
                 href="/quiz"
                 className="inline-block bg-leaf-500 hover:bg-leaf-600 text-white font-bold px-8 py-4 rounded-xl transition-colors no-underline"
@@ -532,8 +552,9 @@ export default function Home() {
               >
                 🥤 Shop MyProtein →
               </AffiliateButton>
+              </div>
             </div>
-          </div>
+          </AnimateOnScroll>
         </section>
       </main>
       <Footer />
