@@ -9,10 +9,10 @@ interface Props {
 
 function Stars({ rating }: { rating: number }) {
   return (
-    <span className="text-amber-400 text-base">
+    <span className="text-amber-400 text-sm">
       {"★".repeat(Math.floor(rating))}
       {"☆".repeat(5 - Math.floor(rating))}
-      <span className="text-gray-400 font-body text-xs ml-2">{rating}/5</span>
+      <span className="text-gray-400 font-body text-xs ml-1">{rating}/5</span>
     </span>
   );
 }
@@ -33,19 +33,47 @@ export default function ProductCard({ product, slug = "product" }: Props) {
       </div>
 
       <div className="mt-2">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-3 mb-3">
-          <h3 className="font-display text-lg sm:text-xl font-bold text-bark leading-snug">
-            {product.name}
-          </h3>
-          <span className="font-body font-bold text-lg sm:text-xl text-leaf-600 shrink-0">
-            {product.price}
-          </span>
+        {/* Price + rating first — visible without scrolling */}
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-3 pb-3 border-b border-gray-100">
+          <div>
+            <div className="text-xs text-gray-400 uppercase tracking-wide mb-0.5">
+              Price from
+            </div>
+            <div className="font-display font-black text-3xl sm:text-4xl text-leaf-600 leading-none">
+              {product.price}
+            </div>
+          </div>
+          <Stars rating={product.rating} />
         </div>
-        <Stars rating={product.rating} />
-        <p className="font-body text-sm text-gray-600 leading-relaxed mt-4 mb-5">
+
+        <h3 className="font-display text-lg sm:text-xl font-bold text-bark leading-snug mb-4">
+          {product.name}
+        </h3>
+
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-5">
+          <Link
+            href={shop.primaryHref}
+            target="_blank"
+            rel="nofollow sponsored noopener"
+            className="no-underline flex-1 text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold px-4 py-3.5 rounded-xl transition-all duration-200 active:scale-[0.98] text-sm sm:text-base"
+          >
+            {shop.primaryLabel}
+          </Link>
+          <Link
+            href={shop.secondaryHref}
+            target="_blank"
+            rel="nofollow sponsored noopener"
+            className="no-underline flex-1 text-center border-2 border-leaf-500 text-leaf-600 hover:bg-leaf-50 font-bold px-4 py-3.5 rounded-xl transition-all duration-200 active:scale-[0.98] text-sm sm:text-base"
+          >
+            {shop.secondaryLabel}
+          </Link>
+        </div>
+
+        <p className="font-body text-sm text-gray-600 leading-relaxed mb-5">
           {product.description}
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 mb-6">
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
           <div>
             <div className="font-body font-bold text-xs text-leaf-600 uppercase tracking-widest mb-2">
               ✅ Pros
@@ -66,25 +94,6 @@ export default function ProductCard({ product, slug = "product" }: Props) {
               </div>
             ))}
           </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-          <Link
-            href={shop.primaryHref}
-            target="_blank"
-            rel="nofollow sponsored noopener"
-            className="no-underline flex-1 text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold px-4 py-3.5 sm:py-4 rounded-xl transition-all duration-200 active:scale-[0.98] text-sm sm:text-base"
-          >
-            {shop.primaryLabel}
-          </Link>
-          <Link
-            href={shop.secondaryHref}
-            target="_blank"
-            rel="nofollow sponsored noopener"
-            className="no-underline flex-1 text-center border-2 border-leaf-500 text-leaf-600 hover:bg-leaf-50 font-bold px-4 py-3.5 sm:py-4 rounded-xl transition-all duration-200 active:scale-[0.98] text-sm sm:text-base"
-          >
-            {shop.secondaryLabel}
-          </Link>
         </div>
       </div>
     </div>

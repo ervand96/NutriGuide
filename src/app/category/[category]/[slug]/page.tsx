@@ -3,6 +3,7 @@ import Footer from "../../../../components/Footer";
 import RelatedArticles from "../../../../components/RelatedArticles";
 import ArticleShopCta from "../../../../components/ArticleShopCta";
 import ArticleBottomShop from "../../../../components/ArticleBottomShop";
+import ArticleTopPicks from "../../../../components/ArticleTopPicks";
 import MobileShopBar from "../../../../components/MobileShopBar";
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "../../../../lib/posts";
@@ -69,12 +70,12 @@ function quickAnswerLines(products: any[]) {
   );
   const lines: string[] = [];
   const top = sorted.find((p) => p.highlight) || sorted[0];
-  if (top) lines.push(`🥇 Best Overall: ${top.name}${top.badge ? ` (${top.badge})` : ""}`);
+  if (top) lines.push(`🥇 Best Overall: ${top.name}${top.badge ? ` (${top.badge})` : ""}${top.price ? ` — ${top.price}` : ""}`);
   const budget = sorted.find((p) =>
     String(p.badge || "").toLowerCase().includes("budget"),
   );
-  if (budget) lines.push(`💰 Best Budget: ${budget.name}`);
-  else if (sorted[1]) lines.push(`💰 Also consider: ${sorted[1].name}`);
+  if (budget) lines.push(`💰 Best Budget: ${budget.name}${budget.price ? ` — ${budget.price}` : ""}`);
+  else if (sorted[1]) lines.push(`💰 Also consider: ${sorted[1].name}${sorted[1].price ? ` — ${sorted[1].price}` : ""}`);
   lines.push("🧠 Always consult a healthcare professional before starting");
   return lines;
 }
@@ -220,6 +221,10 @@ export default async function ArticlePage({
           </ul>
         </div>
 
+        {products.length > 0 && (
+          <ArticleTopPicks products={products} slug={params.slug} />
+        )}
+
         <div
           className="article-content mb-10"
           dangerouslySetInnerHTML={{ __html: contentHtml }}
@@ -229,9 +234,12 @@ export default async function ArticlePage({
 
         {products.length > 0 && (
           <section className="mb-10">
-            <h2 className="font-display font-black text-2xl mb-6">
-              Our Top Picks
+            <h2 className="font-display font-black text-2xl mb-2">
+              Full Product Reviews
             </h2>
+            <p className="text-gray-500 text-sm mb-6">
+              Detailed pros, cons, and why we picked each product.
+            </p>
             {products.map((product: any) => (
               <ProductCard
                 key={product.rank}

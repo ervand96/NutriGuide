@@ -266,37 +266,42 @@ export default function Home() {
                 return (
                 <div
                   key={`${p.postSlug}-${i}`}
-                  className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col hover:border-leaf-200 hover:shadow-sm transition-all"
+                  className="bg-white border border-gray-100 rounded-2xl p-5 sm:p-6 flex flex-col hover:border-leaf-200 hover:shadow-sm transition-all"
                 >
-                  <div className="flex items-start justify-between mb-3">
-                    {p.badge && (
-                      <span className="inline-block bg-leaf-100 text-leaf-700 text-xs font-bold px-2 py-1 rounded-full">
-                        {p.badge}
+                  <div className="flex items-start justify-between gap-3 mb-3 pb-3 border-b border-gray-50">
+                    <div className="flex flex-wrap gap-2">
+                      {p.badge && (
+                        <span className="inline-block bg-leaf-100 text-leaf-700 text-xs font-bold px-2 py-1 rounded-full">
+                          {p.badge}
+                        </span>
+                      )}
+                      {p.rating && (
+                        <span className="text-amber-500 text-sm font-bold">
+                          ★ {p.rating}
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="text-[10px] text-gray-400 uppercase tracking-wide">
+                        From
+                      </div>
+                      <span className="font-display font-black text-xl sm:text-2xl text-leaf-600 leading-none">
+                        {p.price}
                       </span>
-                    )}
-                    {p.rating && (
-                      <span className="text-amber-500 text-sm font-bold">
-                        ★ {p.rating}
-                      </span>
-                    )}
+                    </div>
                   </div>
-                  <div className="font-display font-bold text-lg text-bark mb-1">
+                  <div className="font-display font-bold text-base sm:text-lg text-bark mb-2 leading-snug">
                     {p.name}
                   </div>
-                  <p className="text-gray-500 text-sm leading-relaxed mb-3 flex-1">
+                  <p className="text-gray-500 text-sm leading-relaxed mb-4 flex-1">
                     {p.description}
                   </p>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="font-display font-black text-leaf-600">
-                      {p.price}
-                    </span>
-                    <Link
-                      href={`/category/${p.postCategory.toLowerCase()}/${p.postSlug}`}
-                      className="text-gray-400 hover:text-leaf-500 text-xs no-underline"
-                    >
-                      Read full review →
-                    </Link>
-                  </div>
+                  <Link
+                    href={`/category/${p.postCategory.toLowerCase()}/${p.postSlug}`}
+                    className="text-gray-400 hover:text-leaf-500 text-xs no-underline mb-3"
+                  >
+                    Read full review →
+                  </Link>
                   <Link
                     href={buyUrl}
                     target="_blank"
