@@ -6,6 +6,7 @@ import {
   isValidPartner,
   partnerForProduct,
   buttonTextForPartner,
+  shopLinksForProduct,
 } from "../src/lib/affiliate.js";
 
 describe("affiliate partners", () => {
@@ -53,5 +54,21 @@ describe("affiliate partners", () => {
       buttonTextForPartner("myprotein"),
       "Check Price on MyProtein",
     );
+  });
+
+  it("shopLinksForProduct provides primary and secondary store links", () => {
+    const links = shopLinksForProduct(
+      {
+        name: "NOW Foods Magnesium",
+        affiliateUrl: "/go/iherb?source=test&q=magnesium",
+        buttonText: "Check Price on iHerb",
+      },
+      "test-card",
+    );
+    assert.equal(links.primary, "iherb");
+    assert.equal(links.secondary, "myprotein");
+    assert.match(links.primaryHref, /^\/go\/iherb/);
+    assert.match(links.secondaryHref, /^\/go\/myprotein/);
+    assert.match(links.secondaryLabel, /MyProtein/);
   });
 });

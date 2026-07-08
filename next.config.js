@@ -12,6 +12,15 @@ const nextConfig = {
       { protocol: "https", hostname: "**.myprotein.com" },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/favicon.ico",
+        destination: "/logo.svg",
+        permanent: false,
+      },
+    ];
+  },
   webpack: (config) => {
     config.resolve.alias["@"] = path.resolve(__dirname, "src");
     return config;

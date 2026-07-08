@@ -7,7 +7,6 @@ const PORT = 3456;
 const BASE = `http://localhost:${PORT}`;
 
 let server;
-let serverReady = false;
 
 function waitForServer(maxMs = 60000) {
   const start = Date.now();
@@ -15,10 +14,7 @@ function waitForServer(maxMs = 60000) {
     while (Date.now() - start < maxMs) {
       try {
         const res = await fetch(BASE);
-        if (res.ok || res.status === 404) {
-          serverReady = true;
-          return;
-        }
+        if (res.ok) return;
       } catch {
         // not ready
       }
@@ -61,11 +57,63 @@ describe("site integration", () => {
     assert.doesNotMatch(html, /Amazon Associates/);
   });
 
-  it("quiz page loads", async () => {
+  it("homepage shows product shelf section", async () => {
+    const res = await fetch(BASE);
+    const html = await res.text();
+    assert.match(html, /Top Rated Products/);
+    assert.match(html, /product-img\?name=/);
+    assert.match(html, /Add to cart/);
+  });
+
+  it("quiz page loads with shared navbar", async () => {
     const res = await fetch(`${BASE}/quiz`);
     assert.equal(res.status, 200);
     const html = await res.text();
     assert.match(html, /Find Your Perfect Diet/);
+    assert.match(html, /iHerb/);
+  });
+
+  it("static pages load", async () => {
+    for (const path of [
+      "/about",
+      "/contact",
+      "/privacy-policy",
+      "/affiliate-disclosure",
+    ]) {
+      const res = await fetch(`${BASE}${path}`);
+      assert.equal(res.status, 200, `${path} should return 200`);
+    }
+  });
+
+  it("favicon.ico does not 404", async () => {
+    const res = await fetch(`${BASE}/favicon.ico`, { redirect: "manual" });
+    assert.ok(
+      res.status === 200 || [301, 302, 307, 308].includes(res.status),
+      `favicon should not 404, got ${res.status}`,
+    );
+  });
+
+  it("product-img route returns SVG", async () => {
+    const res = await fetch(
+      `${BASE}/product-img?name=NOW%20Foods%20Ashwagandha`,
+    );
+    assert.equal(res.status, 200);
+    const type = res.headers.get("content-type") || "";
+    assert.match(type, /image\/svg\+xml/);
+    const body = await res.text();
+    assert.match(body, /<svg/);
+  });
+
+  it("product-img works without query params", async () => {
+    const res = await fetch(`${BASE}/product-img`);
+    assert.equal(res.status, 200);
+  });
+
+  it("seo routes load", async () => {
+    for (const path of ["/sitemap.xml", "/robots.txt", "/rss.xml"]) {
+      const res = await fetch(`${BASE}${path}`);
+      assert.equal(res.status, 200, `${path} should return 200`);
+    }
   });
 
   it("affiliate disclosure mentions only iHerb and MyProtein", async () => {
@@ -111,14 +159,31 @@ describe("site integration", () => {
     }
   });
 
-  it("first article page loads", async () => {
+  it("article page loads with product shelf and dual store buttons", async () => {
     const { getAllPosts } = await import("../src/lib/posts.js");
-    const post = getAllPosts()[0];
+    const post =
+      getAllPosts().find((p) => p.products?.length >= 2) || getAllPosts()[0];
     const res = await fetch(
       `${BASE}/category/${post.category.toLowerCase()}/${post.slug}`,
     );
     assert.equal(res.status, 200);
     const html = await res.text();
     assert.match(html, new RegExp(post.title.slice(0, 20)));
+    if (post.products?.length) {
+      assert.match(html, /Shop Our Top Picks|Top Picks/);
+      assert.match(html, /product-img\?name=/);
+      assert.match(html, /Also check/i);
+      assert.match(html, /Shop both of our trusted stores/i);
+    }
+  });
+
+  it("invalid article slug returns 404", async () => {
+    const res = await fetch(`${BASE}/category/reviews/this-slug-does-not-exist-99999`);
+    assert.equal(res.status, 404);
+  });
+
+  it("logo.svg is served", async () => {
+    const res = await fetch(`${BASE}/logo.svg`);
+    assert.equal(res.status, 200);
   });
 });

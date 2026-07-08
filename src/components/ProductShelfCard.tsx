@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Product } from "@/types";
 import { shopLinksForProduct } from "@/lib/affiliate.js";
 import {
@@ -61,13 +60,13 @@ export default function ProductShelfCard({ product, slug, compact }: Props) {
             </span>
           )}
           {imageUrl ? (
-            <Image
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
               src={imageUrl}
               alt={product.name}
-              fill
-              className="object-contain p-2 bg-white"
-              sizes={compact ? "168px" : "220px"}
-              unoptimized={imageUrl.startsWith("/product-img") || imageUrl.endsWith(".svg")}
+              className="absolute inset-0 w-full h-full object-contain p-2 bg-white"
+              loading="lazy"
+              decoding="async"
             />
           ) : (
             <div className="text-center p-4">
