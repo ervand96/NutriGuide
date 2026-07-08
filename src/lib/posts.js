@@ -28,17 +28,20 @@ import {
   partnerForProduct,
   buttonTextForPartner,
 } from "./affiliate.js";
+import { getProductImageUrl } from "./product-image.js";
 
 function normalizeProduct(product, slug, category) {
   if (!product || typeof product !== "object") return product;
 
   const partner = partnerForProduct(product.name || "", category);
   const affiliateUrl = `/go/${partner}?source=${encodeURIComponent(slug)}&q=${encodeURIComponent(product.name || "")}`;
+  const imageUrl = getProductImageUrl(product);
 
   return {
     ...product,
     affiliateUrl,
     buttonText: buttonTextForPartner(partner),
+    ...(imageUrl ? { imageUrl } : {}),
   };
 }
 

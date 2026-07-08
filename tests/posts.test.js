@@ -28,6 +28,13 @@ describe("posts", () => {
     assert.equal(found.title, first.title);
   });
 
+  it("adds imageUrl to normalized products", () => {
+    const post = getAllPosts().find((p) => p.products?.length);
+    assert.ok(post);
+    assert.ok(post.products[0].imageUrl);
+    assert.match(post.products[0].imageUrl, /^(\/product-img|https:\/\/)/);
+  });
+
   it("normalizes protein products to myprotein affiliate URLs", () => {
     const posts = getAllPosts();
     const proteinPost = posts.find((p) =>

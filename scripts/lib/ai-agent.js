@@ -129,7 +129,8 @@ Minimum 350 words. End with a brief conclusion paragraph.`,
   const productsRaw = await askCursor(
     `For article "${title}" (${category}), return ONLY a valid JSON array of 3 products.
 Each object must have: rank, name, badge, rating (number), price (string like "$24.99"),
-description, pros (array of 3 strings), cons (array of 2 strings), highlight (boolean).
+description, pros (array of 3 strings), cons (array of 2 strings), highlight (boolean),
+imageUrl (optional string — direct https URL to product image on iherb.com or myprotein.com CDN if known).
 Use real supplement/diet product names sold on iHerb or MyProtein.
 No markdown fences, no commentary — raw JSON array only.`,
   );

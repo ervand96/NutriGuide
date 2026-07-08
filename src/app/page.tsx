@@ -9,7 +9,7 @@ import AnimateOnScroll from "@/components/AnimateOnScroll";
 import StarterStacks from "@/components/StarterStacks";
 import StorePicker from "@/components/StorePicker";
 import DietComparisonCards from "@/components/DietComparisonCards";
-import ProductShelfCard from "@/components/ProductShelfCard";
+import ProductShelf from "@/components/ProductShelf";
 import { getAllPosts } from "@/lib/posts";
 import Link from "next/link";
 
@@ -249,38 +249,28 @@ export default function Home() {
 
         {/* TOP RATED PRODUCTS */}
         {topProducts.length > 0 && (
-          <section className="max-w-6xl mx-auto px-6 pb-16">
-            <h2 className="font-display font-black text-3xl mb-2">
-              Top Rated Products
-            </h2>
-            <p className="text-gray-400 mb-6 sm:mb-8 max-w-2xl text-sm sm:text-base">
-              Swipe to browse — like a store shelf. Tap to buy on iHerb or MyProtein.
-            </p>
-            <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide -mx-1 px-1">
-              {topProducts.map((p, i) => {
-                const product = {
-                  rank: i + 1,
-                  name: p.name || "",
-                  badge: p.badge || "",
-                  rating: p.rating || 4.5,
-                  price: p.price || "",
-                  description: p.description || "",
-                  pros: [],
-                  cons: [],
-                  affiliateUrl: p.affiliateUrl || "",
-                  buttonText: p.buttonText || "",
-                  highlight: i === 0,
-                };
-                return (
-                  <ProductShelfCard
-                    key={`${p.postSlug}-${i}`}
-                    product={product}
-                    slug={`home-${p.postSlug}`}
-                    compact
-                  />
-                );
-              })}
-            </div>
+          <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+            <ProductShelf
+              title="Top Rated Products"
+              subtitle="Swipe to browse — like a store shelf. Tap to buy on iHerb or MyProtein."
+              products={topProducts.map((p, i) => ({
+                rank: i + 1,
+                name: p.name || "",
+                badge: p.badge || "",
+                rating: p.rating || 4.5,
+                price: p.price || "",
+                description: p.description || "",
+                pros: p.pros || [],
+                cons: p.cons || [],
+                affiliateUrl: p.affiliateUrl || "",
+                buttonText: p.buttonText || "",
+                imageUrl: p.imageUrl,
+                highlight: i === 0,
+              }))}
+              slugPrefix="home"
+              compact
+              className="-mx-0"
+            />
           </section>
         )}
 

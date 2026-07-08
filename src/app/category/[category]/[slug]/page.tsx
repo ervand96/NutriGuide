@@ -222,11 +222,7 @@ export default async function ArticlePage({
         </div>
 
         {products.length > 0 && (
-          <ArticleTopPicks
-            products={products}
-            slug={params.slug}
-            category={post.category}
-          />
+          <ArticleTopPicks products={products} slug={params.slug} />
         )}
 
         <div

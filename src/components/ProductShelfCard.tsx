@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Product } from "@/types";
 import { shopLinksForProduct } from "@/lib/affiliate.js";
 import {
@@ -35,6 +36,7 @@ export default function ProductShelfCard({ product, slug, compact }: Props) {
   const title = compact ? productShortName(product.name) : product.name;
   const reviews = reviewCountFromProduct(product);
   const soldHint = soldHintFromProduct(product);
+  const imageUrl = product.imageUrl || null;
 
   return (
     <article
@@ -44,7 +46,6 @@ export default function ProductShelfCard({ product, slug, compact }: Props) {
           : "border-gray-100"
       } ${compact ? "w-[168px]" : "w-[200px] sm:w-[220px]"}`}
     >
-      {/* Product image area — iHerb-style */}
       <Link
         href={shop.primaryHref}
         target="_blank"
@@ -52,21 +53,32 @@ export default function ProductShelfCard({ product, slug, compact }: Props) {
         className="no-underline block"
       >
         <div
-          className={`relative aspect-square bg-gradient-to-br ${visual.bg} flex items-center justify-center p-4`}
+          className={`relative aspect-square bg-gradient-to-br ${visual.bg} flex items-center justify-center overflow-hidden`}
         >
           {product.badge && (
-            <span className="absolute top-2 left-2 text-[10px] font-bold bg-leaf-500 text-white px-2 py-0.5 rounded-full max-w-[90%] truncate">
+            <span className="absolute top-2 left-2 z-10 text-[10px] font-bold bg-leaf-500 text-white px-2 py-0.5 rounded-full max-w-[90%] truncate">
               {product.badge}
             </span>
           )}
-          <div className="text-center">
-            <div className={`${compact ? "text-5xl" : "text-6xl"} mb-2 drop-shadow-sm`}>
-              {visual.emoji}
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt={product.name}
+              fill
+              className="object-contain p-2 bg-white"
+              sizes={compact ? "168px" : "220px"}
+              unoptimized={imageUrl.startsWith("/product-img") || imageUrl.endsWith(".svg")}
+            />
+          ) : (
+            <div className="text-center p-4">
+              <div className={`${compact ? "text-5xl" : "text-6xl"} mb-2 drop-shadow-sm`}>
+                {visual.emoji}
+              </div>
+              <div className="text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider truncate max-w-[160px]">
+                {brand}
+              </div>
             </div>
-            <div className="text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider truncate max-w-[160px]">
-              {brand}
-            </div>
-          </div>
+          )}
         </div>
       </Link>
 

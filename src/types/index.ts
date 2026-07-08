@@ -19,4 +19,5 @@ export interface Product {
   affiliateUrl: string
   buttonText: string;
   highlight?: boolean | string;
+  imageUrl?: string;
 }
