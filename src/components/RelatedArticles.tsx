@@ -33,7 +33,7 @@ export default function RelatedArticles({
         </span>
       </div>
 
-      <div className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:pb-0 md:snap-none md:items-stretch">
+      <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:pb-0 md:snap-none md:items-stretch">
         {related.map((post, i) => (
           <GuideShelfCard key={post.slug} post={post} rank={i + 1} />
         ))}

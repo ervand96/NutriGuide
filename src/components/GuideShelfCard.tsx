@@ -117,7 +117,7 @@ export default function GuideShelfCard({
 
   return (
     <article
-      className={`group flex flex-col shrink-0 snap-start overflow-hidden rounded-3xl bg-white/90 backdrop-blur-sm border border-white shadow-[0_8px_30px_rgba(44,36,22,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(45,122,58,0.12)] w-[200px] sm:w-[220px] md:w-full ${
+      className={`group flex flex-col shrink-0 snap-start overflow-hidden rounded-3xl bg-white/90 backdrop-blur-sm border border-white shadow-[0_8px_30px_rgba(44,36,22,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(45,122,58,0.12)] w-[min(200px,78vw)] sm:w-[220px] md:w-full ${
         product.highlight ? "ring-2 ring-leaf-400/70" : ""
       }`}
     >
@@ -186,13 +186,13 @@ export default function GuideShelfCard({
           href={shop.primaryHref}
           target="_blank"
           rel="nofollow sponsored noopener"
-          className="no-underline block w-full text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold text-sm py-3 rounded-xl transition-colors active:scale-[0.98]"
+          className="no-underline flex min-h-[44px] w-full items-center justify-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold text-sm py-3 rounded-xl transition-colors active:scale-[0.98]"
         >
           Check price →
         </Link>
         <Link
           href={guideHref}
-          className="mt-2 text-center text-xs font-semibold text-leaf-600 no-underline hover:underline"
+          className="mt-2 inline-flex min-h-[44px] w-full items-center justify-center text-sm font-semibold text-leaf-600 no-underline hover:underline"
         >
           Read full guide →
         </Link>

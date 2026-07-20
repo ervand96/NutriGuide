@@ -31,7 +31,7 @@ export default function Navbar() {
             alt="NutriGuide logo"
             className="h-8 w-8 sm:h-9 sm:w-9 object-contain"
           />
-          <span className="font-display font-black text-lg sm:text-xl text-leaf-500 tracking-tight">
+          <span className="font-display font-black text-base sm:text-xl text-leaf-500 tracking-tight">
             NutriGuide
           </span>
         </Link>
@@ -58,7 +58,7 @@ export default function Navbar() {
           <AffiliateButton
             partner="iherb"
             source="navbar"
-            className="!px-2.5 sm:!px-3 !py-2 text-xs sm:!text-sm"
+            className="hidden sm:inline-flex !px-2.5 sm:!px-3 !py-2 text-xs sm:!text-sm"
           >
             iHerb →
           </AffiliateButton>
@@ -85,7 +85,7 @@ export default function Navbar() {
       {open && (
         <>
           <div
-            className="md:hidden fixed inset-0 top-14 bg-black/20 z-40"
+            className="md:hidden fixed inset-0 top-14 sm:top-16 bg-black/20 z-40"
             onClick={() => setOpen(false)}
             aria-hidden
           />
@@ -101,7 +101,7 @@ export default function Navbar() {
               </Link>
             ))}
             <Link
-              href="/category/reviews"
+              href="/best-picks"
               className="text-gray-700 font-medium no-underline py-3 px-2 rounded-xl hover:bg-leaf-50 min-h-[44px] flex items-center"
               onClick={() => setOpen(false)}
             >

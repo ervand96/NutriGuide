@@ -3,7 +3,7 @@ import { SITE_CONTAINER } from "@/lib/layout.js";
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-100 mt-16 sm:mt-24 pb-[env(safe-area-inset-bottom)]">
+    <footer className="bg-white border-t border-gray-100 mt-16 sm:mt-24 pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-[env(safe-area-inset-bottom)]">
       <div className={`${SITE_CONTAINER} py-10 sm:py-12`}>
         <div className="flex flex-col lg:flex-row justify-between gap-10 mb-8">
           <div className="max-w-sm">
@@ -22,7 +22,7 @@ export default function Footer() {
                 partner="iherb"
                 source="footer"
                 variant="outline"
-                className="!px-4 !py-2.5 text-sm flex-1 sm:flex-none min-w-[140px]"
+                className="!px-4 !py-2.5 text-sm flex-1 sm:flex-none min-w-[140px] min-h-[44px]"
               >
                 🌿 iHerb Deals
               </AffiliateButton>
@@ -30,7 +30,7 @@ export default function Footer() {
                 partner="myprotein"
                 source="footer"
                 variant="outline"
-                className="!px-4 !py-2.5 text-sm flex-1 sm:flex-none min-w-[140px]"
+                className="!px-4 !py-2.5 text-sm flex-1 sm:flex-none min-w-[140px] min-h-[44px]"
               >
                 🥤 MyProtein Deals
               </AffiliateButton>

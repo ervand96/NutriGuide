@@ -249,7 +249,7 @@ export default function Home() {
               {deals.map((d) => (
                 <div
                   key={d.partner}
-                  className="bg-white border border-gray-100 rounded-2xl p-8 flex flex-col"
+                  className="bg-white border border-gray-100 rounded-2xl p-5 sm:p-8 flex flex-col"
                 >
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-4xl">{d.emoji}</span>
@@ -313,20 +313,20 @@ export default function Home() {
         </section>
 
         {/* WHY TRUST US */}
-        <section className="max-w-6xl mx-auto px-6 pb-16">
-          <h2 className="font-display font-black text-3xl mb-2">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+          <h2 className="font-display font-black text-2xl sm:text-3xl mb-2">
             Why Trust NutriGuide
           </h2>
-          <p className="text-gray-400 mb-8 max-w-2xl">
+          <p className="text-gray-400 mb-6 sm:mb-8 max-w-2xl text-sm sm:text-base">
             We built NutriGuide because most nutrition advice online is
             either paid promotion or unverified opinion. Here&apos;s how we&apos;re
             different.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {trustPoints.map((t) => (
               <div
                 key={t.title}
-                className="flex gap-4 bg-white border border-gray-100 rounded-2xl p-6"
+                className="flex gap-3 sm:gap-4 bg-white border border-gray-100 rounded-2xl p-5 sm:p-6"
               >
                 <span className="text-3xl">{t.emoji}</span>
                 <div>

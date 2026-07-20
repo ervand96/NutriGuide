@@ -50,14 +50,14 @@ export default function DietComparisonCards({ diets }: { diets: DietRow[] }) {
               href={`/go/${d.shop.partner}?source=${d.shop.source}&q=${encodeURIComponent(d.shop.q)}`}
               target="_blank"
               rel="nofollow sponsored noopener"
-              className="block text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold py-2.5 rounded-xl no-underline text-sm transition-colors"
+              className="inline-flex min-h-[44px] w-full items-center justify-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold py-2.5 rounded-xl no-underline text-sm transition-colors"
             >
               Shop {d.name} Essentials →
             </Link>
           ) : (
             <Link
               href="/quiz"
-              className="block text-center border-2 border-leaf-500 text-leaf-600 font-bold py-2.5 rounded-xl no-underline text-sm"
+              className="inline-flex min-h-[44px] w-full items-center justify-center border-2 border-leaf-500 text-leaf-600 font-bold py-2.5 rounded-xl no-underline text-sm"
             >
               Find My Diet →
             </Link>

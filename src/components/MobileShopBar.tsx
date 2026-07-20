@@ -22,17 +22,17 @@ export default function MobileShopBar({ slug, category }: Props) {
           href={`/go/iherb?source=mobile-bar-${slug}`}
           target="_blank"
           rel="nofollow sponsored noopener"
-          className="flex-1 text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold text-sm py-3 rounded-xl no-underline transition-colors"
+          className="flex-1 text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold text-sm py-3.5 min-h-[48px] flex items-center justify-center rounded-xl no-underline transition-colors"
         >
-          🌿 iHerb
+          iHerb
         </Link>
         <Link
           href={`/go/myprotein?source=mobile-bar-${slug}${isSports ? "&q=protein" : ""}`}
           target="_blank"
           rel="nofollow sponsored noopener"
-          className="flex-1 text-center border-2 border-leaf-500 text-leaf-600 font-bold text-sm py-3 rounded-xl no-underline transition-colors hover:bg-leaf-50"
+          className="flex-1 text-center border-2 border-leaf-500 text-leaf-600 font-bold text-sm py-3.5 min-h-[48px] flex items-center justify-center rounded-xl no-underline transition-colors hover:bg-leaf-50"
         >
-          🥤 MyProtein
+          MyProtein
         </Link>
       </div>
     </div>

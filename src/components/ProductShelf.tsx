@@ -48,8 +48,8 @@ export default function ProductShelf({
           <span className="text-leaf-700 text-xs font-bold bg-white/80 border border-leaf-100 px-3 py-1.5 rounded-full">
             {sorted.length} top picks
           </span>
-          <span className="hidden sm:inline text-gray-400 text-xs">
-            Swipe on mobile →
+          <span className="inline md:hidden text-gray-400 text-xs">
+            Swipe →
           </span>
         </div>
       </div>
@@ -71,7 +71,7 @@ export default function ProductShelf({
             partner="iherb"
             source={`shelf-${slugPrefix}`}
             query={sorted[0]?.name?.split(",")[0]}
-            className="sm:w-auto sm:min-w-[220px] !py-3.5 !text-sm !px-8"
+            className="sm:w-auto sm:min-w-[220px] !py-3.5 !text-sm !px-8 min-h-[48px]"
           >
             🌿 View all on iHerb →
           </AffiliateButton>
@@ -79,7 +79,7 @@ export default function ProductShelf({
             partner="myprotein"
             source={`shelf-${slugPrefix}`}
             variant="outline"
-            className="sm:w-auto sm:min-w-[220px] !py-3.5 !text-sm !px-8 !bg-white"
+            className="sm:w-auto sm:min-w-[220px] !py-3.5 !text-sm !px-8 !bg-white min-h-[48px]"
           >
             🥤 View all on MyProtein →
           </AffiliateButton>

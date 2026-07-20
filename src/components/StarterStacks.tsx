@@ -33,7 +33,7 @@ const stacks = [
 
 export default function StarterStacks() {
   return (
-    <section className="bg-gradient-to-b from-leaf-50/80 to-cream py-16 px-4 sm:px-6">
+    <section className="bg-gradient-to-b from-leaf-50/80 to-cream py-12 sm:py-16 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         <AnimateOnScroll animation="fade-up">
           <h2 className="font-display font-black text-2xl sm:text-3xl mb-2">

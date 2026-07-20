@@ -38,7 +38,7 @@ export default function StartHereStrip() {
               <Link
                 key={p.href}
                 href={p.href}
-                className="no-underline rounded-2xl border border-leaf-100 bg-leaf-50/60 hover:bg-leaf-50 px-4 py-3 transition-colors"
+                className="no-underline rounded-2xl border border-leaf-100 bg-leaf-50/60 hover:bg-leaf-50 px-4 py-3.5 min-h-[64px] flex flex-col justify-center transition-colors"
               >
                 <div className="font-display font-bold text-bark text-sm sm:text-base">
                   {p.title} →
@@ -49,7 +49,7 @@ export default function StartHereStrip() {
               </Link>
             ))}
           </div>
-          <div className="flex gap-2 shrink-0">
+          <div className="hidden lg:flex gap-2 shrink-0">
             <AffiliateButton
               partner="iherb"
               source="start-here"

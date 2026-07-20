@@ -27,7 +27,7 @@ export default function CategoryNavStrip({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-semibold no-underline transition-colors ${
+                className={`shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-4 py-2.5 rounded-full text-sm font-semibold no-underline transition-colors ${
                   isActive
                     ? "bg-leaf-500 text-white"
                     : "bg-leaf-50 text-leaf-700 hover:bg-leaf-100"

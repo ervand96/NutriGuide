@@ -49,7 +49,7 @@ export default function ShareButtons({
           href={l.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm font-semibold text-bark bg-leaf-50 hover:bg-leaf-100 border border-leaf-100 px-3 py-1.5 rounded-full no-underline transition-colors"
+          className="inline-flex items-center min-h-[44px] text-sm font-semibold text-bark bg-leaf-50 hover:bg-leaf-100 border border-leaf-100 px-4 py-2.5 rounded-full no-underline transition-colors"
         >
           {l.label}
         </a>
@@ -57,7 +57,7 @@ export default function ShareButtons({
       <button
         type="button"
         onClick={copyLink}
-        className="text-sm font-semibold text-bark bg-white hover:bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-full transition-colors"
+        className="inline-flex items-center min-h-[44px] text-sm font-semibold text-bark bg-white hover:bg-gray-50 border border-gray-200 px-4 py-2.5 rounded-full transition-colors"
       >
         {copied ? "Copied!" : "Copy link"}
       </button>

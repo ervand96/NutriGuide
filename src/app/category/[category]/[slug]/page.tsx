@@ -149,7 +149,7 @@ export default async function ArticlePage({
             : undefined
         }
       />
-      <OfferStrip source={`article-${params.slug}`} />
+      <OfferStrip source={`article-${params.slug}`} hideOnMobile />
 
       <script
         type="application/ld+json"
@@ -193,7 +193,7 @@ export default async function ArticlePage({
             {post.description}
           </p>
 
-          <div className="bg-leaf-50 border border-leaf-100 rounded-2xl p-6 sm:p-8 mb-10">
+          <div className="bg-leaf-50 border border-leaf-100 rounded-2xl p-5 sm:p-8 mb-8 sm:mb-10">
             <div className="font-bold text-leaf-600 text-sm uppercase tracking-wider mb-3">
               ⚡ Quick Answer
             </div>

@@ -23,21 +23,21 @@ const stores = [
 
 export default function StoreGuide() {
   return (
-    <section className="bg-gradient-to-b from-leaf-50/80 to-white py-16 px-6">
+    <section className="bg-gradient-to-b from-leaf-50/80 to-white py-12 sm:py-16 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
-        <h2 className="font-display font-black text-3xl mb-2 text-center">
+        <h2 className="font-display font-black text-2xl sm:text-3xl mb-2 text-center">
           Where to Buy — Our Two Trusted Stores
         </h2>
-        <p className="text-gray-500 text-center mb-10 max-w-2xl mx-auto">
+        <p className="text-gray-500 text-center mb-8 sm:mb-10 max-w-2xl mx-auto text-sm sm:text-base">
           We only link to iHerb and MyProtein. Click any button below — your
           discount code is applied automatically and we earn a small
           commission at no extra cost to you.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {stores.map((s) => (
             <div
               key={s.partner}
-              className="bg-white border-2 border-leaf-100 rounded-3xl p-8 flex flex-col"
+              className="bg-white border-2 border-leaf-100 rounded-3xl p-5 sm:p-8 flex flex-col"
             >
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-4xl">{s.emoji}</span>
