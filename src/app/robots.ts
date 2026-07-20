@@ -16,12 +16,11 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/go/"],
       },
     ],
-    // Prefer /sitemaps/pages.* — fresh paths avoid GSC cached "Couldn't fetch"
     sitemap: [
+      `${SITE_URL}/gsc-sitemap`,
+      `${SITE_URL}/gsc-urls`,
       `${SITE_URL}/sitemaps/pages.xml`,
-      `${SITE_URL}/sitemaps/pages.txt`,
       `${SITE_URL}/sitemap.xml`,
-      `${SITE_URL}/sitemap.txt`,
     ],
     host,
   };
