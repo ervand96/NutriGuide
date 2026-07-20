@@ -62,7 +62,7 @@ describe("site integration", () => {
     const html = await res.text();
     assert.match(html, /Top Rated Products/);
     assert.match(html, /product-img\?name=/);
-    assert.match(html, /Add to cart/);
+    assert.match(html, /Check price|Add to cart/);
   });
 
   it("homepage shows new conversion sections", async () => {

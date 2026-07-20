@@ -19,10 +19,10 @@ interface Props {
 function StarRow({ rating }: { rating: number }) {
   const { full, half, empty } = starsDisplay(rating);
   return (
-    <span className="inline-flex items-center gap-0.5 text-amber-400 text-sm leading-none">
+    <span className="inline-flex items-center gap-0.5 text-amber-500 text-[13px] leading-none tracking-tight">
       {"★".repeat(full)}
       {half ? "⯨" : ""}
-      {"☆".repeat(empty)}
+      <span className="text-gray-300">{"☆".repeat(empty)}</span>
     </span>
   );
 }
@@ -36,26 +36,28 @@ export default function ProductShelfCard({ product, slug, compact }: Props) {
   const reviews = reviewCountFromProduct(product);
   const soldHint = soldHintFromProduct(product);
   const imageUrl = product.imageUrl || null;
+  const rank = product.rank || 1;
 
   return (
     <article
-      className={`flex flex-col bg-white border rounded-2xl overflow-hidden shrink-0 snap-start transition-all duration-200 hover:shadow-lg hover:border-leaf-200 ${
-        product.highlight
-          ? "border-leaf-400 ring-2 ring-leaf-100"
-          : "border-gray-100"
-      } ${compact ? "w-[168px] md:w-full" : "w-[200px] sm:w-[220px] md:w-full"}`}
+      className={`group flex flex-col shrink-0 snap-start overflow-hidden rounded-3xl bg-white/90 backdrop-blur-sm border border-white shadow-[0_8px_30px_rgba(44,36,22,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(45,122,58,0.12)] ${
+        product.highlight ? "ring-2 ring-leaf-400/70" : ""
+      } ${compact ? "w-[200px] sm:w-[220px] md:w-full" : "w-[220px] sm:w-[240px] md:w-full"}`}
     >
       <Link
         href={shop.primaryHref}
         target="_blank"
         rel="nofollow sponsored noopener"
-        className="no-underline block"
+        className="no-underline block relative"
       >
         <div
-          className={`relative aspect-square bg-gradient-to-br ${visual.bg} flex items-center justify-center overflow-hidden`}
+          className={`relative aspect-[4/5] bg-gradient-to-br ${visual.bg} flex items-center justify-center overflow-hidden`}
         >
+          <span className="absolute top-3 left-3 z-10 h-8 w-8 flex items-center justify-center rounded-full bg-bark/90 text-white text-xs font-display font-black">
+            {rank}
+          </span>
           {product.badge && (
-            <span className="absolute top-2 left-2 z-10 text-[10px] font-bold bg-leaf-500 text-white px-2 py-0.5 rounded-full max-w-[90%] truncate">
+            <span className="absolute top-3 right-3 z-10 text-[10px] font-bold bg-white/95 text-leaf-700 px-2.5 py-1 rounded-full max-w-[55%] truncate shadow-sm">
               {product.badge}
             </span>
           )}
@@ -64,16 +66,18 @@ export default function ProductShelfCard({ product, slug, compact }: Props) {
             <img
               src={imageUrl}
               alt={product.name}
-              className="absolute inset-0 w-full h-full object-contain p-2 bg-white"
+              className="absolute inset-0 w-full h-full object-contain p-5 bg-white/50 transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
               decoding="async"
             />
           ) : (
-            <div className="text-center p-4">
-              <div className={`${compact ? "text-5xl" : "text-6xl"} mb-2 drop-shadow-sm`}>
+            <div className="text-center p-5">
+              <div
+                className={`${compact ? "text-5xl" : "text-6xl"} mb-3 drop-shadow-sm transition-transform duration-500 group-hover:scale-110`}
+              >
                 {visual.emoji}
               </div>
-              <div className="text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider truncate max-w-[160px]">
+              <div className="text-[10px] sm:text-xs font-bold text-bark/50 uppercase tracking-[0.14em] truncate max-w-[160px] mx-auto">
                 {brand}
               </div>
             </div>
@@ -81,15 +85,10 @@ export default function ProductShelfCard({ product, slug, compact }: Props) {
         </div>
       </Link>
 
-      <div className="p-3 md:p-4 flex flex-col flex-1">
-        <Link
-          href={shop.secondaryHref}
-          target="_blank"
-          rel="nofollow sponsored noopener"
-          className="text-leaf-600 text-xs font-semibold no-underline hover:underline mb-1.5"
-        >
-          + More options
-        </Link>
+      <div className="p-4 sm:p-5 flex flex-col flex-1">
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-leaf-600 mb-1.5">
+          {brand}
+        </p>
 
         <Link
           href={shop.primaryHref}
@@ -97,31 +96,45 @@ export default function ProductShelfCard({ product, slug, compact }: Props) {
           rel="nofollow sponsored noopener"
           className="no-underline flex-1"
         >
-          <h3 className="font-body font-semibold text-sm md:text-[15px] text-bark leading-snug line-clamp-3 mb-2 hover:text-leaf-600 transition-colors">
+          <h3 className="font-display font-bold text-[15px] sm:text-base text-bark leading-snug line-clamp-2 mb-3 group-hover:text-leaf-600 transition-colors">
             {title}
           </h3>
         </Link>
 
-        <div className="flex items-center gap-1.5 mb-1">
+        <div className="flex items-center gap-2 mb-1">
           <StarRow rating={product.rating} />
           <span className="text-gray-400 text-xs font-medium">
             {Number(reviews).toLocaleString()}
           </span>
         </div>
+        <p className="text-gray-400 text-[11px] mb-4 truncate">{soldHint}</p>
 
-        <p className="text-gray-400 text-[11px] mb-2 truncate">{soldHint}</p>
-
-        <div className="font-display font-black text-xl text-bark mb-3 leading-none">
-          {product.price}
+        <div className="mt-auto flex items-end justify-between gap-3 mb-3">
+          <div>
+            <div className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">
+              From
+            </div>
+            <div className="font-display font-black text-2xl text-bark leading-none">
+              {product.price}
+            </div>
+          </div>
         </div>
 
         <Link
           href={shop.primaryHref}
           target="_blank"
           rel="nofollow sponsored noopener"
-          className="no-underline block w-full text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold text-xs py-2.5 rounded-lg transition-colors active:scale-[0.98]"
+          className="no-underline block w-full text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold text-sm py-3 rounded-xl transition-colors active:scale-[0.98]"
         >
-          Add to cart →
+          Check price →
+        </Link>
+        <Link
+          href={shop.secondaryHref}
+          target="_blank"
+          rel="nofollow sponsored noopener"
+          className="mt-2 text-center text-xs font-semibold text-leaf-600 no-underline hover:underline"
+        >
+          {shop.secondaryLabel}
         </Link>
       </div>
     </article>

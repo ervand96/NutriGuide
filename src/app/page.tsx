@@ -279,29 +279,40 @@ export default function Home() {
 
         {/* TOP RATED PRODUCTS */}
         {topProducts.length > 0 && (
-          <section className="bg-white border-y border-gray-100 py-12 sm:py-16">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <ProductShelf
-              title="Top Rated Products"
-              subtitle="Browse our top picks — tap any card to shop on iHerb or MyProtein."
-              products={topProducts.map((p, i) => ({
-                rank: i + 1,
-                name: p.name || "",
-                badge: p.badge || "",
-                rating: p.rating || 4.5,
-                price: p.price || "",
-                description: p.description || "",
-                pros: p.pros || [],
-                cons: p.cons || [],
-                affiliateUrl: p.affiliateUrl || "",
-                buttonText: p.buttonText || "",
-                imageUrl: p.imageUrl,
-                highlight: i === 0,
-              }))}
-              slugPrefix="home"
-              compact
-              className="-mx-0"
+          <section className="relative overflow-hidden border-y border-leaf-100 py-14 sm:py-20">
+            <div
+              className="pointer-events-none absolute inset-0 bg-gradient-to-br from-leaf-50 via-cream to-leaf-100/40"
+              aria-hidden
             />
+            <div
+              className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-leaf-500/10 blur-3xl"
+              aria-hidden
+            />
+            <div
+              className="pointer-events-none absolute -bottom-28 -left-10 h-80 w-80 rounded-full bg-leaf-600/10 blur-3xl"
+              aria-hidden
+            />
+            <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <ProductShelf
+                title="Top Rated Products"
+                subtitle="Six editor picks — tap a card to check live prices on iHerb or MyProtein."
+                products={topProducts.map((p, i) => ({
+                  rank: i + 1,
+                  name: p.name || "",
+                  badge: p.badge || "",
+                  rating: p.rating || 4.5,
+                  price: p.price || "",
+                  description: p.description || "",
+                  pros: p.pros || [],
+                  cons: p.cons || [],
+                  affiliateUrl: p.affiliateUrl || "",
+                  buttonText: p.buttonText || "",
+                  imageUrl: p.imageUrl,
+                  highlight: i === 0,
+                }))}
+                slugPrefix="home"
+                compact
+              />
             </div>
           </section>
         )}
