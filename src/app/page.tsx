@@ -19,6 +19,7 @@ import QuickPaths from "@/components/QuickPaths";
 import CategoryGuides from "@/components/CategoryGuides";
 import CategoryNavStrip from "@/components/CategoryNavStrip";
 import StartHereStrip from "@/components/StartHereStrip";
+import HeroCarousel from "@/components/HeroCarousel";
 import { getAllPosts } from "@/lib/posts";
 import {
   organizationJsonLd,
@@ -190,54 +191,7 @@ export default function Home() {
       />
       <Navbar />
       <main>
-        {/* HERO */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-leaf-500 via-leaf-600 to-leaf-700 hero-shimmer text-white py-16 sm:py-20 md:py-28 px-4 sm:px-6">
-          <div
-            className="pointer-events-none absolute inset-0 opacity-[0.12]"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 20% 20%, #fff 1px, transparent 1px), radial-gradient(circle at 80% 60%, #fff 1px, transparent 1px)",
-              backgroundSize: "48px 48px, 64px 64px",
-            }}
-            aria-hidden
-          />
-          <div className="relative max-w-3xl mx-auto text-center">
-            <p className="font-display font-black text-2xl sm:text-3xl md:text-4xl tracking-tight mb-3 sm:mb-4 animate-on-scroll is-visible animate-fade-up">
-              NutriGuide
-            </p>
-            <h1 className="font-display font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight mb-4 sm:mb-6">
-              Find the Diet That
-              <br />
-              <span className="text-green-200">Actually Works</span>
-            </h1>
-            <p className="text-white/80 text-base sm:text-lg md:text-xl leading-relaxed max-w-xl mx-auto mb-8 sm:mb-10 px-2">
-              Science-backed reviews of diets, supplements, and programs — then
-              shop iHerb &amp; MyProtein with our discount links.
-            </p>
-            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center max-w-lg sm:max-w-none mx-auto">
-              <Link
-                href="/category/reviews"
-                className="bg-white text-leaf-600 font-bold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:bg-green-50 transition-all duration-200 no-underline cta-pulse active:scale-[0.98]"
-              >
-                Browse Reviews →
-              </Link>
-              <Link
-                href="/quiz"
-                className="border border-white/40 text-white font-bold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:bg-white/10 transition-colors no-underline"
-              >
-                Take 2-Minute Quiz
-              </Link>
-            </div>
-            <div className="mt-5 flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center max-w-md mx-auto">
-              <AffiliateButton partner="iherb" source="hero" variant="ghost" className="!py-3 !text-sm">
-                🌿 Shop iHerb Deals →
-              </AffiliateButton>
-              <AffiliateButton partner="myprotein" source="hero" variant="ghost" className="!py-3 !text-sm">
-                🥤 Shop MyProtein →
-              </AffiliateButton>
-            </div>
-          </div>
-        </section>
+        <HeroCarousel />
 
         <TrustBar reviewsCount={allPosts.length} />
 

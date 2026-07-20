@@ -77,6 +77,8 @@ describe("site integration", () => {
     assert.equal(res.status, 200);
     const html = await res.text();
     assert.match(html, /NutriGuide/);
+    assert.match(html, /Find the Diet That/);
+    assert.match(html, /\/hero\/|Browse Reviews/);
     assert.match(html, /iHerb/);
     assert.match(html, /MyProtein/);
     assert.doesNotMatch(html, /HelloFresh/);
