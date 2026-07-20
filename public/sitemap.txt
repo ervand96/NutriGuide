@@ -1,6 +1,7 @@
 https://nutri-guide-indol.vercel.app
 https://nutri-guide-indol.vercel.app/best-picks
 https://nutri-guide-indol.vercel.app/quiz
+https://nutri-guide-indol.vercel.app/site-map
 https://nutri-guide-indol.vercel.app/category/diets
 https://nutri-guide-indol.vercel.app/category/reviews
 https://nutri-guide-indol.vercel.app/category/supplements

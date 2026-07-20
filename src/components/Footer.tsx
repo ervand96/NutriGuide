@@ -42,6 +42,12 @@ export default function Footer() {
               <div className="font-bold text-sm mb-3 text-bark">Content</div>
               <div className="flex flex-col gap-2.5">
                 <a
+                  href="/site-map"
+                  className="text-gray-400 hover:text-leaf-500 text-sm transition-colors no-underline py-0.5"
+                >
+                  All pages
+                </a>
+                <a
                   href="/best-picks"
                   className="text-gray-400 hover:text-leaf-500 text-sm transition-colors no-underline py-0.5"
                 >
