@@ -144,6 +144,24 @@
   }
 }
 
+@keyframes heroKen {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes heroProgress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-on-scroll,
   .hero-shimmer,
@@ -160,6 +178,20 @@
     to {
       opacity: 1;
       transform: none;
+    }
+  }
+
+  @keyframes heroKen {
+    from,
+    to {
+      transform: none;
+    }
+  }
+
+  @keyframes heroProgress {
+    from,
+    to {
+      width: 100%;
     }
   }
 }
