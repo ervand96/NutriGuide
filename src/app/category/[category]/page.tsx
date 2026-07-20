@@ -133,7 +133,7 @@ export default function CategoryPage({
           <h2 className="font-display font-black text-xl sm:text-2xl text-bark mb-4">
             {`Top 5 ${params.category} guides`}
           </h2>
-          <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 md:gap-5 md:overflow-visible md:pb-0">
+          <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-3 xl:grid-cols-5 md:gap-5 md:overflow-visible md:pb-0 md:items-stretch">
             {featured.map((post, i) => (
               <GuideShelfCard key={post.slug} post={post} rank={i + 1} />
             ))}

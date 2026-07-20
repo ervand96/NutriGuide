@@ -107,7 +107,7 @@ export default function CategoryGuides({
           </div>
         </div>
 
-        <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 md:gap-5 lg:gap-6 md:overflow-visible md:pb-0 md:snap-none">
+        <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-3 xl:grid-cols-5 md:gap-5 lg:gap-6 md:overflow-visible md:pb-0 md:snap-none md:items-stretch">
           {list.map((post, i) => (
             <GuideShelfCard
               key={post.slug}
