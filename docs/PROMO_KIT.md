@@ -12,15 +12,15 @@ Use these after deploy. Prefer value-first posts — never spam affiliate codes 
 ## Google Search Console (do this once)
 1. Open Search Console for the verified property
 2. Submit sitemap: `sitemap.xml` (or full URL)
-3. If status is **"Couldn't fetch" / "Не получено"**:
-   - The file is already live (opens in browser) — this is a known Google + Vercel delay/bug
-   - Try submitting again as: `sitemap.xml/` (trailing slash) to force a fresh fetch
-   - Or wait 1–7 days and click **Resubmit**
-   - Use URL Inspection → test `https://nutri-guide-indol.vercel.app/sitemap.xml`
+3. If status is **"Couldn't fetch" / "Не получено"** or **"Could not process" / "Не удалось обработать"**:
+   - Open https://nutri-guide-indol.vercel.app/sitemap.xml — you should see a URL list (browser style warning is normal)
+   - Delete the old sitemap entry in GSC, then submit **`sitemap.txt`** (plain URL list — often works when XML processing fails)
+   - Or resubmit `sitemap.xml` after deploy (dates are now `YYYY-MM-DD` only)
+   - Wait 1–7 days; GSC on `*.vercel.app` is often slow
 4. Request indexing for `/`, `/best-picks`, `/quiz`, and 3 top articles
 5. Check Coverage / Page indexing weekly
 
-Sitemap is generated at build time into `public/sitemap.xml` (`npm run sitemap`).
+Sitemaps are generated at build time (`npm run sitemap`) into `public/sitemap.xml` and `public/sitemap.txt`.
 
 ## Reddit (manual — API blocked for new apps)
 Pick 1–2 relevant subs (e.g. r/Supplements, r/nutrition, r/Fitness). Lead with advice, end with one link.

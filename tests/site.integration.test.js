@@ -143,7 +143,8 @@ describe("site integration", () => {
     const xml = await res.text();
     assert.match(xml, /\/best-picks/);
     assert.match(xml, /\/quiz/);
-    assert.match(xml, /<priority>/);
+    assert.match(xml, /<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/);
+    assert.doesNotMatch(xml, /changefreq|priority/);
   });
 
   it("category page shows top 3 guides and nav strip", async () => {

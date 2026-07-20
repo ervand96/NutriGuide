@@ -16,7 +16,8 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/go/"],
       },
     ],
-    sitemap: `${SITE_URL}/sitemap.xml`,
+    // List both: XML + plain text (GSC fallback when XML processing fails)
+    sitemap: [`${SITE_URL}/sitemap.xml`, `${SITE_URL}/sitemap.txt`],
     host,
   };
 }
