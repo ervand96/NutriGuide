@@ -61,7 +61,7 @@ describe("site integration", () => {
     const res = await fetch(BASE);
     const html = await res.text();
     assert.match(html, /Top Rated Products/);
-    assert.match(html, /product-img\?name=/);
+    assert.match(html, /\/products\/|product-img\?name=/);
     assert.match(html, /Check price|Add to cart/);
   });
 
@@ -182,7 +182,7 @@ describe("site integration", () => {
     assert.match(html, new RegExp(post.title.slice(0, 20)));
     if (post.products?.length) {
       assert.match(html, /Shop Our Top Picks|Top Picks/);
-      assert.match(html, /product-img\?name=/);
+      assert.match(html, /\/products\/|product-img\?name=/);
       assert.match(html, /Also check/i);
       assert.match(html, /Shop both of our trusted stores/i);
     }

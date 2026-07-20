@@ -32,7 +32,7 @@ describe("posts", () => {
     const post = getAllPosts().find((p) => p.products?.length);
     assert.ok(post);
     assert.ok(post.products[0].imageUrl);
-    assert.match(post.products[0].imageUrl, /^(\/product-img|https:\/\/)/);
+    assert.match(post.products[0].imageUrl, /^(\/products\/|\/product-img|https:\/\/)/);
   });
 
   it("normalizes protein products to myprotein affiliate URLs", () => {

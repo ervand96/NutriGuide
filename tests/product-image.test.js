@@ -4,12 +4,22 @@ import {
   getProductImageUrl,
   isAllowedImageUrl,
   cacheKey,
+  photoForProductName,
 } from "../src/lib/product-image.js";
 
 describe("product images", () => {
-  it("generates /product-img URL when no cache or explicit image", () => {
-    const url = getProductImageUrl({ name: "NOW Foods Vitamin D3" });
-    assert.match(url, /^\/product-img\?name=/);
+  it("maps zinc products to concrete zinc bottle photo", () => {
+    const url = getProductImageUrl({
+      name: "Thorne, Zinc Picolinate, 30 mg, 60 Capsules",
+    });
+    assert.match(url, /\/products\/bottle-zinc\.jpg/);
+  });
+
+  it("maps omega products before MyProtein brand protein match", () => {
+    assert.match(
+      photoForProductName("MyProtein Essential Omega-3 Softgels"),
+      /bottle-omega/,
+    );
   });
 
   it("prefers explicit imageUrl when allowed", () => {
@@ -21,8 +31,9 @@ describe("product images", () => {
     );
   });
 
-  it("allows /product-img paths", () => {
+  it("allows /products and /product-img paths", () => {
     assert.equal(isAllowedImageUrl("/product-img?name=x"), true);
+    assert.equal(isAllowedImageUrl("/products/bottle-zinc.jpg"), true);
   });
 
   it("rejects unknown external hosts", () => {

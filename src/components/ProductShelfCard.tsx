@@ -66,7 +66,7 @@ export default function ProductShelfCard({ product, slug, compact }: Props) {
             <img
               src={imageUrl}
               alt={product.name}
-              className="absolute inset-0 w-full h-full object-contain p-5 bg-white/50 transition-transform duration-500 group-hover:scale-105"
+              className="absolute inset-0 w-full h-full object-contain p-4 sm:p-6 bg-white transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
               decoding="async"
             />
