@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo.js";
 
 export default function robots(): MetadataRoute.Robots {
+  const host = SITE_URL.replace(/^https?:\/\//, "");
   return {
     rules: [
       {
@@ -9,8 +10,13 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/api/", "/go/"],
       },
+      {
+        userAgent: "Googlebot",
+        allow: "/",
+        disallow: ["/api/", "/go/"],
+      },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
-    host: SITE_URL,
+    host,
   };
 }

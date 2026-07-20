@@ -9,6 +9,8 @@
     "lint": "next lint",
     "test": "node --test tests/*.test.js",
     "test:unit": "node --test tests/posts.test.js tests/affiliate.test.js tests/product-image.test.js tests/product-visual.test.js",
+    "sitemap": "node scripts/generate-sitemap.js",
+    "prebuild": "npm run sitemap",
     "prepush": "npm test && npm run build",
     "generate": "node scripts/generate-post.js",
     "pinterest:auto": "node scripts/pinterest-auto.js",
