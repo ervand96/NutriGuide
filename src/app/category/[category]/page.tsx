@@ -164,12 +164,17 @@ export default function CategoryPage({
 
         {rest.length > 0 && (
           <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-            <h2 className="font-display font-black text-xl sm:text-2xl text-bark mb-6">
-              More {params.category}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {rest.map((post) => (
-                <ArticleCard key={post.slug} article={post} />
+            <div className="mb-8">
+              <p className="text-leaf-600 text-xs font-bold uppercase tracking-[0.16em] mb-2">
+                Editor shelf
+              </p>
+              <h2 className="font-display font-black text-xl sm:text-3xl text-bark">
+                More {params.category}
+              </h2>
+            </div>
+            <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-5 md:overflow-visible md:pb-0 md:items-stretch">
+              {rest.map((post, i) => (
+                <ArticleCard key={post.slug} article={post} rank={i + 1} />
               ))}
             </div>
           </section>

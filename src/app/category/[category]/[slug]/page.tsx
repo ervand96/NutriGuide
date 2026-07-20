@@ -9,6 +9,7 @@ import CategoryNavStrip from "../../../../components/CategoryNavStrip";
 import OfferStrip from "../../../../components/OfferStrip";
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "../../../../lib/posts";
+import { SITE_CONTAINER } from "@/lib/layout.js";
 import ProductCard from "../../../../components/ProductCard";
 import { remark } from "remark";
 import remarkHtml from "remark-html";
@@ -192,92 +193,94 @@ export default async function ArticlePage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14 pb-24 md:pb-14">
-        <nav aria-label="Breadcrumb" className="mb-4 sm:mb-6 text-xs sm:text-sm text-gray-500">
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-            <a href="/" className="hover:text-leaf-500">
-              Home
-            </a>
-            <span>/</span>
-            <a href={categoryUrl} className="hover:text-leaf-500">
+      <main className="pb-24 md:pb-14">
+        <div className={`${SITE_CONTAINER} py-10 sm:py-14`}>
+          <nav aria-label="Breadcrumb" className="mb-4 sm:mb-6 text-xs sm:text-sm text-gray-500">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <a href="/" className="hover:text-leaf-500">
+                Home
+              </a>
+              <span>/</span>
+              <a href={categoryUrl} className="hover:text-leaf-500">
+                {post.category}
+              </a>
+              <span>/</span>
+              <span className="text-gray-700 line-clamp-2">{post.title}</span>
+            </div>
+          </nav>
+
+          <div className="mb-8 sm:mb-10">
+            <span className="category-badge mb-3 sm:mb-4 inline-block">
               {post.category}
-            </a>
-            <span>/</span>
-            <span className="text-gray-700 line-clamp-2">{post.title}</span>
+            </span>
+
+            <h1 className="font-display font-black text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight tracking-tight text-bark mb-3 sm:mb-4">
+              {post.title}
+            </h1>
+
+            <div className="text-gray-400 text-sm font-body">
+              ⏱ {post.readTime} · Updated {post.date}
+            </div>
           </div>
-        </nav>
 
-        <div className="mb-8 sm:mb-10">
-          <span className="category-badge mb-3 sm:mb-4 inline-block">
-            {post.category}
-          </span>
-
-          <h1 className="font-display font-black text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight tracking-tight text-bark mb-3 sm:mb-4">
-            {post.title}
-          </h1>
-
-          <div className="text-gray-400 text-sm font-body">
-            ⏱ {post.readTime} · Updated {post.date}
-          </div>
-        </div>
-
-        <p className="text-base sm:text-lg text-gray-600 leading-relaxed mb-6 sm:mb-8 font-body">
-          {post.description}
-        </p>
-
-        <div className="bg-leaf-50 border border-leaf-100 rounded-2xl p-6 mb-10">
-          <div className="font-bold text-leaf-600 text-sm uppercase tracking-wider mb-3">
-            ⚡ Quick Answer
-          </div>
-          <ul className="space-y-1 text-sm text-gray-600">
-            {quickLines.map((line) => (
-              <li key={line}>{line}</li>
-            ))}
-          </ul>
-        </div>
-
-        {products.length > 0 && (
-          <ArticleTopPicks products={products} slug={params.slug} />
-        )}
-
-        <div
-          className="article-content mb-10"
-          dangerouslySetInnerHTML={{ __html: contentHtml }}
-        />
-
-        <ArticleShopCta slug={params.slug} />
-
-        {products.length > 0 && (
-          <section className="mb-10">
-            <h2 className="font-display font-black text-2xl mb-2">
-              Full Product Reviews
-            </h2>
-            <p className="text-gray-500 text-sm mb-6">
-              Detailed pros, cons, and why we picked each product.
-            </p>
-            {products.map((product: any) => (
-              <ProductCard
-                key={product.rank}
-                product={product}
-                slug={params.slug}
-              />
-            ))}
-          </section>
-        )}
-
-        <ArticleBottomShop slug={params.slug} category={post.category} />
-
-        <RelatedArticles
-          currentSlug={post.slug}
-          category={post.category}
-        />
-
-        <div className="mt-12 bg-gray-50 border border-gray-100 rounded-xl p-5">
-          <p className="text-xs text-gray-400 leading-relaxed">
-            <strong className="text-gray-500">Affiliate Disclosure:</strong>{" "}
-            This article may contain affiliate links to iHerb and MyProtein.
-            We may earn a commission at no extra cost to you.
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed mb-6 sm:mb-8 font-body">
+            {post.description}
           </p>
+
+          <div className="bg-leaf-50 border border-leaf-100 rounded-2xl p-6 sm:p-8 mb-10">
+            <div className="font-bold text-leaf-600 text-sm uppercase tracking-wider mb-3">
+              ⚡ Quick Answer
+            </div>
+            <ul className="space-y-2 text-sm sm:text-base text-gray-600">
+              {quickLines.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          </div>
+
+          {products.length > 0 && (
+            <ArticleTopPicks products={products} slug={params.slug} />
+          )}
+
+          <div
+            className="article-content mb-10"
+            dangerouslySetInnerHTML={{ __html: contentHtml }}
+          />
+
+          <ArticleShopCta slug={params.slug} />
+
+          {products.length > 0 && (
+            <section className="mb-10">
+              <h2 className="font-display font-black text-2xl mb-2">
+                Full Product Reviews
+              </h2>
+              <p className="text-gray-500 text-sm mb-6">
+                Detailed pros, cons, and why we picked each product.
+              </p>
+              {products.map((product: any) => (
+                <ProductCard
+                  key={product.rank}
+                  product={product}
+                  slug={params.slug}
+                />
+              ))}
+            </section>
+          )}
+
+          <ArticleBottomShop slug={params.slug} category={post.category} />
+
+          <RelatedArticles
+            currentSlug={post.slug}
+            category={post.category}
+          />
+
+          <div className="mt-12 bg-gray-50 border border-gray-100 rounded-xl p-5">
+            <p className="text-xs text-gray-400 leading-relaxed">
+              <strong className="text-gray-500">Affiliate Disclosure:</strong>{" "}
+              This article may contain affiliate links to iHerb and MyProtein.
+              We may earn a commission at no extra cost to you.
+            </p>
+          </div>
         </div>
       </main>
 

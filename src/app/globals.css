@@ -23,25 +23,28 @@
     @apply bg-white border border-gray-100 rounded-2xl p-5 sm:p-6 hover:-translate-y-1 hover:shadow-md transition-all duration-300;
   }
   .article-content h2 {
-    @apply font-display font-bold text-xl sm:text-2xl text-bark mt-8 sm:mt-10 mb-3 sm:mb-4;
+    @apply font-display font-bold text-2xl sm:text-3xl text-bark mt-10 sm:mt-12 mb-4 sm:mb-5 tracking-tight;
   }
   .article-content h3 {
-    @apply font-display font-bold text-lg sm:text-xl text-bark mt-6 sm:mt-8 mb-2 sm:mb-3;
+    @apply font-display font-bold text-xl sm:text-2xl text-bark mt-8 sm:mt-10 mb-3 sm:mb-4;
   }
   .article-content p {
-    @apply text-gray-600 leading-relaxed mb-4 text-sm sm:text-base;
+    @apply text-gray-600 leading-[1.75] mb-5 sm:mb-6 text-base sm:text-lg;
   }
   .article-content ul {
-    @apply list-disc pl-5 sm:pl-6 mb-4 text-gray-600 space-y-1 text-sm sm:text-base;
+    @apply list-disc pl-5 sm:pl-6 mb-5 sm:mb-6 text-gray-600 space-y-2 text-base sm:text-lg;
   }
   .article-content ol {
-    @apply list-decimal pl-5 sm:pl-6 mb-4 text-gray-600 space-y-1 text-sm sm:text-base;
+    @apply list-decimal pl-5 sm:pl-6 mb-5 sm:mb-6 text-gray-600 space-y-2 text-base sm:text-lg;
   }
   .article-content a {
     @apply text-leaf-600 underline break-words;
   }
   .article-content strong {
-    @apply text-bark;
+    @apply text-bark font-semibold;
+  }
+  .article-content li {
+    @apply leading-[1.7];
   }
 
   /* Scroll-triggered animations */

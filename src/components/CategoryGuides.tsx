@@ -73,7 +73,7 @@ export default function CategoryGuides({
         aria-hidden
       />
 
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div className="max-w-xl">
             <p className="text-leaf-600 text-xs font-bold uppercase tracking-[0.16em] mb-2">

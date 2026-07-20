@@ -1,9 +1,10 @@
 import AffiliateButton from "./AffiliateButton";
+import { SITE_CONTAINER } from "@/lib/layout.js";
 
 export default function Footer() {
   return (
     <footer className="bg-white border-t border-gray-100 mt-16 sm:mt-24 pb-[env(safe-area-inset-bottom)]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
+      <div className={`${SITE_CONTAINER} py-10 sm:py-12`}>
         <div className="flex flex-col lg:flex-row justify-between gap-10 mb-8">
           <div className="max-w-sm">
             <div className="flex items-center gap-2 mb-2">

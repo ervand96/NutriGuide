@@ -1,5 +1,6 @@
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
+import { SITE_CONTAINER } from "@/lib/layout.js";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,7 +14,7 @@ export default function ContactPage() {
   return (
     <>
       <Navbar />
-      <main className="max-w-4xl mx-auto px-6 py-16">
+      <main className={`${SITE_CONTAINER} py-16`}>
         <div className="mb-10">
           <p className="text-sm uppercase tracking-[0.3em] text-leaf-500 font-semibold mb-3">
             Get in Touch

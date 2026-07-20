@@ -1,4 +1,5 @@
 import AffiliateButton from "./AffiliateButton";
+import { SITE_CONTAINER } from "@/lib/layout.js";
 
 export default function OfferStrip({
   source = "offer-strip",
@@ -6,8 +7,8 @@ export default function OfferStrip({
   source?: string;
 }) {
   return (
-    <section className="bg-bark text-white py-6 sm:py-8 px-4 sm:px-6">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6">
+    <section className="bg-bark text-white py-6 sm:py-8">
+      <div className={`${SITE_CONTAINER} flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6`}>
         <div>
           <div className="text-leaf-300 text-xs font-bold uppercase tracking-widest mb-1">
             Exclusive offers

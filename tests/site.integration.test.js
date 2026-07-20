@@ -230,6 +230,39 @@ describe("site integration", () => {
     }
   });
 
+  it("article page text and shelves match header container width", async () => {
+    const { getAllPosts } = await import("../src/lib/posts.js");
+    const post =
+      getAllPosts().find((p) => p.category.toLowerCase() === "diets") ||
+      getAllPosts()[0];
+    const res = await fetchOk(
+      `${BASE}/category/${post.category.toLowerCase()}/${post.slug}`,
+    );
+    assert.equal(res.status, 200);
+    const html = await res.text();
+
+    // Shared shell class from SITE_CONTAINER
+    assert.match(html, /max-w-6xl mx-auto px-4 sm:px-6/);
+    // No leftover narrow article column
+    assert.doesNotMatch(html, /max-w-3xl/);
+    assert.doesNotMatch(html, /max-w-4xl/);
+    // Article body + related shelf present
+    assert.match(html, /article-content/);
+    assert.match(html, /Related Articles/);
+    assert.match(html, /Editor shelf/);
+    assert.match(html, /Check price|Read full guide/);
+  });
+
+  it("about/contact pages use the same wide container as navbar", async () => {
+    for (const path of ["/about", "/contact"]) {
+      const res = await fetchOk(`${BASE}${path}`);
+      assert.equal(res.status, 200);
+      const html = await res.text();
+      assert.match(html, /max-w-6xl mx-auto px-4 sm:px-6/);
+      assert.doesNotMatch(html, /max-w-4xl/);
+    }
+  });
+
   it("invalid article slug returns 404", async () => {
     const res = await fetchOk(`${BASE}/category/reviews/this-slug-does-not-exist-99999`);
     assert.equal(res.status, 404);

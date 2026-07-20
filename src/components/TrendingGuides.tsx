@@ -1,66 +1,43 @@
-import Link from "next/link";
-import AnimateOnScroll from "./AnimateOnScroll";
-import AffiliateButton from "./AffiliateButton";
+import GuideShelfCard, { GuideCardPost } from "./GuideShelfCard";
 
-interface Guide {
-  title: string;
-  description: string;
-  href: string;
-  category: string;
-  shop?: { partner: "iherb" | "myprotein"; q: string };
-}
+export default function TrendingGuides({
+  posts,
+}: {
+  posts: GuideCardPost[];
+}) {
+  if (!posts?.length) return null;
 
-export default function TrendingGuides({ guides }: { guides: Guide[] }) {
-  if (!guides?.length) return null;
+  const list = posts.slice(0, 3);
 
   return (
-    <section className="bg-white border-y border-gray-100 py-12 sm:py-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-      <AnimateOnScroll animation="fade-up">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6 sm:mb-8">
+    <section className="relative overflow-hidden border-y border-leaf-100 py-14 sm:py-16">
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-leaf-50 via-cream to-leaf-100/40"
+        aria-hidden
+      />
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
           <div>
-            <h2 className="font-display font-black text-2xl sm:text-3xl mb-1">
+            <p className="text-leaf-600 text-xs font-bold uppercase tracking-[0.16em] mb-2">
+              Editor shelf
+            </p>
+            <h2 className="font-display font-black text-2xl sm:text-4xl text-bark tracking-tight mb-1">
               Trending guides this week
             </h2>
             <p className="text-gray-500 text-sm sm:text-base">
-              Most-read topics — jump in, then shop the matching stack.
+              Most-read topics — tap a card to check price or read the full guide.
             </p>
           </div>
+          <span className="text-leaf-700 text-xs font-bold bg-white/80 border border-leaf-100 px-3 py-1.5 rounded-full w-fit">
+            {list.length} top picks
+          </span>
         </div>
-      </AnimateOnScroll>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-        {guides.map((g, i) => (
-          <AnimateOnScroll key={g.href} animation="fade-up" delay={i * 80}>
-            <article className="h-full flex flex-col bg-cream border border-gray-100 rounded-2xl p-5 sm:p-6 hover:border-leaf-200 hover:shadow-md transition-all duration-300">
-              <span className="category-badge mb-3 w-fit">{g.category}</span>
-              <Link href={g.href} className="no-underline flex-1 group">
-                <h3 className="font-display font-bold text-lg text-bark mb-2 group-hover:text-leaf-600 transition-colors leading-snug">
-                  {g.title}
-                </h3>
-                <p className="text-gray-500 text-sm leading-relaxed line-clamp-3 mb-4">
-                  {g.description}
-                </p>
-                <span className="text-leaf-600 font-bold text-sm">
-                  Read guide →
-                </span>
-              </Link>
-              {g.shop && (
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <AffiliateButton
-                    partner={g.shop.partner}
-                    source="trending-guide"
-                    query={g.shop.q}
-                    className="w-full !py-2.5 !text-xs"
-                  >
-                    Shop related →
-                  </AffiliateButton>
-                </div>
-              )}
-            </article>
-          </AnimateOnScroll>
-        ))}
-      </div>
+        <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:pb-0 md:items-stretch">
+          {list.map((post, i) => (
+            <GuideShelfCard key={post.slug} post={post} rank={i + 1} />
+          ))}
+        </div>
       </div>
     </section>
   );

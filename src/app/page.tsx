@@ -173,25 +173,7 @@ export default function Home() {
     .filter((p) => p.category === "Supplements")
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  const trendingGuides = posts.slice(0, 3).map((p) => {
-    const cat = p.category.toLowerCase();
-    const shop =
-      cat === "supplements" || cat === "reviews"
-        ? {
-            partner: (/protein|creatine|whey|pre-workout/i.test(p.title)
-              ? "myprotein"
-              : "iherb") as "iherb" | "myprotein",
-            q: p.title.split(":")[0].trim().slice(0, 48),
-          }
-        : { partner: "iherb" as const, q: p.category };
-    return {
-      title: p.title,
-      description: p.description,
-      href: `/category/${p.category.toLowerCase()}/${p.slug}`,
-      category: p.category,
-      shop,
-    };
-  });
+  const trendingPosts = posts.slice(0, 3);
 
   return (
     <>
@@ -312,7 +294,7 @@ export default function Home() {
               className="pointer-events-none absolute -bottom-28 -left-10 h-80 w-80 rounded-full bg-leaf-600/10 blur-3xl"
               aria-hidden
             />
-            <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
               <ProductShelf
                 title="Top Rated Products"
                 subtitle="Six editor picks — tap a card to check live prices on iHerb or MyProtein."
@@ -384,31 +366,40 @@ export default function Home() {
         </section>
 
         {/* LATEST ARTICLES */}
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
-            <div>
-              <h2 className="font-display font-black text-2xl sm:text-3xl mb-1">
-                Latest Articles
-              </h2>
-              <p className="text-gray-400 text-sm sm:text-base">
-                Honest guides to help you eat better
-              </p>
+        <section className="relative overflow-hidden border-y border-leaf-100 py-14 sm:py-16">
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-br from-leaf-50 via-cream to-leaf-100/30"
+            aria-hidden
+          />
+          <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 mb-8">
+              <div>
+                <p className="text-leaf-600 text-xs font-bold uppercase tracking-[0.16em] mb-2">
+                  Editor shelf
+                </p>
+                <h2 className="font-display font-black text-2xl sm:text-4xl text-bark tracking-tight mb-1">
+                  Latest Articles
+                </h2>
+                <p className="text-gray-500 text-sm sm:text-base">
+                  Honest guides to help you eat better — with shop links on every card.
+                </p>
+              </div>
+              <Link
+                href="/category/reviews"
+                className="text-leaf-500 font-bold text-sm hover:underline no-underline shrink-0"
+              >
+                View all →
+              </Link>
             </div>
-            <Link
-              href="/category/reviews"
-              className="text-leaf-500 font-bold text-sm hover:underline no-underline shrink-0"
-            >
-              View all →
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.map((post) => (
-              <ArticleCard key={post.slug} article={post} />
-            ))}
+            <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-5 md:overflow-visible md:pb-0 md:items-stretch">
+              {posts.map((post, i) => (
+                <ArticleCard key={post.slug} article={post} rank={i + 1} />
+              ))}
+            </div>
           </div>
         </section>
 
-        <TrendingGuides guides={trendingGuides} />
+        <TrendingGuides posts={trendingPosts} />
 
         <StoreGuide />
 
@@ -525,7 +516,7 @@ export default function Home() {
         </section>
 
         {/* FAQ */}
-        <section className="max-w-4xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
           <h2 className="font-display font-black text-2xl sm:text-3xl mb-6 sm:mb-8 text-center">
             Frequently Asked Questions
           </h2>

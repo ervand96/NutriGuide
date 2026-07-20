@@ -15,7 +15,7 @@ export default function ArticleTopPicks({
       subtitle="Swipe to compare — real prices, ratings & photos"
       products={products}
       slugPrefix={slug}
-      className="mb-8 sm:mb-10 -mx-4 sm:mx-0 px-4 sm:px-0"
+      className="mb-8 sm:mb-10"
     />
   );
 }

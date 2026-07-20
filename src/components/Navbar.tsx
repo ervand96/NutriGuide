@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import AffiliateButton from "./AffiliateButton";
+import { SITE_CONTAINER } from "@/lib/layout.js";
 
 const links = [
   { href: "/category/diets", label: "Diets" },
@@ -23,7 +24,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-white/95 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2">
+      <div className={`${SITE_CONTAINER} h-14 sm:h-16 flex items-center justify-between gap-2`}>
         <Link href="/" className="flex items-center gap-2 no-underline shrink-0">
           <img
             src="/logo.svg"
