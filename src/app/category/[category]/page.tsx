@@ -5,6 +5,7 @@ import OfferStrip from "../../../components/OfferStrip";
 import AffiliateButton from "../../../components/AffiliateButton";
 import CategoryNavStrip from "../../../components/CategoryNavStrip";
 import ProductShelf from "../../../components/ProductShelf";
+import GuideShelfCard from "../../../components/GuideShelfCard";
 import { getAllPosts } from "../../../lib/posts";
 import type { Metadata } from "next";
 
@@ -132,9 +133,9 @@ export default function CategoryPage({
           <h2 className="font-display font-black text-xl sm:text-2xl text-bark mb-4">
             {`Top 5 ${params.category} guides`}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-12">
-            {featured.map((post) => (
-              <ArticleCard key={post.slug} article={post} />
+          <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 md:gap-5 md:overflow-visible md:pb-0">
+            {featured.map((post, i) => (
+              <GuideShelfCard key={post.slug} post={post} rank={i + 1} />
             ))}
           </div>
         </section>
