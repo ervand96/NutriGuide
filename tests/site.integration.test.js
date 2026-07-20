@@ -8,17 +8,25 @@ const BASE = `http://localhost:${PORT}`;
 
 let server;
 
-function waitForServer(maxMs = 60000) {
+async function fetchOk(url, opts = {}) {
+  const res = await fetch(url, {
+    ...opts,
+    signal: AbortSignal.timeout(opts.timeoutMs || 20000),
+  });
+  return res;
+}
+
+function waitForServer(maxMs = 90000) {
   const start = Date.now();
   return (async () => {
     while (Date.now() - start < maxMs) {
       try {
-        const res = await fetch(BASE);
-        if (res.ok) return;
+        const res = await fetchOk(BASE, { timeoutMs: 3000 });
+        if (res.ok || res.status === 404) return;
       } catch {
         // not ready
       }
-      await sleep(500);
+      await sleep(700);
     }
     throw new Error("Dev server did not start in time");
   })();
@@ -28,10 +36,15 @@ before(async () => {
   server = spawn("npm", ["run", "dev", "--", "-p", String(PORT)], {
     cwd: process.cwd(),
     stdio: ["ignore", "pipe", "pipe"],
-    env: { ...process.env, NODE_ENV: "development" },
+    env: {
+      ...process.env,
+      NODE_ENV: "development",
+      NEXT_TELEMETRY_DISABLED: "1",
+    },
+    detached: process.platform !== "win32",
   });
 
-  server.stderr.on("data", (d) => {
+  server.stderr?.on("data", (d) => {
     const msg = d.toString();
     if (msg.includes("Error") && !msg.includes("EADDRINUSE")) {
       console.error(msg);
@@ -42,12 +55,25 @@ before(async () => {
 });
 
 after(() => {
-  if (server) server.kill("SIGTERM");
+  if (!server) return;
+  try {
+    if (server.pid && process.platform !== "win32") {
+      process.kill(-server.pid, "SIGKILL");
+    } else {
+      server.kill("SIGKILL");
+    }
+  } catch {
+    try {
+      server.kill("SIGKILL");
+    } catch {
+      // ignore
+    }
+  }
 });
 
 describe("site integration", () => {
   it("homepage loads with NutriGuide branding", async () => {
-    const res = await fetch(BASE);
+    const res = await fetchOk(BASE);
     assert.equal(res.status, 200);
     const html = await res.text();
     assert.match(html, /NutriGuide/);
@@ -58,7 +84,7 @@ describe("site integration", () => {
   });
 
   it("homepage shows product shelf section", async () => {
-    const res = await fetch(BASE);
+    const res = await fetchOk(BASE);
     const html = await res.text();
     assert.match(html, /Top Rated Products/);
     assert.match(html, /\/products\/|product-img\?name=/);
@@ -66,7 +92,7 @@ describe("site integration", () => {
   });
 
   it("homepage shows new conversion sections", async () => {
-    const res = await fetch(BASE);
+    const res = await fetchOk(BASE);
     const html = await res.text();
     assert.match(html, /How shopping with NutriGuide works/);
     assert.match(html, /Start with your goal/);
@@ -80,7 +106,7 @@ describe("site integration", () => {
   });
 
   it("category page shows top 5 guides and nav strip", async () => {
-    const res = await fetch(`${BASE}/category/diets`);
+    const res = await fetchOk(`${BASE}/category/diets`);
     assert.equal(res.status, 200);
     const html = await res.text();
     assert.match(html, /Top 5/);
@@ -89,7 +115,7 @@ describe("site integration", () => {
   });
 
   it("quiz page loads with shared navbar", async () => {
-    const res = await fetch(`${BASE}/quiz`);
+    const res = await fetchOk(`${BASE}/quiz`);
     assert.equal(res.status, 200);
     const html = await res.text();
     assert.match(html, /Find Your Perfect Diet/);
@@ -103,13 +129,13 @@ describe("site integration", () => {
       "/privacy-policy",
       "/affiliate-disclosure",
     ]) {
-      const res = await fetch(`${BASE}${path}`);
+      const res = await fetchOk(`${BASE}${path}`);
       assert.equal(res.status, 200, `${path} should return 200`);
     }
   });
 
   it("favicon.ico does not 404", async () => {
-    const res = await fetch(`${BASE}/favicon.ico`, { redirect: "manual" });
+    const res = await fetchOk(`${BASE}/favicon.ico`, { redirect: "manual" });
     assert.ok(
       res.status === 200 || [301, 302, 307, 308].includes(res.status),
       `favicon should not 404, got ${res.status}`,
@@ -117,7 +143,7 @@ describe("site integration", () => {
   });
 
   it("product-img route returns SVG", async () => {
-    const res = await fetch(
+    const res = await fetchOk(
       `${BASE}/product-img?name=NOW%20Foods%20Ashwagandha`,
     );
     assert.equal(res.status, 200);
@@ -128,19 +154,19 @@ describe("site integration", () => {
   });
 
   it("product-img works without query params", async () => {
-    const res = await fetch(`${BASE}/product-img`);
+    const res = await fetchOk(`${BASE}/product-img`);
     assert.equal(res.status, 200);
   });
 
   it("seo routes load", async () => {
     for (const path of ["/sitemap.xml", "/robots.txt", "/rss.xml"]) {
-      const res = await fetch(`${BASE}${path}`);
+      const res = await fetchOk(`${BASE}${path}`);
       assert.equal(res.status, 200, `${path} should return 200`);
     }
   });
 
   it("affiliate disclosure mentions only iHerb and MyProtein", async () => {
-    const res = await fetch(`${BASE}/affiliate-disclosure`);
+    const res = await fetchOk(`${BASE}/affiliate-disclosure`);
     assert.equal(res.status, 200);
     const html = await res.text();
     assert.match(html, /iHerb/);
@@ -148,7 +174,7 @@ describe("site integration", () => {
   });
 
   it("/go/iherb redirects to iherb.com with rcode", async () => {
-    const res = await fetch(`${BASE}/go/iherb?source=test`, {
+    const res = await fetchOk(`${BASE}/go/iherb?source=test`, {
       redirect: "manual",
     });
     assert.ok([301, 302, 307, 308].includes(res.status));
@@ -158,7 +184,7 @@ describe("site integration", () => {
   });
 
   it("/go/myprotein redirects to myprotein.com", async () => {
-    const res = await fetch(`${BASE}/go/myprotein?source=test`, {
+    const res = await fetchOk(`${BASE}/go/myprotein?source=test`, {
       redirect: "manual",
     });
     assert.ok([301, 302, 307, 308].includes(res.status));
@@ -167,7 +193,7 @@ describe("site integration", () => {
   });
 
   it("unknown partner falls back to iherb redirect", async () => {
-    const res = await fetch(`${BASE}/go/amazon?source=test`, {
+    const res = await fetchOk(`${BASE}/go/amazon?source=test`, {
       redirect: "manual",
     });
     assert.ok([301, 302, 307, 308].includes(res.status));
@@ -177,7 +203,7 @@ describe("site integration", () => {
 
   it("category pages load", async () => {
     for (const cat of ["diets", "reviews", "supplements"]) {
-      const res = await fetch(`${BASE}/category/${cat}`);
+      const res = await fetchOk(`${BASE}/category/${cat}`);
       assert.equal(res.status, 200, `category ${cat} should load`);
     }
   });
@@ -186,7 +212,7 @@ describe("site integration", () => {
     const { getAllPosts } = await import("../src/lib/posts.js");
     const post =
       getAllPosts().find((p) => p.products?.length >= 2) || getAllPosts()[0];
-    const res = await fetch(
+    const res = await fetchOk(
       `${BASE}/category/${post.category.toLowerCase()}/${post.slug}`,
     );
     assert.equal(res.status, 200);
@@ -201,12 +227,12 @@ describe("site integration", () => {
   });
 
   it("invalid article slug returns 404", async () => {
-    const res = await fetch(`${BASE}/category/reviews/this-slug-does-not-exist-99999`);
+    const res = await fetchOk(`${BASE}/category/reviews/this-slug-does-not-exist-99999`);
     assert.equal(res.status, 404);
   });
 
   it("logo.svg is served", async () => {
-    const res = await fetch(`${BASE}/logo.svg`);
+    const res = await fetchOk(`${BASE}/logo.svg`);
     assert.equal(res.status, 200);
   });
 });
