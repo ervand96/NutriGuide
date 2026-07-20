@@ -105,7 +105,8 @@ describe("site integration", () => {
     assert.match(html, /Supplements: top 5 guides/);
     assert.match(html, /Editor shelf/);
     assert.match(html, /\/products\//);
-    assert.match(html, /Read guide/);
+    assert.match(html, /Check price/);
+    assert.match(html, /Read full guide/);
   });
 
   it("category page shows top 5 guides and nav strip", async () => {
