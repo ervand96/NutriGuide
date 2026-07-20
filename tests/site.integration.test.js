@@ -65,6 +65,17 @@ describe("site integration", () => {
     assert.match(html, /Add to cart/);
   });
 
+  it("homepage shows new conversion sections", async () => {
+    const res = await fetch(BASE);
+    const html = await res.text();
+    assert.match(html, /How shopping with NutriGuide works/);
+    assert.match(html, /Start with your goal/);
+    assert.match(html, /Trending guides this week/);
+    assert.match(html, /Get weekly pick alerts/);
+    assert.match(html, /Why only iHerb and MyProtein/);
+    assert.match(html, /Independent reviews|reviews published|\+ reviews/i);
+  });
+
   it("quiz page loads with shared navbar", async () => {
     const res = await fetch(`${BASE}/quiz`);
     assert.equal(res.status, 200);

@@ -10,6 +10,12 @@ import StarterStacks from "@/components/StarterStacks";
 import StorePicker from "@/components/StorePicker";
 import DietComparisonCards from "@/components/DietComparisonCards";
 import ProductShelf from "@/components/ProductShelf";
+import HowItWorks from "@/components/HowItWorks";
+import TrendingGuides from "@/components/TrendingGuides";
+import FaqAccordion from "@/components/FaqAccordion";
+import NewsletterStrip from "@/components/NewsletterStrip";
+import TrustBar from "@/components/TrustBar";
+import QuickPaths from "@/components/QuickPaths";
 import { getAllPosts } from "@/lib/posts";
 import Link from "next/link";
 
@@ -118,6 +124,14 @@ const faqs = [
     q: "Which diet is best for beginners?",
     a: "It depends on your goals, schedule, and food preferences. Take our 2-minute quiz below and we'll point you to the guide that fits you best.",
   },
+  {
+    q: "Why only iHerb and MyProtein?",
+    a: "We focus on two stores so every link stays tracked and discount-ready: iHerb for vitamins & wellness, MyProtein for protein and sports nutrition. Fewer partners means clearer picks and fewer fake “deals.”",
+  },
+  {
+    q: "Will I pay more if I click your link?",
+    a: "No. You pay the same retail price — often less when a discount is applied. Our commission comes from the store, not from an extra fee on your order.",
+  },
 ];
 
 export default function Home() {
@@ -128,13 +142,6 @@ export default function Home() {
   const featuredPosts = allPosts.filter((p) => p.featured).slice(0, 3);
   const rest = allPosts.filter((p) => !featuredPosts.some((f) => f.slug === p.slug));
   const posts = [...featuredPosts, ...rest].slice(0, 6);
-
-  const stats = [
-    { value: String(allPosts.length), label: "Reviews published" },
-    { value: "2", label: "Partner stores" },
-    { value: "100%", label: "Independent opinions" },
-    { value: "0", label: "Paid placements" },
-  ];
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -154,6 +161,26 @@ export default function Home() {
     .sort((a, b) => (b.rating || 0) - (a.rating || 0))
     .slice(0, 6);
 
+  const trendingGuides = posts.slice(0, 3).map((p) => {
+    const cat = p.category.toLowerCase();
+    const shop =
+      cat === "supplements" || cat === "reviews"
+        ? {
+            partner: (/protein|creatine|whey|pre-workout/i.test(p.title)
+              ? "myprotein"
+              : "iherb") as "iherb" | "myprotein",
+            q: p.title.split(":")[0].trim().slice(0, 48),
+          }
+        : { partner: "iherb" as const, q: p.category };
+    return {
+      title: p.title,
+      description: p.description,
+      href: `/category/${p.category.toLowerCase()}/${p.slug}`,
+      category: p.category,
+      shop,
+    };
+  });
+
   return (
     <>
       <script
@@ -163,10 +190,19 @@ export default function Home() {
       <Navbar />
       <main>
         {/* HERO */}
-        <section className="bg-gradient-to-br from-leaf-500 via-leaf-600 to-leaf-700 hero-shimmer text-white py-16 sm:py-20 md:py-24 px-4 sm:px-6">
-          <div className="max-w-3xl mx-auto text-center">
-            <p className="text-leaf-100 text-xs font-bold tracking-[3px] sm:tracking-[4px] uppercase mb-4 sm:mb-6 animate-on-scroll is-visible animate-fade-up">
-              Trusted Nutrition Reviews
+        <section className="relative overflow-hidden bg-gradient-to-br from-leaf-500 via-leaf-600 to-leaf-700 hero-shimmer text-white py-16 sm:py-20 md:py-28 px-4 sm:px-6">
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.12]"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 20% 20%, #fff 1px, transparent 1px), radial-gradient(circle at 80% 60%, #fff 1px, transparent 1px)",
+              backgroundSize: "48px 48px, 64px 64px",
+            }}
+            aria-hidden
+          />
+          <div className="relative max-w-3xl mx-auto text-center">
+            <p className="font-display font-black text-2xl sm:text-3xl md:text-4xl tracking-tight mb-3 sm:mb-4 animate-on-scroll is-visible animate-fade-up">
+              NutriGuide
             </p>
             <h1 className="font-display font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight mb-4 sm:mb-6">
               Find the Diet That
@@ -174,8 +210,8 @@ export default function Home() {
               <span className="text-green-200">Actually Works</span>
             </h1>
             <p className="text-white/80 text-base sm:text-lg md:text-xl leading-relaxed max-w-xl mx-auto mb-8 sm:mb-10 px-2">
-              Science-backed reviews of diets, supplements, and programs — so
-              you stop guessing and start seeing results.
+              Science-backed reviews of diets, supplements, and programs — then
+              shop iHerb &amp; MyProtein with our discount links.
             </p>
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center max-w-lg sm:max-w-none mx-auto">
               <Link
@@ -190,31 +226,25 @@ export default function Home() {
               >
                 Take 2-Minute Quiz
               </Link>
-              <AffiliateButton partner="iherb" source="hero" variant="ghost" className="!py-3.5">
+            </div>
+            <div className="mt-5 flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center max-w-md mx-auto">
+              <AffiliateButton partner="iherb" source="hero" variant="ghost" className="!py-3 !text-sm">
                 🌿 Shop iHerb Deals →
               </AffiliateButton>
-              <AffiliateButton partner="myprotein" source="hero" variant="ghost" className="!py-3.5">
+              <AffiliateButton partner="myprotein" source="hero" variant="ghost" className="!py-3 !text-sm">
                 🥤 Shop MyProtein →
               </AffiliateButton>
             </div>
           </div>
         </section>
 
-        {/* STATS */}
-        <section className="bg-white border-b border-gray-100 py-6 px-6">
-          <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="font-display font-black text-3xl text-leaf-500">
-                  {s.value}
-                </div>
-                <div className="text-gray-400 text-xs mt-1">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <TrustBar reviewsCount={allPosts.length} />
 
         <OfferStrip source="home-top" />
+
+        <HowItWorks />
+
+        <QuickPaths />
 
         <ShopByGoal />
 
@@ -347,6 +377,8 @@ export default function Home() {
           </div>
         </section>
 
+        <TrendingGuides guides={trendingGuides} />
+
         <StoreGuide />
 
         {/* WHY TRUST US */}
@@ -356,7 +388,7 @@ export default function Home() {
           </h2>
           <p className="text-gray-400 mb-8 max-w-2xl">
             We built NutriGuide because most nutrition advice online is
-            either paid promotion or unverified opinion. Here's how we're
+            either paid promotion or unverified opinion. Here&apos;s how we&apos;re
             different.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -462,24 +494,14 @@ export default function Home() {
         </section>
 
         {/* FAQ */}
-        <section className="max-w-4xl mx-auto px-6 pb-16">
-          <h2 className="font-display font-black text-3xl mb-8 text-center">
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+          <h2 className="font-display font-black text-2xl sm:text-3xl mb-6 sm:mb-8 text-center">
             Frequently Asked Questions
           </h2>
-          <div className="flex flex-col gap-4">
-            {faqs.map((f) => (
-              <div
-                key={f.q}
-                className="bg-leaf-50 border border-leaf-100 rounded-2xl p-6"
-              >
-                <div className="font-display font-bold text-bark mb-2">
-                  {f.q}
-                </div>
-                <p className="text-gray-500 text-sm leading-relaxed">{f.a}</p>
-              </div>
-            ))}
-          </div>
+          <FaqAccordion faqs={faqs} />
         </section>
+
+        <NewsletterStrip />
 
         {/* CTA BANNER */}
         <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
