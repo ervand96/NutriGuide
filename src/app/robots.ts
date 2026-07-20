@@ -16,8 +16,13 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/go/"],
       },
     ],
-    // List both: XML + plain text (GSC fallback when XML processing fails)
-    sitemap: [`${SITE_URL}/sitemap.xml`, `${SITE_URL}/sitemap.txt`],
+    // Prefer /sitemaps/pages.* — fresh paths avoid GSC cached "Couldn't fetch"
+    sitemap: [
+      `${SITE_URL}/sitemaps/pages.xml`,
+      `${SITE_URL}/sitemaps/pages.txt`,
+      `${SITE_URL}/sitemap.xml`,
+      `${SITE_URL}/sitemap.txt`,
+    ],
     host,
   };
 }

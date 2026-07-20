@@ -72,9 +72,21 @@ ${body}
 mkdirSync(dirname(outPath), { recursive: true });
 writeFileSync(outPath, xml, "utf8");
 
-// Plain-text sitemap — Google accepts this and GSC often processes it when XML fails
 const txtPath = join(root, "public", "sitemap.txt");
 writeFileSync(txtPath, `${entries.map((e) => e.loc).join("\n")}\n`, "utf8");
 
+// Alternate paths — GSC often caches "Couldn't fetch" for /sitemap.xml on Vercel;
+// submitting a NEW path forces a fresh Google fetch.
+const altDir = join(root, "public", "sitemaps");
+mkdirSync(altDir, { recursive: true });
+writeFileSync(join(altDir, "pages.xml"), xml, "utf8");
+writeFileSync(
+  join(altDir, "pages.txt"),
+  `${entries.map((e) => e.loc).join("\n")}\n`,
+  "utf8",
+);
+writeFileSync(join(altDir, "index.xml"), xml, "utf8");
+
 console.log(`Wrote ${outPath} (${entries.length} URLs)`);
 console.log(`Wrote ${txtPath} (${entries.length} URLs)`);
+console.log(`Wrote ${altDir}/pages.xml (+ pages.txt) for GSC cache-bust`);

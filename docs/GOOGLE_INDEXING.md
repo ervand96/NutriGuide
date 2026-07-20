@@ -1,39 +1,40 @@
-# Get NutriGuide into Google (do this now — 10 minutes)
+# Google sitemap «Не получено» — это НЕ значит, что файл сломан
 
-Google **cannot** be notified by ping anymore (deprecated 2023).  
-Only **you** can push indexing via Search Console. The site is already verified.
+Твой sitemap **открывается** (HTTP 200). Googlebot тоже его видит.
+В Search Console на `*.vercel.app` часто висит **старая ошибка в кэше** для `/sitemap.xml` и `/sitemap.txt`.
 
-## Step 1 — Open Search Console
-https://search.google.com/search-console?resource_id=https%3A%2F%2Fnutri-guide-indol.vercel.app%2F
+## Что поставить СЕЙЧАС (новый путь)
 
-## Step 2 — Submit sitemaps (Sitemaps → add)
-1. Delete old broken `/sitemap.xml` entry if it still shows errors
-2. Submit: `sitemap.txt`
-3. Also submit: `sitemap.xml`
-4. Wait — status may stay “processing” for hours/days on vercel.app
+В поле «Добавьте файл Sitemap» вставь **ровно**:
 
-## Step 3 — Request indexing (URL Inspection) — paste one by one, Request indexing
-Priority URLs:
-1. https://nutri-guide-indol.vercel.app/
-2. https://nutri-guide-indol.vercel.app/best-picks
-3. https://nutri-guide-indol.vercel.app/quiz
-4. https://nutri-guide-indol.vercel.app/category/reviews
-5. https://nutri-guide-indol.vercel.app/category/supplements
-6. https://nutri-guide-indol.vercel.app/category/diets
-7. https://nutri-guide-indol.vercel.app/site-map
-8. Pick 3 strong articles (creatine, magnesium, mediterranean)
+```
+sitemaps/pages.xml
+```
 
-Daily limit ~10–20 requests — don’t spam.
+Нажми **ОТПРАВИТЬ**.
 
-## Step 4 — Check in 2–7 days
-Search: `site:nutri-guide-indol.vercel.app`  
-Then: `best creatine site:nutri-guide-indol.vercel.app`
+Если снова ошибка — вторым:
 
-## Already done in code
-- Verified meta tag in layout
-- robots.txt + sitemaps
-- HTML sitemap at `/site-map`
-- IndexNow for Bing/Yandex: `npm run indexnow` (after deploy)
+```
+sitemaps/pages.txt
+```
 
-## Biggest boost later
-Buy a real domain (not vercel.app) → faster trust & indexing.
+Проверка в браузере:
+- https://nutri-guide-indol.vercel.app/sitemaps/pages.xml
+- https://nutri-guide-indol.vercel.app/sitemaps/pages.txt
+
+## Старые записи
+
+`/sitemap.xml` и `/sitemap.txt` со статусом «Не получено» можно **игнорировать** или удалить.
+Не отправляй их снова — Google помнит неудачу по этому URL.
+
+## Параллельно (важнее sitemap)
+
+1. URL Inspection → главная → **Запросить индексирование**
+2. То же для `/best-picks`, `/quiz`, 3 статей
+3. Подожди 1–7 дней (на vercel.app бывает долго)
+
+## Почему так
+
+Google отключил ping. На Vercel «Couldn't fetch» часто = кэш GSC / задержка, а не 404.
+Сайт при этом индексируется и через обычный краулинг + URL Inspection.
