@@ -1,13 +1,15 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { SITE_CONTAINER } from "@/lib/layout.js";
+import { pageMetadata } from "@/lib/seo.js";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy",
   description:
     "Privacy policy for NutriGuide, including data collection, cookies, and affiliate disclosures.",
-};
+  path: "/privacy-policy",
+});
 
 export default function PrivacyPolicyPage() {
   return (

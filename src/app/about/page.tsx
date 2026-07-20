@@ -3,13 +3,15 @@ import Footer from "../../components/Footer";
 import StoreGuide from "../../components/StoreGuide";
 import OfferStrip from "../../components/OfferStrip";
 import { SITE_CONTAINER } from "@/lib/layout.js";
+import { pageMetadata } from "@/lib/seo.js";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About Us",
   description:
     "Learn about NutriGuide's mission to provide honest, science-backed nutrition and supplement reviews.",
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

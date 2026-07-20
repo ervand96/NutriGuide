@@ -18,7 +18,12 @@ import TrustBar from "@/components/TrustBar";
 import QuickPaths from "@/components/QuickPaths";
 import CategoryGuides from "@/components/CategoryGuides";
 import CategoryNavStrip from "@/components/CategoryNavStrip";
+import StartHereStrip from "@/components/StartHereStrip";
 import { getAllPosts } from "@/lib/posts";
+import {
+  organizationJsonLd,
+  websiteJsonLd,
+} from "@/lib/seo.js";
 import Link from "next/link";
 
 const categories = [
@@ -155,6 +160,8 @@ export default function Home() {
     })),
   };
 
+  const siteSchema = [organizationJsonLd(), websiteJsonLd(), faqSchema];
+
   const topProducts = allPosts
     .flatMap((post) =>
       (post.products || []).map((p) => ({ ...p, postSlug: post.slug, postCategory: post.category })),
@@ -179,7 +186,7 @@ export default function Home() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchema) }}
       />
       <Navbar />
       <main>
@@ -238,11 +245,13 @@ export default function Home() {
 
         <OfferStrip source="home-top" />
 
-        <CategoryGuides category="diets" posts={dietPosts} limit={5} />
+        <StartHereStrip />
 
-        <CategoryGuides category="reviews" posts={reviewPosts} limit={5} />
+        <CategoryGuides category="diets" posts={dietPosts} limit={3} />
 
-        <CategoryGuides category="supplements" posts={supplementPosts} limit={5} />
+        <CategoryGuides category="reviews" posts={reviewPosts} limit={3} />
+
+        <CategoryGuides category="supplements" posts={supplementPosts} limit={3} />
 
         <HowItWorks />
 

@@ -1,13 +1,15 @@
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { SITE_CONTAINER } from "@/lib/layout.js";
+import { pageMetadata } from "@/lib/seo.js";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Affiliate Disclosure",
   description:
     "How NutriGuide uses affiliate links and how that affects (or doesn't affect) our recommendations.",
-};
+  path: "/affiliate-disclosure",
+});
 
 export default function AffiliateDisclosurePage() {
   return (

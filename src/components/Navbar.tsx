@@ -50,7 +50,7 @@ export default function Navbar() {
 
         <div className="flex items-center gap-1.5 sm:gap-2">
           <Link
-            href="/category/reviews"
+            href="/best-picks"
             className="hidden lg:inline-flex text-gray-500 hover:text-leaf-500 text-sm font-bold no-underline"
           >
             Best Picks

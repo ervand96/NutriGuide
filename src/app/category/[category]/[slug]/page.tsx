@@ -10,13 +10,17 @@ import OfferStrip from "../../../../components/OfferStrip";
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "../../../../lib/posts";
 import { SITE_CONTAINER } from "@/lib/layout.js";
+import {
+  SITE_URL,
+  articleJsonLd,
+  breadcrumbJsonLd,
+  productJsonLd,
+} from "@/lib/seo.js";
 import ProductCard from "../../../../components/ProductCard";
+import ShareButtons from "../../../../components/ShareButtons";
 import { remark } from "remark";
 import remarkHtml from "remark-html";
 import type { Metadata } from "next";
-
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://nutri-guide-indol.vercel.app";
 
 export async function generateMetadata({
   params,
@@ -29,7 +33,7 @@ export async function generateMetadata({
     return {};
   }
 
-  const articleUrl = `${siteUrl}/category/${params.category}/${params.slug}`;
+  const articleUrl = `${SITE_URL}/category/${params.category}/${params.slug}`;
 
   return {
     title: post.title,
@@ -44,7 +48,7 @@ export async function generateMetadata({
       type: "article",
       images: [
         {
-          url: `${siteUrl}/og/${params.slug}`,
+          url: `${SITE_URL}/og/${params.slug}`,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -55,7 +59,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      images: [`${siteUrl}/og/${params.slug}`],
+      images: [`${SITE_URL}/og/${params.slug}`],
     },
   };
 }
@@ -100,75 +104,28 @@ export default async function ArticlePage({
     await remark().use(remarkHtml).process(post.content)
   ).toString();
 
-  const articleUrl = `${siteUrl}/category/${params.category}/${params.slug}`;
-  const categoryUrl = `${siteUrl}/category/${params.category}`;
+  const articleUrl = `${SITE_URL}/category/${params.category}/${params.slug}`;
+  const categoryUrl = `${SITE_URL}/category/${params.category}`;
   const products = post.products ?? [];
   const quickLines = quickAnswerLines(products);
 
   const jsonLd = [
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: siteUrl,
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: post.category,
-          item: categoryUrl,
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: post.title,
-          item: articleUrl,
-        },
-      ],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      headline: post.title,
+    breadcrumbJsonLd([
+      { name: "Home", url: SITE_URL },
+      { name: post.category, url: categoryUrl },
+      { name: post.title, url: articleUrl },
+    ]),
+    articleJsonLd({
+      title: post.title,
       description: post.description,
-      datePublished: post.date,
-      dateModified: post.date,
-      author: {
-        "@type": "Organization",
-        name: "NutriGuide",
-      },
-      publisher: {
-        "@type": "Organization",
-        name: "NutriGuide",
-      },
-      mainEntityOfPage: {
-        "@type": "WebPage",
-        "@id": articleUrl,
-      },
-      image: `${siteUrl}/og/${params.slug}`,
-    },
-    ...products.map((product: any) => ({
-      "@context": "https://schema.org",
-      "@type": "Product",
-      name: product.name,
-      description: product.description,
-      brand: {
-        "@type": "Brand",
-        name: product.name,
-      },
-      offers: {
-        "@type": "Offer",
-        url: product.affiliateUrl?.startsWith("http")
-          ? product.affiliateUrl
-          : `${siteUrl}${product.affiliateUrl}`,
-        price: product.price?.replace(/[^0-9.]/g, "") || "0",
-        priceCurrency: "USD",
-      },
-    })),
+      date: post.date,
+      url: articleUrl,
+      image: `${SITE_URL}/og/${params.slug}`,
+      category: post.category,
+    }),
+    ...products.map((product: any) =>
+      productJsonLd(product, { siteUrl: SITE_URL }),
+    ),
   ];
 
   return (
@@ -197,13 +154,16 @@ export default async function ArticlePage({
         <div className={`${SITE_CONTAINER} py-10 sm:py-14`}>
           <nav aria-label="Breadcrumb" className="mb-4 sm:mb-6 text-xs sm:text-sm text-gray-500">
             <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-              <a href="/" className="hover:text-leaf-500">
-                Home
-              </a>
-              <span>/</span>
-              <a href={categoryUrl} className="hover:text-leaf-500">
-                {post.category}
-              </a>
+            <a href="/" className="hover:text-leaf-500">
+              Home
+            </a>
+            <span>/</span>
+            <a
+              href={`/category/${params.category}`}
+              className="hover:text-leaf-500"
+            >
+              {post.category}
+            </a>
               <span>/</span>
               <span className="text-gray-700 line-clamp-2">{post.title}</span>
             </div>
@@ -246,6 +206,8 @@ export default async function ArticlePage({
             className="article-content mb-10"
             dangerouslySetInnerHTML={{ __html: contentHtml }}
           />
+
+          <ShareButtons title={post.title} url={articleUrl} />
 
           <ArticleShopCta slug={params.slug} />
 

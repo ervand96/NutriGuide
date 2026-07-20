@@ -7,10 +7,12 @@ import CategoryNavStrip from "../../../components/CategoryNavStrip";
 import ProductShelf from "../../../components/ProductShelf";
 import GuideShelfCard from "../../../components/GuideShelfCard";
 import { getAllPosts } from "../../../lib/posts";
+import {
+  SITE_URL,
+  breadcrumbJsonLd,
+  itemListJsonLd,
+} from "@/lib/seo.js";
 import type { Metadata } from "next";
-
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://nutri-guide-indol.vercel.app";
 
 const categoryShop: Record<
   string,
@@ -64,13 +66,31 @@ export function generateMetadata({
     title: `${params.category} Articles`,
     description: `All ${params.category} articles on NutriGuide.`,
   };
-  const url = `${siteUrl}/category/${key}`;
+  const url = `${SITE_URL}/category/${key}`;
 
   return {
     title: meta.title,
     description: meta.description,
     alternates: { canonical: url },
-    openGraph: { title: meta.title, description: meta.description, url },
+    openGraph: {
+      title: meta.title,
+      description: meta.description,
+      url,
+      images: [
+        {
+          url: `${SITE_URL}/og/default`,
+          width: 1200,
+          height: 630,
+          alt: meta.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: meta.title,
+      description: meta.description,
+      images: [`${SITE_URL}/og/default`],
+    },
   };
 }
 
@@ -96,11 +116,33 @@ export default function CategoryPage({
     .sort((a, b) => (b.rating || 0) - (a.rating || 0))
     .slice(0, 5);
 
-  const featured = posts.slice(0, 5);
-  const rest = posts.slice(5);
+  const featured = posts.slice(0, 3);
+  const rest = posts.slice(3);
+
+  const jsonLd = [
+    breadcrumbJsonLd([
+      { name: "Home", url: SITE_URL },
+      {
+        name: params.category,
+        url: `${SITE_URL}/category/${key}`,
+      },
+    ]),
+    itemListJsonLd({
+      name: meta?.title || `${params.category} guides`,
+      description: meta?.description || `Guides in ${params.category}`,
+      items: posts.map((p) => ({
+        name: p.title,
+        url: `${SITE_URL}/category/${key}/${p.slug}`,
+      })),
+    }),
+  ];
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar />
       <CategoryNavStrip active={["diets", "reviews", "supplements"].includes(key) ? key : undefined} />
       <OfferStrip source={`category-${params.category}`} />
@@ -115,7 +157,7 @@ export default function CategoryPage({
                 {meta?.description || `All articles in ${params.category}`}
               </p>
               <p className="text-leaf-600 text-sm font-semibold mt-2">
-                Showing {posts.length} guides · top 5 featured below
+                Showing {posts.length} guides · top 3 featured below
               </p>
             </div>
             {shop && (
@@ -131,9 +173,9 @@ export default function CategoryPage({
           </div>
 
           <h2 className="font-display font-black text-xl sm:text-2xl text-bark mb-4">
-            {`Top 5 ${params.category} guides`}
+            {`Top 3 ${params.category} guides`}
           </h2>
-          <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-3 xl:grid-cols-5 md:gap-5 md:overflow-visible md:pb-0 md:items-stretch">
+          <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:pb-0 md:items-stretch">
             {featured.map((post, i) => (
               <GuideShelfCard key={post.slug} post={post} rank={i + 1} />
             ))}

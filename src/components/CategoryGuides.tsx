@@ -17,7 +17,7 @@ const META: Record<
     emoji: "🥗",
     title: "Diets",
     subtitle:
-      "Five practical eating plans — tap a card to read, then shop matching essentials.",
+      "Three practical eating plans — tap a card to read, then shop matching essentials.",
     partner: "iherb",
     query: "diet electrolytes fiber omega",
     shopLabel: "Shop diet essentials →",
@@ -26,7 +26,7 @@ const META: Record<
     emoji: "⭐",
     title: "Reviews",
     subtitle:
-      "Five independent product picks — photos, prices, and honest takeaways.",
+      "Three independent product picks — photos, prices, and honest takeaways.",
     partner: "myprotein",
     query: "protein creatine best sellers",
     shopLabel: "Shop top rated →",
@@ -35,7 +35,7 @@ const META: Record<
     emoji: "💊",
     title: "Supplements",
     subtitle:
-      "Five evidence-based guides — magnesium, omega-3, vitamins, and more.",
+      "Three evidence-based guides — magnesium, omega-3, vitamins, and more.",
     partner: "iherb",
     query: "vitamins magnesium omega",
     shopLabel: "Shop supplements →",
@@ -51,7 +51,7 @@ interface Props {
 export default function CategoryGuides({
   category,
   posts,
-  limit = 5,
+  limit = 3,
 }: Props) {
   const meta = META[category];
   if (!meta || !posts?.length) return null;
@@ -107,7 +107,7 @@ export default function CategoryGuides({
           </div>
         </div>
 
-        <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-3 xl:grid-cols-5 md:gap-5 lg:gap-6 md:overflow-visible md:pb-0 md:snap-none md:items-stretch">
+        <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-3 md:gap-5 lg:gap-6 md:overflow-visible md:pb-0 md:snap-none md:items-stretch">
           {list.map((post, i) => (
             <GuideShelfCard
               key={post.slug}

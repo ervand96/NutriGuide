@@ -41,6 +41,12 @@ export default function Footer() {
             <div>
               <div className="font-bold text-sm mb-3 text-bark">Content</div>
               <div className="flex flex-col gap-2.5">
+                <a
+                  href="/best-picks"
+                  className="text-gray-400 hover:text-leaf-500 text-sm transition-colors no-underline py-0.5"
+                >
+                  Best Picks
+                </a>
                 {["Diets", "Supplements", "Reviews"].map((item) => (
                   <a
                     key={item}
@@ -50,6 +56,12 @@ export default function Footer() {
                     {item}
                   </a>
                 ))}
+                <a
+                  href="/quiz"
+                  className="text-gray-400 hover:text-leaf-500 text-sm transition-colors no-underline py-0.5"
+                >
+                  Diet Quiz
+                </a>
               </div>
             </div>
             <div>

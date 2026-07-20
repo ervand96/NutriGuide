@@ -1,12 +1,14 @@
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { SITE_CONTAINER } from "@/lib/layout.js";
+import { pageMetadata } from "@/lib/seo.js";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact Us",
   description: "Get in touch with the NutriGuide team.",
-};
+  path: "/contact",
+});
 
 const CONTACT_EMAIL = "ervandharutyunyan06096@gmail.com";
 

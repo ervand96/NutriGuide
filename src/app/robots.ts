@@ -1,12 +1,16 @@
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://nutri-guide-indol.vercel.app";
+import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/seo.js";
 
-export default function robots() {
+export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-    },
-    sitemap: `${siteUrl}/sitemap.xml`,
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/api/", "/go/"],
+      },
+    ],
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }

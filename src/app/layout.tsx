@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
+import { SITE_URL, DEFAULT_DESCRIPTION } from "@/lib/seo.js";
 import "./globals.css";
 
 const inter = Inter({
@@ -16,28 +17,29 @@ export const viewport: Viewport = {
   themeColor: "#2D7A3A",
 };
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://nutri-guide-indol.vercel.app";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "NutriGuide — Honest Diet & Supplement Reviews",
     template: "%s | NutriGuide",
   },
-  description:
-    "Science-backed reviews of diets, supplements, and nutrition programs to help you make the right choice.",
+  description: DEFAULT_DESCRIPTION,
   keywords: [
     "nutrition reviews",
     "diet advice",
     "supplement guides",
+    "best protein powder",
+    "creatine review",
+    "mediterranean diet",
+    "iHerb deals",
+    "MyProtein code",
     "healthy eating",
     "weight loss tips",
   ],
   alternates: {
-    canonical: siteUrl,
+    canonical: SITE_URL,
     types: {
-      "application/rss+xml": `${siteUrl}/rss.xml`,
+      "application/rss+xml": `${SITE_URL}/rss.xml`,
     },
   },
   robots: {
@@ -55,14 +57,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: siteUrl,
+    url: SITE_URL,
     siteName: "NutriGuide",
     title: "NutriGuide — Honest Diet & Supplement Reviews",
-    description:
-      "Science-backed reviews of diets, supplements, and nutrition programs to help you make the right choice.",
+    description: DEFAULT_DESCRIPTION,
     images: [
       {
-        url: `${siteUrl}/og/default`,
+        url: `${SITE_URL}/og/default`,
         width: 1200,
         height: 630,
         alt: "NutriGuide nutrition reviews",
@@ -72,8 +73,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "NutriGuide — Honest Diet & Supplement Reviews",
-    description:
-      "Science-backed reviews of diets, supplements, and nutrition programs to help you make the right choice.",
+    description: DEFAULT_DESCRIPTION,
+    images: [`${SITE_URL}/og/default`],
   },
 };
 

@@ -100,20 +100,57 @@ describe("site integration", () => {
     assert.match(html, /Get weekly pick alerts/);
     assert.match(html, /Why only iHerb and MyProtein/);
     assert.match(html, /Independent reviews|reviews published|\+ reviews/i);
-    assert.match(html, /Diets: top 5 guides/);
-    assert.match(html, /Reviews: top 5 guides/);
-    assert.match(html, /Supplements: top 5 guides/);
+    assert.match(html, /Diets: top 3 guides/);
+    assert.match(html, /Reviews: top 3 guides/);
+    assert.match(html, /Supplements: top 3 guides/);
     assert.match(html, /Editor shelf/);
     assert.match(html, /\/products\//);
     assert.match(html, /Check price/);
     assert.match(html, /Read full guide/);
+    assert.match(html, /Start with one clear path/);
+    assert.match(html, /"@type":"Organization"/);
+    assert.match(html, /"@type":"WebSite"/);
   });
 
-  it("category page shows top 5 guides and nav strip", async () => {
+  it("best-picks hub loads for promotion funnel", async () => {
+    const res = await fetchOk(`${BASE}/best-picks`);
+    assert.equal(res.status, 200);
+    const html = await res.text();
+    assert.match(html, /Best diet/);
+    assert.match(html, /Top rated products|Most useful guides/i);
+    assert.match(html, /ItemList/);
+  });
+
+  it("quiz page has dedicated SEO metadata", async () => {
+    const res = await fetchOk(`${BASE}/quiz`);
+    assert.equal(res.status, 200);
+    const html = await res.text();
+    assert.match(html, /Find Your Perfect Diet|2-Minute Quiz|diet quiz/i);
+  });
+
+  it("rss feed escapes content and includes guid", async () => {
+    const res = await fetchOk(`${BASE}/rss.xml`);
+    assert.equal(res.status, 200);
+    const xml = await res.text();
+    assert.match(xml, /<guid isPermaLink="true">/);
+    assert.match(xml, /atom:link/);
+    assert.match(xml, /<item>/);
+  });
+
+  it("sitemap includes best-picks and priority hints", async () => {
+    const res = await fetchOk(`${BASE}/sitemap.xml`);
+    assert.equal(res.status, 200);
+    const xml = await res.text();
+    assert.match(xml, /\/best-picks/);
+    assert.match(xml, /\/quiz/);
+    assert.match(xml, /<priority>/);
+  });
+
+  it("category page shows top 3 guides and nav strip", async () => {
     const res = await fetchOk(`${BASE}/category/diets`);
     assert.equal(res.status, 200);
     const html = await res.text();
-    assert.match(html, /Top 5/);
+    assert.match(html, /Top 3/);
     assert.match(html, /guides/);
     assert.match(html, /aria-label="Browse topics"/);
   });
