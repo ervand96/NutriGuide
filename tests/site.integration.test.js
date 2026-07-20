@@ -98,7 +98,6 @@ describe("site integration", () => {
     const html = await res.text();
     assert.match(html, /How shopping with NutriGuide works/);
     assert.match(html, /Start with your goal/);
-    assert.match(html, /Trending guides this week/);
     assert.match(html, /Get weekly pick alerts/);
     assert.match(html, /Why only iHerb and MyProtein/);
     assert.match(html, /Independent reviews|reviews published|\+ reviews/i);
@@ -112,6 +111,8 @@ describe("site integration", () => {
     assert.match(html, /Start with one clear path/);
     assert.match(html, /"@type":"Organization"/);
     assert.match(html, /"@type":"WebSite"/);
+    assert.doesNotMatch(html, /Browse by Topic/);
+    assert.doesNotMatch(html, /Trending guides this week/);
   });
 
   it("best-picks hub loads for promotion funnel", async () => {

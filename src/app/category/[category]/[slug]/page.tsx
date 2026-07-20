@@ -34,17 +34,23 @@ export async function generateMetadata({
   }
 
   const articleUrl = `${SITE_URL}/category/${params.category}/${params.slug}`;
+  const canonicalUrl = post.canonicalSlug
+    ? `${SITE_URL}/category/${String(post.category).toLowerCase()}/${post.canonicalSlug}`
+    : articleUrl;
 
   return {
     title: post.title,
     description: post.description,
+    robots: post.noindex
+      ? { index: false, follow: true }
+      : { index: true, follow: true },
     alternates: {
-      canonical: articleUrl,
+      canonical: canonicalUrl,
     },
     openGraph: {
       title: post.title,
       description: post.description,
-      url: articleUrl,
+      url: canonicalUrl,
       type: "article",
       images: [
         {

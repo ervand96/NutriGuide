@@ -12,7 +12,7 @@ products: [{"rank":1,"name":"Thorne Creatine","badge":"Best Overall","rating":4.
 
 **Category:** Reviews
 
-Creatine is one of the most studied sports supplements available. It helps your muscles produce energy during short, intense efforts like lifting, sprinting, or repeated sets. Most people see benefits from a simple daily dose, but not every tub on the shelf is worth buying. This guide covers what to check before you purchase, how different forms compare, and where our 2026 picks will land once testing and sourcing are complete.
+Creatine is one of the most studied sports supplements available. It helps your muscles produce energy during short, intense efforts like lifting, sprinting, or repeated sets. Most people see benefits from a simple daily dose, but not every tub on the shelf is worth buying. This guide covers what to check before you purchase, how different forms compare, and our top 2026 picks from iHerb and MyProtein.
 
 ## What to Look for in a Creatine Supplement
 
@@ -30,9 +30,13 @@ Creatine is one of the most studied sports supplements available. It helps your 
 
 ## Our Top Creatine Picks for 2026
 
-Our full ranked list is coming soon. We are evaluating powders and capsules based on ingredient transparency, dose per serving, mixability, third-party testing where available, and price per gram on iHerb and MyProtein.
+We ranked three clear options you can buy today on iHerb or MyProtein:
 
-For now, use the checklist above to narrow your options. Prioritize plain creatine monohydrate from brands that disclose sourcing and batch testing. Avoid products that hide creatine inside proprietary blends, since you cannot tell how much you are actually getting.
+1. **Thorne Creatine** — best overall for third-party testing (NSF / Informed Sport)
+2. **MyProtein Creapure Creatine Monohydrate** — best if you want Creapure-sourced powder
+3. **California Gold Nutrition Sport Pure Creatine Monohydrate** — best value per gram on iHerb
+
+Use the product cards above (and the full reviews below) to compare price, dose, and testing — then tap Check Price for live deals.
 
 **Practical tip:** If you are new to creatine, start with a monohydrate powder before trying flavored stacks or alternate forms. It is the most cost-effective way to see whether creatine fits your routine.
 

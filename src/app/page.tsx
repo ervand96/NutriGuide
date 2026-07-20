@@ -3,7 +3,6 @@ import Footer from "@/components/Footer";
 import ArticleCard from "@/components/ArticleCard";
 import AffiliateButton from "@/components/AffiliateButton";
 import ShopByGoal from "@/components/ShopByGoal";
-import StoreGuide from "@/components/StoreGuide";
 import OfferStrip from "@/components/OfferStrip";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 import StarterStacks from "@/components/StarterStacks";
@@ -11,7 +10,6 @@ import StorePicker from "@/components/StorePicker";
 import DietComparisonCards from "@/components/DietComparisonCards";
 import ProductShelf from "@/components/ProductShelf";
 import HowItWorks from "@/components/HowItWorks";
-import TrendingGuides from "@/components/TrendingGuides";
 import FaqAccordion from "@/components/FaqAccordion";
 import NewsletterStrip from "@/components/NewsletterStrip";
 import TrustBar from "@/components/TrustBar";
@@ -26,27 +24,6 @@ import {
   websiteJsonLd,
 } from "@/lib/seo.js";
 import Link from "next/link";
-
-const categories = [
-  {
-    href: "/category/diets",
-    emoji: "🥗",
-    title: "Diets",
-    desc: "Keto, IF, Mediterranean and more",
-  },
-  {
-    href: "/category/reviews",
-    emoji: "⭐",
-    title: "Reviews",
-    desc: "Honest product & program reviews",
-  },
-  {
-    href: "/category/supplements",
-    emoji: "💊",
-    title: "Supplements",
-    desc: "What actually works, what doesn't",
-  },
-];
 
 const deals = [
   {
@@ -181,8 +158,6 @@ export default function Home() {
     .filter((p) => p.category === "Supplements")
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  const trendingPosts = posts.slice(0, 3);
-
   return (
     <>
       <script
@@ -216,31 +191,6 @@ export default function Home() {
         <StorePicker />
 
         <StarterStacks />
-
-        {/* CATEGORIES */}
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-          <AnimateOnScroll animation="fade-up">
-            <h2 className="font-display font-black text-2xl sm:text-3xl mb-2">
-              Browse by Topic
-            </h2>
-            <p className="text-gray-400 mb-6 sm:mb-8">Pick what you&apos;re looking for</p>
-          </AnimateOnScroll>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-            {categories.map((cat, i) => (
-              <AnimateOnScroll key={cat.href} animation="fade-up" delay={i * 80}>
-                <Link href={cat.href} className="no-underline block h-full">
-                  <div className="bg-leaf-50 border border-leaf-100 rounded-2xl p-5 sm:p-6 hover:bg-leaf-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer h-full">
-                    <div className="text-3xl sm:text-4xl mb-3">{cat.emoji}</div>
-                    <div className="font-display font-bold text-lg sm:text-xl text-bark mb-1">
-                      {cat.title}
-                    </div>
-                    <div className="text-gray-500 text-sm">{cat.desc}</div>
-                  </div>
-                </Link>
-              </AnimateOnScroll>
-            ))}
-          </div>
-        </section>
 
         {/* TOP RATED PRODUCTS */}
         {topProducts.length > 0 && (
@@ -361,10 +311,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <TrendingGuides posts={trendingPosts} />
-
-        <StoreGuide />
 
         {/* WHY TRUST US */}
         <section className="max-w-6xl mx-auto px-6 pb-16">

@@ -96,15 +96,19 @@ export function getAllPosts() {
         readTime: data.readTime || "5 min read",
         date: safeDate(data.date),
         featured: Boolean(data.featured),
+        noindex: Boolean(data.noindex),
+        canonicalSlug: data.canonicalSlug ? String(data.canonicalSlug) : null,
         content,
         products: normalizeProducts(data.products, file.replace(".md", ""), safeCategory(data.category || cat)),
       });
     }
   }
 
-  return all.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  );
+  return all
+    .filter((p) => !p.noindex)
+    .sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    );
 }
 
 // ─────────────────────────────
@@ -128,6 +132,8 @@ export function getPostBySlug(slug) {
       date: safeDate(data.date),
       readTime: data.readTime || "5 min read",
       featured: Boolean(data.featured),
+      noindex: Boolean(data.noindex),
+      canonicalSlug: data.canonicalSlug ? String(data.canonicalSlug) : null,
       content,
       products: normalizeProducts(data.products, slug, safeCategory(data.category)),
     };

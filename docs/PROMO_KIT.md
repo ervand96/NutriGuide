@@ -2,6 +2,11 @@
 
 Use these after deploy. Prefer value-first posts — never spam affiliate codes as the first line.
 
+## Content strategy (already applied in repo)
+- Thin duplicate protein/collagen/generic guides are `noindex` + canonical to the strongest article
+- Homepage removed redundant Browse by Topic / Trending / StoreGuide blocks
+- Prefer one strong article per topic over near-duplicates
+
 ## Live URLs
 - Home: https://nutri-guide-indol.vercel.app
 - Best picks: https://nutri-guide-indol.vercel.app/best-picks
