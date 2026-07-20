@@ -22,7 +22,7 @@ export default function ArticleCard({ article }: { article: Article }) {
         <h3 className="font-display font-bold text-lg leading-snug text-gray-800 mb-3 flex-1">
           {article.title}
         </h3>
-        <p className="text-gray-500 text-sm leading-relaxed mb-4">
+        <p className="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3">
           {article.description}
         </p>
         <div className="flex items-center justify-between text-xs text-gray-400 mt-auto pt-4 border-t border-gray-50">

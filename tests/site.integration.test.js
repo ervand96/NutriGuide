@@ -74,6 +74,18 @@ describe("site integration", () => {
     assert.match(html, /Get weekly pick alerts/);
     assert.match(html, /Why only iHerb and MyProtein/);
     assert.match(html, /Independent reviews|reviews published|\+ reviews/i);
+    assert.match(html, /Diets: top 5 guides/);
+    assert.match(html, /Reviews: top 5 guides/);
+    assert.match(html, /Supplements: top 5 guides/);
+  });
+
+  it("category page shows top 5 guides and nav strip", async () => {
+    const res = await fetch(`${BASE}/category/diets`);
+    assert.equal(res.status, 200);
+    const html = await res.text();
+    assert.match(html, /Top 5/);
+    assert.match(html, /guides/);
+    assert.match(html, /aria-label="Browse topics"/);
   });
 
   it("quiz page loads with shared navbar", async () => {

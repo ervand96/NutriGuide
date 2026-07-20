@@ -16,6 +16,8 @@ import FaqAccordion from "@/components/FaqAccordion";
 import NewsletterStrip from "@/components/NewsletterStrip";
 import TrustBar from "@/components/TrustBar";
 import QuickPaths from "@/components/QuickPaths";
+import CategoryGuides from "@/components/CategoryGuides";
+import CategoryNavStrip from "@/components/CategoryNavStrip";
 import { getAllPosts } from "@/lib/posts";
 import Link from "next/link";
 
@@ -161,6 +163,16 @@ export default function Home() {
     .sort((a, b) => (b.rating || 0) - (a.rating || 0))
     .slice(0, 6);
 
+  const dietPosts = allPosts
+    .filter((p) => p.category === "Diets")
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const reviewPosts = allPosts
+    .filter((p) => p.category === "Reviews")
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const supplementPosts = allPosts
+    .filter((p) => p.category === "Supplements")
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
   const trendingGuides = posts.slice(0, 3).map((p) => {
     const cat = p.category.toLowerCase();
     const shop =
@@ -240,7 +252,15 @@ export default function Home() {
 
         <TrustBar reviewsCount={allPosts.length} />
 
+        <CategoryNavStrip />
+
         <OfferStrip source="home-top" />
+
+        <CategoryGuides category="diets" posts={dietPosts} limit={5} />
+
+        <CategoryGuides category="reviews" posts={reviewPosts} limit={5} />
+
+        <CategoryGuides category="supplements" posts={supplementPosts} limit={5} />
 
         <HowItWorks />
 

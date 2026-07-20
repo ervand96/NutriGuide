@@ -5,6 +5,8 @@ import ArticleShopCta from "../../../../components/ArticleShopCta";
 import ArticleBottomShop from "../../../../components/ArticleBottomShop";
 import ArticleTopPicks from "../../../../components/ArticleTopPicks";
 import MobileShopBar from "../../../../components/MobileShopBar";
+import CategoryNavStrip from "../../../../components/CategoryNavStrip";
+import OfferStrip from "../../../../components/OfferStrip";
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "../../../../lib/posts";
 import ProductCard from "../../../../components/ProductCard";
@@ -171,6 +173,19 @@ export default async function ArticlePage({
   return (
     <>
       <Navbar />
+      <CategoryNavStrip
+        active={
+          ["diets", "reviews", "supplements"].includes(
+            params.category.toLowerCase(),
+          )
+            ? (params.category.toLowerCase() as
+                | "diets"
+                | "reviews"
+                | "supplements")
+            : undefined
+        }
+      />
+      <OfferStrip source={`article-${params.slug}`} />
 
       <script
         type="application/ld+json"

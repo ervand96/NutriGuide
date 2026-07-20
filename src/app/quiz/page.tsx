@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import CategoryNavStrip from "@/components/CategoryNavStrip";
 import Footer from "@/components/Footer";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 
@@ -201,6 +202,7 @@ export default function QuizPage() {
   return (
     <>
       <Navbar />
+      <CategoryNavStrip active="quiz" />
       <main className="min-h-[calc(100dvh-3.5rem)] bg-cream flex flex-col">
         <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-10 sm:py-16">
           <div className="w-full max-w-2xl">
