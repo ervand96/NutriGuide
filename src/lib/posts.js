@@ -29,6 +29,7 @@ import {
   buttonTextForPartner,
 } from "./affiliate.js";
 import { getProductImageUrl } from "./product-image.js";
+import { normalizeFaqFrontmatter } from "./article-content.js";
 
 function normalizeProduct(product, slug, category) {
   if (!product || typeof product !== "object") return product;
@@ -88,18 +89,22 @@ export function getAllPosts() {
 
       const { data, content } = matter(raw);
 
+      const slug = file.replace(".md", "");
+      const category = safeCategory(data.category || cat);
       all.push({
-        slug: file.replace(".md", ""),
-        category: safeCategory(data.category || cat),
-        title: data.title || file.replace(".md", ""),
+        slug,
+        category,
+        title: data.title || slug,
         description: data.description || content.slice(0, 120),
         readTime: data.readTime || "5 min read",
         date: safeDate(data.date),
+        updated: safeDate(data.updated || data.date),
         featured: Boolean(data.featured),
         noindex: Boolean(data.noindex),
         canonicalSlug: data.canonicalSlug ? String(data.canonicalSlug) : null,
         content,
-        products: normalizeProducts(data.products, file.replace(".md", ""), safeCategory(data.category || cat)),
+        products: normalizeProducts(data.products, slug, category),
+        faq: normalizeFaqFrontmatter(data.faq),
       });
     }
   }
@@ -124,18 +129,21 @@ export function getPostBySlug(slug) {
 
     const { data, content } = matter(raw);
 
+    const category = safeCategory(data.category);
     return {
       slug,
       title: data.title || slug,
       description: data.description || content.slice(0, 120),
-      category: safeCategory(data.category),
+      category,
       date: safeDate(data.date),
+      updated: safeDate(data.updated || data.date),
       readTime: data.readTime || "5 min read",
       featured: Boolean(data.featured),
       noindex: Boolean(data.noindex),
       canonicalSlug: data.canonicalSlug ? String(data.canonicalSlug) : null,
       content,
-      products: normalizeProducts(data.products, slug, safeCategory(data.category)),
+      products: normalizeProducts(data.products, slug, category),
+      faq: normalizeFaqFrontmatter(data.faq),
     };
   }
 

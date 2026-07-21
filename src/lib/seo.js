@@ -98,14 +98,22 @@ export function breadcrumbJsonLd(items) {
   };
 }
 
-export function articleJsonLd({ title, description, date, url, image, category }) {
+export function articleJsonLd({
+  title,
+  description,
+  date,
+  updated,
+  url,
+  image,
+  category,
+}) {
   return {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: title,
     description,
     datePublished: date,
-    dateModified: date,
+    dateModified: updated || date,
     articleSection: category,
     author: { "@type": "Organization", name: SITE_NAME },
     publisher: {

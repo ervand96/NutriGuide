@@ -2,13 +2,24 @@ import Navbar from "../../../../components/Navbar";
 import Footer from "../../../../components/Footer";
 import RelatedArticles from "../../../../components/RelatedArticles";
 import ArticleShopCta from "../../../../components/ArticleShopCta";
+import ArticleMidCta from "../../../../components/ArticleMidCta";
 import ArticleBottomShop from "../../../../components/ArticleBottomShop";
 import ArticleTopPicks from "../../../../components/ArticleTopPicks";
+import ProductComparisonTable from "../../../../components/ProductComparisonTable";
+import HowWeTest from "../../../../components/HowWeTest";
+import FaqAccordion from "../../../../components/FaqAccordion";
+import NewsletterStrip from "../../../../components/NewsletterStrip";
+import EmailCapturePopup from "../../../../components/EmailCapturePopup";
 import MobileShopBar from "../../../../components/MobileShopBar";
 import CategoryNavStrip from "../../../../components/CategoryNavStrip";
 import OfferStrip from "../../../../components/OfferStrip";
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "../../../../lib/posts";
+import {
+  splitHtmlAtMidpoint,
+  formatArticleDate,
+  buildArticleFaqs,
+} from "../../../../lib/article-content";
 import { SITE_CONTAINER } from "@/lib/layout.js";
 import {
   SITE_URL,
@@ -109,11 +120,18 @@ export default async function ArticlePage({
   const contentHtml = (
     await remark().use(remarkHtml).process(post.content)
   ).toString();
+  const { before: contentBefore, after: contentAfter } =
+    splitHtmlAtMidpoint(contentHtml);
 
   const articleUrl = `${SITE_URL}/category/${params.category}/${params.slug}`;
   const categoryUrl = `${SITE_URL}/category/${params.category}`;
   const products = post.products ?? [];
   const quickLines = quickAnswerLines(products);
+  const updatedLabel = formatArticleDate(post.updated || post.date);
+  const faqs = buildArticleFaqs(post);
+  const midQuery =
+    products[0]?.name?.split(",")[0]?.trim() ||
+    post.title.split(":")[0].trim();
 
   const jsonLd = [
     breadcrumbJsonLd([
@@ -125,6 +143,7 @@ export default async function ArticlePage({
       title: post.title,
       description: post.description,
       date: post.date,
+      updated: post.updated || post.date,
       url: articleUrl,
       image: `${SITE_URL}/og/${params.slug}`,
       category: post.category,
@@ -132,6 +151,19 @@ export default async function ArticlePage({
     ...products.map((product: any) =>
       productJsonLd(product, { siteUrl: SITE_URL }),
     ),
+    ...(faqs.length
+      ? [
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map((f: { q: string; a: string }) => ({
+              "@type": "Question",
+              name: f.q,
+              acceptedAnswer: { "@type": "Answer", text: f.a },
+            })),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -185,7 +217,7 @@ export default async function ArticlePage({
             </h1>
 
             <div className="text-gray-400 text-sm font-body">
-              ⏱ {post.readTime} · Updated {post.date}
+              ⏱ {post.readTime} · Updated {updatedLabel}
             </div>
           </div>
 
@@ -205,19 +237,6 @@ export default async function ArticlePage({
           </div>
 
           {products.length > 0 && (
-            <ArticleTopPicks products={products} slug={params.slug} />
-          )}
-
-          <div
-            className="article-content mb-10"
-            dangerouslySetInnerHTML={{ __html: contentHtml }}
-          />
-
-          <ShareButtons title={post.title} url={articleUrl} />
-
-          <ArticleShopCta slug={params.slug} />
-
-          {products.length > 0 && (
             <section className="mb-10">
               <h2 className="font-display font-black text-2xl mb-2">
                 Full Product Reviews
@@ -232,6 +251,51 @@ export default async function ArticlePage({
                   slug={params.slug}
                 />
               ))}
+            </section>
+          )}
+
+          <HowWeTest category={post.category} />
+
+          {products.length > 0 && (
+            <ProductComparisonTable products={products} slug={params.slug} />
+          )}
+
+          {products.length > 0 && (
+            <ArticleTopPicks products={products} slug={params.slug} />
+          )}
+
+          {contentAfter ? (
+            <>
+              <div
+                className="article-content mb-2"
+                dangerouslySetInnerHTML={{ __html: contentBefore }}
+              />
+              <ArticleMidCta slug={params.slug} query={midQuery} />
+              <div
+                className="article-content mb-10"
+                dangerouslySetInnerHTML={{ __html: contentAfter }}
+              />
+            </>
+          ) : (
+            <div
+              className="article-content mb-10"
+              dangerouslySetInnerHTML={{ __html: contentHtml }}
+            />
+          )}
+
+          <ShareButtons title={post.title} url={articleUrl} />
+
+          <ArticleShopCta slug={params.slug} />
+
+          {faqs.length > 0 && (
+            <section className="mb-10">
+              <h2 className="font-display font-black text-2xl mb-2">
+                Frequently asked questions
+              </h2>
+              <p className="text-gray-500 text-sm mb-6">
+                Quick answers before you buy — based on this guide.
+              </p>
+              <FaqAccordion faqs={faqs} />
             </section>
           )}
 
@@ -250,9 +314,12 @@ export default async function ArticlePage({
             </p>
           </div>
         </div>
+
+        <NewsletterStrip />
       </main>
 
       <MobileShopBar slug={params.slug} category={post.category} />
+      <EmailCapturePopup />
       <Footer />
     </>
   );

@@ -33,12 +33,17 @@ export type GuideCardPost = {
 
 const BOTTLE_COVERS = [
   { match: /ashwagandha|adaptogen|ksm/i, src: "/products/bottle-ashwagandha.jpg" },
-  { match: /creatine|protein|whey|pre-workout|pre workout/i, src: "/products/bottle-creatine.jpg" },
-  { match: /omega|fish oil|dha|epa|mct|plant-based|vegan|mediterranean/i, src: "/products/bottle-omega.jpg" },
+  { match: /probiotic/i, src: "/products/probiotics.jpg" },
+  { match: /creatine/i, src: "/products/bottle-creatine.jpg" },
+  { match: /protein|whey|pre-workout|pre workout/i, src: "/products/protein.jpg" },
+  { match: /omega|fish oil|dha|epa|mct|olive|mediterranean/i, src: "/products/bottle-omega.jpg" },
   { match: /magnesium|electrolyte|hydration|dash|mind|keto/i, src: "/products/bottle-magnesium.jpg" },
   { match: /zinc/i, src: "/products/bottle-zinc.jpg" },
+  { match: /b-?12|folate/i, src: "/products/b12.jpg" },
   { match: /vitamin d|d3|multi|popular diet/i, src: "/products/bottle-vitamin-d.jpg" },
-  { match: /b-?12|probiotic|fiber|psyllium/i, src: "/products/bottle-zinc.jpg" },
+  { match: /fiber|psyllium|green|superfood/i, src: "/products/supplements.jpg" },
+  { match: /collagen/i, src: "/products/protein.jpg" },
+  { match: /sleep|melatonin/i, src: "/products/sleep.jpg" },
 ];
 
 const CATEGORY_DEFAULT: Record<string, string> = {

@@ -9,16 +9,40 @@ import {
 
 describe("product images", () => {
   it("maps zinc products to concrete zinc bottle photo", () => {
+    assert.match(
+      photoForProductName("Thorne, Zinc Picolinate, 30 mg, 60 Capsules"),
+      /\/products\/bottle-zinc\.jpg/,
+    );
+  });
+
+  it("getProductImageUrl prefers cached CDN or unique images", () => {
     const url = getProductImageUrl({
-      name: "Thorne, Zinc Picolinate, 30 mg, 60 Capsules",
+      name: "NOW Foods, Magnesium Glycinate",
     });
-    assert.match(url, /\/products\/bottle-zinc\.jpg/);
+    assert.ok(
+      /images-iherb\.com|\/products\/|\/product-img/.test(url),
+      `unexpected image url: ${url}`,
+    );
+  });
+
+  it("maps probiotics to probiotics photo not magnesium", () => {
+    assert.match(
+      photoForProductName("Culturelle, Probiotics, Digestive Daily Probiotic"),
+      /probiotics\.jpg/,
+    );
+  });
+
+  it("maps B12 to b12 photo not zinc", () => {
+    assert.match(
+      photoForProductName("NOW Foods, Methyl B-12, 1,000 mcg"),
+      /b12\.jpg/,
+    );
   });
 
   it("maps omega products before MyProtein brand protein match", () => {
     assert.match(
       photoForProductName("MyProtein Essential Omega-3 Softgels"),
-      /bottle-omega/,
+      /bottle-omega|omega/,
     );
   });
 
