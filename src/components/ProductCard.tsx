@@ -21,6 +21,7 @@ export default function ProductCard({ product, slug = "product" }: Props) {
   const isHighlighted = product.highlight ?? false;
   const source = `product-${slug}-${product.rank}`;
   const shop = shopLinksForProduct(product, source);
+  const imageUrl = product.imageUrl || null;
 
   return (
     <div
@@ -28,45 +29,68 @@ export default function ProductCard({ product, slug = "product" }: Props) {
         isHighlighted ? "border-leaf-500 shadow-md shadow-leaf-100" : "border-gray-100"
       }`}
     >
-      <div className="absolute -top-3 sm:-top-4 left-4 sm:left-6 bg-leaf-500 text-white font-body font-bold text-xs px-3 sm:px-4 py-1.5 rounded-full">
+      <div className="absolute -top-3 sm:-top-4 left-4 sm:left-6 bg-leaf-500 text-white font-body font-bold text-xs px-3 sm:px-4 py-1.5 rounded-full z-10">
         #{product.rank} {product.badge}
       </div>
 
       <div className="mt-2">
-        {/* Price + rating first — visible without scrolling */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-3 pb-3 border-b border-gray-100">
-          <div>
-            <div className="text-xs text-gray-400 uppercase tracking-wide mb-0.5">
-              Price from
+        <div className="flex flex-col sm:flex-row gap-5 sm:gap-6 mb-5">
+          {imageUrl ? (
+            <Link
+              href={shop.primaryHref}
+              target="_blank"
+              rel="nofollow sponsored noopener"
+              className="no-underline shrink-0 mx-auto sm:mx-0"
+            >
+              <div className="w-[160px] h-[160px] sm:w-[180px] sm:h-[180px] rounded-2xl bg-white border border-gray-100 flex items-center justify-center overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={imageUrl}
+                  alt={product.name}
+                  className="w-full h-full object-contain p-3"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </Link>
+          ) : null}
+
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-3 pb-3 border-b border-gray-100">
+              <div>
+                <div className="text-xs text-gray-400 uppercase tracking-wide mb-0.5">
+                  Price from
+                </div>
+                <div className="font-display font-black text-3xl sm:text-4xl text-leaf-600 leading-none">
+                  {product.price}
+                </div>
+              </div>
+              <Stars rating={product.rating} />
             </div>
-            <div className="font-display font-black text-3xl sm:text-4xl text-leaf-600 leading-none">
-              {product.price}
+
+            <h3 className="font-display text-lg sm:text-xl font-bold text-bark leading-snug mb-4">
+              {product.name}
+            </h3>
+
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+              <Link
+                href={shop.primaryHref}
+                target="_blank"
+                rel="nofollow sponsored noopener"
+                className="no-underline flex-1 text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold px-4 py-3.5 rounded-xl transition-all duration-200 active:scale-[0.98] text-sm sm:text-base"
+              >
+                {shop.primaryLabel}
+              </Link>
+              <Link
+                href={shop.secondaryHref}
+                target="_blank"
+                rel="nofollow sponsored noopener"
+                className="no-underline flex-1 text-center border-2 border-leaf-500 text-leaf-600 hover:bg-leaf-50 font-bold px-4 py-3.5 rounded-xl transition-all duration-200 active:scale-[0.98] text-sm sm:text-base"
+              >
+                {shop.secondaryLabel}
+              </Link>
             </div>
           </div>
-          <Stars rating={product.rating} />
-        </div>
-
-        <h3 className="font-display text-lg sm:text-xl font-bold text-bark leading-snug mb-4">
-          {product.name}
-        </h3>
-
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-5">
-          <Link
-            href={shop.primaryHref}
-            target="_blank"
-            rel="nofollow sponsored noopener"
-            className="no-underline flex-1 text-center bg-leaf-500 hover:bg-leaf-600 text-white font-bold px-4 py-3.5 rounded-xl transition-all duration-200 active:scale-[0.98] text-sm sm:text-base"
-          >
-            {shop.primaryLabel}
-          </Link>
-          <Link
-            href={shop.secondaryHref}
-            target="_blank"
-            rel="nofollow sponsored noopener"
-            className="no-underline flex-1 text-center border-2 border-leaf-500 text-leaf-600 hover:bg-leaf-50 font-bold px-4 py-3.5 rounded-xl transition-all duration-200 active:scale-[0.98] text-sm sm:text-base"
-          >
-            {shop.secondaryLabel}
-          </Link>
         </div>
 
         <p className="font-body text-sm text-gray-600 leading-relaxed mb-5">

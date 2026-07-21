@@ -7,6 +7,8 @@ import ArticleBottomShop from "../../../../components/ArticleBottomShop";
 import ArticleTopPicks from "../../../../components/ArticleTopPicks";
 import ProductComparisonTable from "../../../../components/ProductComparisonTable";
 import HowWeTest from "../../../../components/HowWeTest";
+import DosageCalculator from "../../../../components/DosageCalculator";
+import { dosageKeyForSlug } from "@/lib/dosage.js";
 import FaqAccordion from "../../../../components/FaqAccordion";
 import NewsletterStrip from "../../../../components/NewsletterStrip";
 import EmailCapturePopup from "../../../../components/EmailCapturePopup";
@@ -132,6 +134,7 @@ export default async function ArticlePage({
   const midQuery =
     products[0]?.name?.split(",")[0]?.trim() ||
     post.title.split(":")[0].trim();
+  const dosageKey = dosageKeyForSlug(params.slug);
 
   const jsonLd = [
     breadcrumbJsonLd([
@@ -259,6 +262,13 @@ export default async function ArticlePage({
           {products.length > 0 && (
             <ProductComparisonTable products={products} slug={params.slug} />
           )}
+
+          {dosageKey ? (
+            <DosageCalculator
+              supplement={dosageKey}
+              source={`article-dose-${params.slug}`}
+            />
+          ) : null}
 
           {products.length > 0 && (
             <ArticleTopPicks products={products} slug={params.slug} />

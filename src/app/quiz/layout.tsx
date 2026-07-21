@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo.js";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Find Your Perfect Diet — Free 2-Minute Quiz",
+  title: "Personalized Supplement Quiz — Free 2-Minute Plan",
   description:
-    "Answer a few questions and get a practical diet match plus supplement starter tips. Free NutriGuide quiz — then shop iHerb or MyProtein if you need essentials.",
+    "Answer a few questions and get personalized supplement picks with shop links. Free NutriGuide quiz — then browse iHerb or MyProtein.",
   path: "/quiz",
 });
 

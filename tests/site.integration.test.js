@@ -128,7 +128,7 @@ describe("site integration", () => {
     const res = await fetchOk(`${BASE}/quiz`);
     assert.equal(res.status, 200);
     const html = await res.text();
-    assert.match(html, /Find Your Perfect Diet|2-Minute Quiz|diet quiz/i);
+    assert.match(html, /Personalized Supplement Quiz|2-Minute Quiz|personalized picks/i);
   });
 
   it("rss feed escapes content and includes guid", async () => {
@@ -163,7 +163,7 @@ describe("site integration", () => {
     const res = await fetchOk(`${BASE}/quiz`);
     assert.equal(res.status, 200);
     const html = await res.text();
-    assert.match(html, /Find Your Perfect Diet/);
+    assert.match(html, /Personalized Supplement Quiz|personalized picks/);
     assert.match(html, /iHerb/);
   });
 

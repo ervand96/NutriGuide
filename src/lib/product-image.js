@@ -16,39 +16,48 @@ function loadCache() {
 }
 
 /**
- * Keyword → distinct category photo (specific first).
- * Prefer category lifestyle/product shots so probiotics ≠ magnesium, B12 ≠ zinc, etc.
+ * Studio bottle shots only — never lifestyle pill piles / emoji SVG.
+ * These match the iHerb-style white-background product look.
  */
-const KEYWORD_PHOTOS = [
+const KEYWORD_BOTTLES = [
   { match: /ashwagandha|adaptogen|ksm-66|ksm66/i, src: "/products/bottle-ashwagandha.jpg" },
-  { match: /probiotic|culturelle/i, src: "/products/probiotics.jpg" },
-  { match: /electrolyte|hydration|nuun|liquid i\.?v|ultima replenisher/i, src: "/products/magnesium.jpg" },
-  { match: /magnesium|glycinate|threonate/i, src: "/products/bottle-magnesium.jpg" },
-  { match: /b-?12|methylcobalamin|folate/i, src: "/products/b12.jpg" },
+  { match: /magnesium|glycinate|threonate|electrolyte|hydration|nuun|liquid i\.?v|ultima/i, src: "/products/bottle-magnesium.jpg" },
   { match: /zinc|picolinate/i, src: "/products/bottle-zinc.jpg" },
-  { match: /vitamin d|d3|d-3/i, src: "/products/bottle-vitamin-d.jpg" },
-  { match: /collagen|gelatin/i, src: "/products/protein.jpg" },
-  { match: /psyllium|fiber/i, src: "/products/herbs.jpg" },
-  { match: /olive oil/i, src: "/products/fish-oil.jpg" },
-  { match: /mct oil/i, src: "/products/omega.jpg" },
-  { match: /omega|fish oil|dha|epa/i, src: "/products/bottle-omega.jpg" },
-  { match: /melatonin|sleep/i, src: "/products/sleep.jpg" },
-  { match: /pre-workout|pre workout/i, src: "/products/creatine.jpg" },
-  { match: /creatine/i, src: "/products/bottle-creatine.jpg" },
-  { match: /whey|\bisolate\b|mass gainer|\bprotein\b/i, src: "/products/protein.jpg" },
-  { match: /ag1|green|superfood|perfect food|orgain/i, src: "/products/supplements.jpg" },
-  { match: /multivitamin|multi for|basic nutrients|two-per-day/i, src: "/products/multivitamin.jpg" },
+  { match: /vitamin d|d3|d-3|multivitamin|multi for|basic nutrients|two-per-day|ag1|green|superfood|orgain|perfect food/i, src: "/products/bottle-vitamin-d.jpg" },
+  { match: /b-?12|methylcobalamin|folate|probiotic|culturelle/i, src: "/products/bottle-zinc.jpg" },
+  { match: /omega|fish oil|dha|epa|mct|olive oil|psyllium|fiber/i, src: "/products/bottle-omega.jpg" },
+  { match: /melatonin|sleep/i, src: "/products/bottle-ashwagandha.jpg" },
+  { match: /creatine|pre-workout|pre workout|whey|\bisolate\b|mass gainer|\bprotein\b|collagen|gelatin/i, src: "/products/bottle-creatine.jpg" },
 ];
 
 export function photoForProductName(name = "") {
-  for (const row of KEYWORD_PHOTOS) {
+  for (const row of KEYWORD_BOTTLES) {
     if (row.match.test(name)) return row.src;
   }
   return "/products/bottle-vitamin-d.jpg";
 }
 
+/** Real iHerb CDN product photography */
+export function isCdnProductImage(url) {
+  if (!url || typeof url !== "string") return false;
+  return (
+    /cloudinary\.images-iherb\.com|s3\.images-iherb\.com|images-iherb\.com/i.test(
+      url,
+    ) && /\/images\/[a-z0-9]+\//i.test(url)
+  );
+}
+
+/** Professional product shot we allow on cards: CDN or studio bottle JPG */
+export function isProfessionalProductImage(url) {
+  if (!url || typeof url !== "string") return false;
+  if (isCdnProductImage(url)) return true;
+  if (url.startsWith("/products/bottle-") && url.endsWith(".jpg")) return true;
+  return false;
+}
+
 export function isAllowedImageUrl(url) {
   if (!url || typeof url !== "string") return false;
+  // Keep /product-img allowed for legacy routes, but getProductImageUrl never returns it
   if (url.startsWith("/product-img")) return true;
   if (url.startsWith("/products/")) return true;
   try {
@@ -66,24 +75,26 @@ export function isAllowedImageUrl(url) {
   }
 }
 
-function generatedImageUrl(name = "") {
-  return `/product-img?name=${encodeURIComponent(name.slice(0, 120))}`;
-}
-
-/** Explicit imageUrl → cache → keyword photo → SVG placeholder */
+/**
+ * Prefer real iHerb CDN photos; otherwise studio bottle JPGs.
+ * Never return emoji SVG placeholders or lifestyle pill-pile photos.
+ */
 export function getProductImageUrl(product) {
-  if (product?.imageUrl && isAllowedImageUrl(product.imageUrl)) {
+  if (product?.imageUrl && isProfessionalProductImage(product.imageUrl)) {
     return product.imageUrl;
   }
+  if (product?.imageUrl && isCdnProductImage(product.imageUrl)) {
+    return product.imageUrl;
+  }
+
   const key = cacheKey(product?.name || "");
   if (key) {
     const cached = loadCache()[key];
-    if (cached && isAllowedImageUrl(cached)) return cached;
+    if (cached && isProfessionalProductImage(cached)) return cached;
+    if (cached && isCdnProductImage(cached)) return cached;
   }
-  if (product?.name) {
-    return photoForProductName(product.name);
-  }
-  return generatedImageUrl("Supplement");
+
+  return photoForProductName(product?.name || "");
 }
 
 export function saveImageCache(cache) {

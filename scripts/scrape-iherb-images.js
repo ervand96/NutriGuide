@@ -21,9 +21,19 @@ const ONLY_LOCAL = process.argv.includes("--only-local");
 function needsFetch(url) {
   if (!url) return true;
   if (FORCE) return true;
-  if (String(url).includes("images-iherb.com")) return false;
+  // Keep real iHerb CDN shots
+  if (
+    /images-iherb\.com/i.test(String(url)) &&
+    /\/images\/[a-z0-9]+\//i.test(String(url))
+  ) {
+    return false;
+  }
+  // Re-fetch emoji SVG placeholders and lifestyle / non-bottle photos
+  if (String(url).includes("/product-img")) return true;
   if (ONLY_LOCAL) return String(url).startsWith("/products/");
-  return String(url).startsWith("/products/bottle-");
+  if (String(url).startsWith("/products/bottle-")) return true;
+  if (String(url).startsWith("/products/")) return true;
+  return true;
 }
 
 function pickImage(imgs, query) {

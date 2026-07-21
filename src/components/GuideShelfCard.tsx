@@ -32,18 +32,12 @@ export type GuideCardPost = {
 };
 
 const BOTTLE_COVERS = [
-  { match: /ashwagandha|adaptogen|ksm/i, src: "/products/bottle-ashwagandha.jpg" },
-  { match: /probiotic/i, src: "/products/probiotics.jpg" },
-  { match: /creatine/i, src: "/products/bottle-creatine.jpg" },
-  { match: /protein|whey|pre-workout|pre workout/i, src: "/products/protein.jpg" },
-  { match: /omega|fish oil|dha|epa|mct|olive|mediterranean/i, src: "/products/bottle-omega.jpg" },
-  { match: /magnesium|electrolyte|hydration|dash|mind|keto/i, src: "/products/bottle-magnesium.jpg" },
-  { match: /zinc/i, src: "/products/bottle-zinc.jpg" },
-  { match: /b-?12|folate/i, src: "/products/b12.jpg" },
-  { match: /vitamin d|d3|multi|popular diet/i, src: "/products/bottle-vitamin-d.jpg" },
-  { match: /fiber|psyllium|green|superfood/i, src: "/products/supplements.jpg" },
-  { match: /collagen/i, src: "/products/protein.jpg" },
-  { match: /sleep|melatonin/i, src: "/products/sleep.jpg" },
+  { match: /ashwagandha|adaptogen|ksm|sleep|melatonin/i, src: "/products/bottle-ashwagandha.jpg" },
+  { match: /creatine|protein|whey|pre-workout|pre workout|collagen/i, src: "/products/bottle-creatine.jpg" },
+  { match: /omega|fish oil|dha|epa|mct|olive|mediterranean|fiber|psyllium/i, src: "/products/bottle-omega.jpg" },
+  { match: /magnesium|electrolyte|hydration|dash|mind|keto|probiotic/i, src: "/products/bottle-magnesium.jpg" },
+  { match: /zinc|b-?12|folate/i, src: "/products/bottle-zinc.jpg" },
+  { match: /vitamin d|d3|multi|green|superfood|popular diet/i, src: "/products/bottle-vitamin-d.jpg" },
 ];
 
 const CATEGORY_DEFAULT: Record<string, string> = {
@@ -63,8 +57,11 @@ function bottleCover(post: GuideCardPost, productName?: string) {
   for (const row of BOTTLE_COVERS) {
     if (row.match.test(haystack)) return row.src;
   }
-  const existing = post.products?.find((p) =>
-    p.imageUrl?.includes("/products/bottle-"),
+  const existing = post.products?.find(
+    (p) =>
+      p.imageUrl &&
+      (/images-iherb\.com/i.test(p.imageUrl) ||
+        p.imageUrl.includes("/products/bottle-")),
   )?.imageUrl;
   if (existing) return existing;
   return (
@@ -105,9 +102,12 @@ export default function GuideShelfCard({
     cons: raw?.cons || [],
     affiliateUrl: raw?.affiliateUrl || "",
     buttonText: raw?.buttonText || "",
-    imageUrl: raw?.imageUrl?.includes("/products/bottle-")
-      ? raw.imageUrl
-      : bottleCover(post, productName),
+    imageUrl:
+      raw?.imageUrl &&
+      (/images-iherb\.com/i.test(raw.imageUrl) ||
+        raw.imageUrl.includes("/products/bottle-"))
+        ? raw.imageUrl
+        : bottleCover(post, productName),
     highlight: rank === 1,
   };
 

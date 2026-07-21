@@ -30,6 +30,7 @@ import {
 } from "./affiliate.js";
 import { getProductImageUrl } from "./product-image.js";
 import { normalizeFaqFrontmatter } from "./article-content.js";
+import { withServingEconomics } from "./product-servings.js";
 
 function normalizeProduct(product, slug, category) {
   if (!product || typeof product !== "object") return product;
@@ -38,12 +39,12 @@ function normalizeProduct(product, slug, category) {
   const affiliateUrl = `/go/${partner}?source=${encodeURIComponent(slug)}&q=${encodeURIComponent(product.name || "")}`;
   const imageUrl = getProductImageUrl(product);
 
-  return {
+  return withServingEconomics({
     ...product,
     affiliateUrl,
     buttonText: buttonTextForPartner(partner),
     ...(imageUrl ? { imageUrl } : {}),
-  };
+  });
 }
 
 function normalizeProducts(products, slug, category) {

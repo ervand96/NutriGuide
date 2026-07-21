@@ -1,202 +1,128 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import CategoryNavStrip from "@/components/CategoryNavStrip";
 import Footer from "@/components/Footer";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
+import {
+  clearQuizAnswers,
+  loadQuizAnswers,
+  saveQuizAnswers,
+  type QuizAnswers,
+} from "@/lib/quiz-recommendations.js";
 
 interface Question {
-  id: number;
+  id: string;
   question: string;
   options: { label: string; value: string; emoji: string }[];
-}
-
-interface Result {
-  diet: string;
-  emoji: string;
-  description: string;
-  pros: string[];
-  affiliateLabel: string;
-  affiliateUrl: string;
-  moreLabel: string;
-  moreHref: string;
+  freeTextWhen?: string;
 }
 
 const questions: Question[] = [
   {
-    id: 1,
+    id: "goal",
     question: "What is your main goal?",
     options: [
-      { label: "Lose weight fast", value: "lose_fast", emoji: "⚡" },
-      { label: "Lose weight steadily", value: "lose_slow", emoji: "📉" },
-      { label: "Build healthy habits", value: "habits", emoji: "🌱" },
-      { label: "Improve energy & mood", value: "energy", emoji: "✨" },
+      { label: "Better sleep", value: "sleep", emoji: "😴" },
+      { label: "Less stress", value: "stress", emoji: "🧘" },
+      { label: "More energy", value: "energy", emoji: "⚡" },
+      { label: "Weight loss support", value: "weight_loss", emoji: "⚖️" },
+      { label: "Muscle & training", value: "muscle", emoji: "💪" },
+      { label: "Heart health", value: "heart", emoji: "❤️" },
     ],
   },
   {
-    id: 2,
-    question: "How do you feel about carbs?",
+    id: "gut",
+    question: "Do you have gut / digestion issues?",
     options: [
-      { label: "I can cut them completely", value: "no_carbs", emoji: "🚫" },
-      { label: "I want to reduce them", value: "less_carbs", emoji: "📊" },
-      { label: "I love carbs, keep some", value: "some_carbs", emoji: "🍞" },
-      { label: "Carbs are fine for me", value: "carbs_ok", emoji: "✅" },
+      { label: "Yes", value: "yes", emoji: "🫤" },
+      { label: "No", value: "no", emoji: "✅" },
     ],
   },
   {
-    id: 3,
-    question: "How much time can you spend on meal prep?",
+    id: "budget",
+    question: "What's your monthly supplement budget?",
     options: [
-      { label: "Minimal — keep it simple", value: "minimal", emoji: "⏱" },
-      { label: "30 min per day", value: "medium", emoji: "🍳" },
-      { label: "I enjoy cooking", value: "enjoy", emoji: "👨‍🍳" },
-      { label: "I prefer meal delivery", value: "delivery", emoji: "📦" },
+      { label: "$ — keep it lean", value: "$", emoji: "💵" },
+      { label: "$$ — solid mid-range", value: "$$", emoji: "💰" },
+      { label: "$$$ — premium is fine", value: "$$$", emoji: "💎" },
     ],
   },
   {
-    id: 4,
-    question: "Do you exercise regularly?",
+    id: "alreadySupplementing",
+    question: "Are you already taking supplements?",
     options: [
-      { label: "Not yet, just starting", value: "none", emoji: "🛋️" },
-      { label: "1–2 times a week", value: "light", emoji: "🚶" },
-      { label: "3–4 times a week", value: "moderate", emoji: "🏃" },
-      { label: "Almost every day", value: "active", emoji: "💪" },
+      { label: "Yes", value: "yes", emoji: "💊" },
+      { label: "No", value: "no", emoji: "🌱" },
     ],
-  },
-  {
-    id: 5,
-    question: "Have you tried dieting before?",
-    options: [
-      { label: "No, this is my first time", value: "first", emoji: "👋" },
-      { label: "Yes, but nothing stuck", value: "failed", emoji: "😅" },
-      { label: "Yes, had some success", value: "partial", emoji: "📈" },
-      { label: "Yes, I know what works", value: "veteran", emoji: "🎯" },
-    ],
+    freeTextWhen: "yes",
   },
 ];
 
-const results: Record<string, Result> = {
-  keto: {
-    diet: "Keto Diet",
-    emoji: "🥑",
-    description:
-      "You're a great fit for keto. It's a high-fat, low-carb diet that switches your body into fat-burning mode. Great for fast, visible results.",
-    pros: ["Fast weight loss", "Reduces hunger", "Boosts mental clarity"],
-    affiliateLabel: "Shop Keto-Friendly Products on iHerb",
-    affiliateUrl: "/go/iherb?source=quiz-keto&q=keto",
-    moreLabel: "Read our Keto Diet guide",
-    moreHref: "/category/diets/the-keto-diet-a-practical-beginner-guide-to-low-carb-eating-17177",
-  },
-  intermittent: {
-    diet: "Intermittent Fasting",
-    emoji: "⏰",
-    description:
-      "Intermittent fasting fits your lifestyle perfectly. You eat within a specific time window — no calorie counting, no complicated meal prep.",
-    pros: ["No food restrictions", "Easy to maintain", "Improves metabolism"],
-    affiliateLabel: "Shop IF Essentials on iHerb",
-    affiliateUrl: "/go/iherb?source=quiz-if&q=intermittent+fasting",
-    moreLabel: "Explore all Diet guides",
-    moreHref: "/category/diets",
-  },
-  mediterranean: {
-    diet: "Mediterranean Diet",
-    emoji: "🫒",
-    description:
-      "The Mediterranean diet is the world's healthiest. Lots of vegetables, olive oil, fish, and whole grains. Sustainable and delicious.",
-    pros: [
-      "Proven long-term results",
-      "Heart-healthy",
-      "No strict restrictions",
-    ],
-    affiliateLabel: "Shop Mediterranean Diet Essentials on iHerb",
-    affiliateUrl: "/go/iherb?source=quiz-mediterranean",
-    moreLabel: "Read our Mediterranean Diet guide",
-    moreHref:
-      "/category/diets/the-mediterranean-diet-your-path-to-a-healthier-happier-life-03601",
-  },
-  paleo: {
-    diet: "High-Protein Plan",
-    emoji: "💪",
-    description:
-      "Based on your answers, you need structure plus quality protein. A high-protein approach with MyProtein supplements can help you build habits that stick.",
-    pros: [
-      "Supports muscle & satiety",
-      "Flexible meal choices",
-      "Affordable sports nutrition",
-    ],
-    affiliateLabel: "Shop MyProtein — Exclusive Code Applied",
-    affiliateUrl: "/go/myprotein?source=quiz-protein",
-    moreLabel: "Explore all Supplement guides",
-    moreHref: "/category/supplements",
-  },
-};
-
-function getResult(answers: string[]): Result {
-  const noCarbs = answers.includes("no_carbs");
-  const loseFast = answers.includes("lose_fast");
-  const habits = answers.includes("habits") || answers.includes("failed");
-  const delivery = answers.includes("delivery");
-
-  if (noCarbs && loseFast) return results.keto;
-  if (habits || delivery) return results.paleo;
-  if (answers.includes("some_carbs") || answers.includes("carbs_ok"))
-    return results.mediterranean;
-  return results.intermittent;
-}
-
 export default function QuizPage() {
+  const router = useRouter();
   const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<string[]>([]);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
   const [selected, setSelected] = useState<string | null>(null);
-  const [done, setDone] = useState(false);
-  const [email, setEmail] = useState("");
-  const [emailSaved, setEmailSaved] = useState(false);
-  const [emailLoading, setEmailLoading] = useState(false);
+  const [whichSupplements, setWhichSupplements] = useState("");
+  const [savedPlan, setSavedPlan] = useState<QuizAnswers | null>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    setSavedPlan(loadQuizAnswers());
+    setReady(true);
+  }, []);
 
   const question = questions[current];
-  const result = done ? getResult(answers) : null;
-  const progress = Math.round(((current + (done ? 1 : 0)) / questions.length) * 100);
-
-  function handleSelect(value: string) {
-    setSelected(value);
-  }
+  const progress = Math.round(((current + 1) / questions.length) * 100);
+  const needsFreeText =
+    question.freeTextWhen && selected === question.freeTextWhen;
 
   function handleNext() {
     if (!selected) return;
-    const newAnswers = [...answers, selected];
-    setAnswers(newAnswers);
+
+    const nextAnswers = { ...answers, [question.id]: selected };
+    if (question.id === "alreadySupplementing" && selected === "yes") {
+      nextAnswers.whichSupplements = whichSupplements.trim();
+    }
+    setAnswers(nextAnswers);
     setSelected(null);
+    setWhichSupplements("");
+
     if (current + 1 >= questions.length) {
-      setDone(true);
-    } else {
-      setCurrent((c) => c + 1);
-    }
-  }
-
-  function handleRestart() {
-    setCurrent(0);
-    setAnswers([]);
-    setSelected(null);
-    setDone(false);
-    setEmail("");
-    setEmailSaved(false);
-  }
-
-  async function handleSaveEmail() {
-    if (!email || !result) return;
-    setEmailLoading(true);
-    try {
-      const res = await fetch("/api/quiz-lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, diet: result.diet }),
+      saveQuizAnswers({
+        goal: nextAnswers.goal,
+        gut: nextAnswers.gut,
+        budget: nextAnswers.budget,
+        alreadySupplementing: nextAnswers.alreadySupplementing,
+        whichSupplements: nextAnswers.whichSupplements || "",
       });
-      if (res.ok) setEmailSaved(true);
-    } finally {
-      setEmailLoading(false);
+      router.push("/quiz/results");
+      return;
     }
+    setCurrent((c) => c + 1);
+  }
+
+  function startFresh() {
+    clearQuizAnswers();
+    setSavedPlan(null);
+    setCurrent(0);
+    setAnswers({});
+    setSelected(null);
+    setWhichSupplements("");
+  }
+
+  if (!ready) {
+    return (
+      <>
+        <Navbar />
+        <main className="min-h-[40vh] bg-cream" />
+        <Footer />
+      </>
+    );
   }
 
   return (
@@ -206,14 +132,40 @@ export default function QuizPage() {
       <main className="min-h-[calc(100dvh-3.5rem)] bg-cream flex flex-col">
         <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-10 sm:py-16">
           <div className="w-full max-w-2xl">
-            {!done ? (
+            {savedPlan ? (
+              <AnimateOnScroll animation="fade-up" className="text-center">
+                <p className="text-leaf-500 text-xs font-bold tracking-[3px] uppercase mb-3">
+                  Welcome back
+                </p>
+                <h1 className="font-display font-black text-3xl sm:text-4xl text-bark mb-3">
+                  Here&apos;s your plan
+                </h1>
+                <p className="text-gray-500 text-base mb-8">
+                  We saved your last quiz answers. Jump back to your picks or
+                  retake the quiz.
+                </p>
+                <Link
+                  href="/quiz/results"
+                  className="affiliate-btn max-w-md mx-auto mb-4 block no-underline"
+                >
+                  View my personalized picks →
+                </Link>
+                <button
+                  type="button"
+                  onClick={startFresh}
+                  className="text-gray-400 text-sm hover:text-gray-600 underline bg-transparent border-0 cursor-pointer min-h-[44px]"
+                >
+                  Retake quiz
+                </button>
+              </AnimateOnScroll>
+            ) : (
               <AnimateOnScroll animation="fade-up">
                 <div className="text-center mb-8 sm:mb-10">
                   <p className="text-leaf-500 text-xs font-bold tracking-[3px] uppercase mb-3">
                     2-Minute Quiz
                   </p>
                   <h1 className="font-display font-black text-3xl sm:text-4xl text-bark">
-                    Find Your Perfect Diet
+                    Find your personalized picks
                   </h1>
                 </div>
 
@@ -242,7 +194,7 @@ export default function QuizPage() {
                       <button
                         key={opt.value}
                         type="button"
-                        onClick={() => handleSelect(opt.value)}
+                        onClick={() => setSelected(opt.value)}
                         className={`flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition-all duration-150 cursor-pointer min-h-[56px] active:scale-[0.98]
                         ${
                           selected === opt.value
@@ -258,6 +210,24 @@ export default function QuizPage() {
                     ))}
                   </div>
 
+                  {needsFreeText ? (
+                    <div className="mb-6">
+                      <label
+                        htmlFor="which-supps"
+                        className="block text-xs font-bold text-bark uppercase tracking-wide mb-2"
+                      >
+                        Which ones? (optional notes)
+                      </label>
+                      <input
+                        id="which-supps"
+                        value={whichSupplements}
+                        onChange={(e) => setWhichSupplements(e.target.value)}
+                        placeholder="e.g. vitamin D, fish oil"
+                        className="w-full min-h-[48px] px-4 rounded-xl border border-gray-200 text-sm"
+                      />
+                    </div>
+                  ) : null}
+
                   <button
                     type="button"
                     onClick={handleNext}
@@ -270,95 +240,12 @@ export default function QuizPage() {
                     }`}
                   >
                     {current + 1 === questions.length
-                      ? "See My Result →"
-                      : "Next Question →"}
+                      ? "See my picks →"
+                      : "Next question →"}
                   </button>
                 </div>
               </AnimateOnScroll>
-            ) : result ? (
-              <AnimateOnScroll animation="scale-in" className="text-center">
-                <div className="text-6xl sm:text-7xl mb-4">{result.emoji}</div>
-                <p className="text-leaf-500 text-xs font-bold tracking-[3px] uppercase mb-2">
-                  Your Match
-                </p>
-                <h1 className="font-display font-black text-3xl sm:text-4xl md:text-5xl text-bark mb-4 px-2">
-                  {result.diet}
-                </h1>
-                <p className="text-gray-500 text-base sm:text-lg leading-relaxed max-w-lg mx-auto mb-8 px-2">
-                  {result.description}
-                </p>
-
-                <div className="bg-white border border-gray-100 rounded-2xl p-5 sm:p-6 mb-6 text-left max-w-md mx-auto">
-                  <div className="text-xs font-bold text-leaf-500 uppercase tracking-widest mb-4">
-                    Why it works for you
-                  </div>
-                  {result.pros.map((pro) => (
-                    <div key={pro} className="flex items-center gap-3 mb-3">
-                      <div className="w-5 h-5 rounded-full bg-leaf-50 flex items-center justify-center text-leaf-500 text-xs shrink-0">
-                        ✓
-                      </div>
-                      <span className="text-gray-600 text-sm">{pro}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="bg-leaf-50 border border-leaf-100 rounded-2xl p-5 sm:p-6 mb-6 max-w-md mx-auto text-left">
-                  <div className="text-xs font-bold text-leaf-600 uppercase tracking-widest mb-2">
-                    Get your plan by email
-                  </div>
-                  <p className="text-gray-500 text-sm mb-3">
-                    Optional — we&apos;ll send tips matched to {result.diet}.
-                  </p>
-                  {emailSaved ? (
-                    <p className="text-leaf-600 text-sm font-semibold">
-                      ✓ Saved! Check your inbox soon.
-                    </p>
-                  ) : (
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      <input
-                        type="email"
-                        placeholder="you@email.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm min-h-[48px]"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleSaveEmail}
-                        disabled={emailLoading || !email.includes("@")}
-                        className="bg-leaf-500 hover:bg-leaf-600 disabled:bg-gray-200 text-white font-bold px-6 py-3 rounded-xl text-sm min-h-[48px] shrink-0"
-                      >
-                        {emailLoading ? "…" : "Send"}
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                <a
-                  href={result.affiliateUrl}
-                  target="_blank"
-                  rel="nofollow sponsored noopener"
-                  className="affiliate-btn max-w-md mx-auto mb-4 block cta-pulse"
-                >
-                  {result.affiliateLabel} →
-                </a>
-
-                <Link
-                  href={result.moreHref}
-                  className="block text-center text-leaf-500 font-semibold text-sm hover:underline no-underline max-w-md mx-auto mb-8"
-                >
-                  {result.moreLabel} →
-                </Link>
-
-                <button
-                  type="button"
-                  onClick={handleRestart}
-                  className="text-gray-400 text-sm hover:text-gray-600 transition-colors underline cursor-pointer bg-transparent border-none min-h-[44px]"
-                >
-                  Retake quiz
-                </button>
-              </AnimateOnScroll>
-            ) : null}
+            )}
           </div>
         </div>
       </main>

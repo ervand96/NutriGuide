@@ -20,4 +20,6 @@ export interface Product {
   buttonText: string;
   highlight?: boolean | string;
   imageUrl?: string;
+  servingsPerContainer?: number;
+  costPerServing?: string;
 }
