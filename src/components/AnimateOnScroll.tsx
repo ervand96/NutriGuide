@@ -24,6 +24,16 @@ export default function AnimateOnScroll({
     const el = ref.current;
     if (!el) return;
 
+    // Above-the-fold content can miss the first paint if we wait for IO;
+    // reveal immediately when already in (or near) the viewport.
+    const rect = el.getBoundingClientRect();
+    const inView =
+      rect.top < window.innerHeight * 0.95 && rect.bottom > 0;
+    if (inView) {
+      setVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -31,7 +41,7 @@ export default function AnimateOnScroll({
           observer.unobserve(el);
         }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
+      { threshold: 0.01, rootMargin: "0px 0px 0px 0px" },
     );
 
     observer.observe(el);

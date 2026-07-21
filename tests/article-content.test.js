@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
   splitHtmlAtMidpoint,
+  splitHtmlAtChooseHeading,
   formatArticleDate,
   buildArticleFaqs,
 } from "../src/lib/article-content.js";
@@ -14,6 +15,16 @@ describe("article-content helpers", () => {
     assert.ok(before.includes("<p>two</p>"));
     assert.ok(after.includes("<p>three</p>"));
     assert.ok(after.includes("<p>four</p>"));
+  });
+
+  it("splits HTML after How to Choose heading", () => {
+    const html =
+      "<p>intro</p><h2>How to Choose the Right Form and Dose</h2><p>body</p>";
+    const { before, heading, after, found } = splitHtmlAtChooseHeading(html);
+    assert.equal(found, true);
+    assert.equal(before, "<p>intro</p>");
+    assert.match(heading, /How to Choose the Right Form and Dose/);
+    assert.equal(after, "<p>body</p>");
   });
 
   it("formats ISO dates for readers", () => {

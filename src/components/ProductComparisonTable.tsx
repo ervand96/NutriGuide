@@ -152,7 +152,7 @@ export default function ProductComparisonTable({
               </th>
               <SortHeader label="Rating" keyName="rating" />
               <SortHeader label="Price" keyName="price" />
-              <SortHeader label="Cost/Serving" keyName="cost" />
+              <SortHeader label="Cost per serving" keyName="cost" />
               <th className="px-5 py-3.5 font-display font-bold text-bark text-sm">
                 Shop
               </th>

@@ -1,4 +1,26 @@
 /**
+ * Split article HTML just after the "How to Choose…" heading so we can
+ * inject the dosage calculator into that section.
+ */
+export function splitHtmlAtChooseHeading(html = "") {
+  const text = String(html);
+  const re = /(<h2[^>]*>\s*How to Choose[\s\S]*?<\/h2>)/i;
+  const match = text.match(re);
+  if (!match || match.index == null) {
+    return { before: text, heading: "", after: "", found: false };
+  }
+  const heading = match[1];
+  const start = match.index;
+  const end = start + heading.length;
+  return {
+    before: text.slice(0, start),
+    heading,
+    after: text.slice(end),
+    found: true,
+  };
+}
+
+/**
  * Split article HTML roughly in half at a paragraph boundary
  * so we can inject a mid-article CTA.
  */

@@ -19,6 +19,7 @@ import { notFound } from "next/navigation";
 import { getPostBySlug } from "../../../../lib/posts";
 import {
   splitHtmlAtMidpoint,
+  splitHtmlAtChooseHeading,
   formatArticleDate,
   buildArticleFaqs,
 } from "../../../../lib/article-content";
@@ -122,8 +123,14 @@ export default async function ArticlePage({
   const contentHtml = (
     await remark().use(remarkHtml).process(post.content)
   ).toString();
+  const dosageKey = dosageKeyForSlug(params.slug);
+  const doseSplit = dosageKey
+    ? splitHtmlAtChooseHeading(contentHtml)
+    : { before: contentHtml, heading: "", after: "", found: false };
+  // Mid-article CTA splits the body after the dose heading (or full HTML).
+  const bodyForMid = doseSplit.found ? doseSplit.after : contentHtml;
   const { before: contentBefore, after: contentAfter } =
-    splitHtmlAtMidpoint(contentHtml);
+    splitHtmlAtMidpoint(bodyForMid);
 
   const articleUrl = `${SITE_URL}/category/${params.category}/${params.slug}`;
   const categoryUrl = `${SITE_URL}/category/${params.category}`;
@@ -134,7 +141,6 @@ export default async function ArticlePage({
   const midQuery =
     products[0]?.name?.split(",")[0]?.trim() ||
     post.title.split(":")[0].trim();
-  const dosageKey = dosageKeyForSlug(params.slug);
 
   const jsonLd = [
     breadcrumbJsonLd([
@@ -263,34 +269,70 @@ export default async function ArticlePage({
             <ProductComparisonTable products={products} slug={params.slug} />
           )}
 
-          {dosageKey ? (
-            <DosageCalculator
-              supplement={dosageKey}
-              source={`article-dose-${params.slug}`}
-            />
-          ) : null}
-
           {products.length > 0 && (
             <ArticleTopPicks products={products} slug={params.slug} />
           )}
 
-          {contentAfter ? (
+          {doseSplit.found ? (
             <>
               <div
                 className="article-content mb-2"
-                dangerouslySetInnerHTML={{ __html: contentBefore }}
+                dangerouslySetInnerHTML={{
+                  __html: doseSplit.before + doseSplit.heading,
+                }}
               />
-              <ArticleMidCta slug={params.slug} query={midQuery} />
-              <div
-                className="article-content mb-10"
-                dangerouslySetInnerHTML={{ __html: contentAfter }}
-              />
+              {dosageKey ? (
+                <DosageCalculator
+                  supplement={dosageKey}
+                  source={`article-dose-${params.slug}`}
+                />
+              ) : null}
+              {contentAfter ? (
+                <>
+                  <div
+                    className="article-content mb-2"
+                    dangerouslySetInnerHTML={{ __html: contentBefore }}
+                  />
+                  <ArticleMidCta slug={params.slug} query={midQuery} />
+                  <div
+                    className="article-content mb-10"
+                    dangerouslySetInnerHTML={{ __html: contentAfter }}
+                  />
+                </>
+              ) : (
+                <div
+                  className="article-content mb-10"
+                  dangerouslySetInnerHTML={{ __html: contentBefore }}
+                />
+              )}
             </>
           ) : (
-            <div
-              className="article-content mb-10"
-              dangerouslySetInnerHTML={{ __html: contentHtml }}
-            />
+            <>
+              {dosageKey ? (
+                <DosageCalculator
+                  supplement={dosageKey}
+                  source={`article-dose-${params.slug}`}
+                />
+              ) : null}
+              {contentAfter ? (
+                <>
+                  <div
+                    className="article-content mb-2"
+                    dangerouslySetInnerHTML={{ __html: contentBefore }}
+                  />
+                  <ArticleMidCta slug={params.slug} query={midQuery} />
+                  <div
+                    className="article-content mb-10"
+                    dangerouslySetInnerHTML={{ __html: contentAfter }}
+                  />
+                </>
+              ) : (
+                <div
+                  className="article-content mb-10"
+                  dangerouslySetInnerHTML={{ __html: contentHtml }}
+                />
+              )}
+            </>
           )}
 
           <ShareButtons title={post.title} url={articleUrl} />

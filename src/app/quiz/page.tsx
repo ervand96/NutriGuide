@@ -6,7 +6,6 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import CategoryNavStrip from "@/components/CategoryNavStrip";
 import Footer from "@/components/Footer";
-import AnimateOnScroll from "@/components/AnimateOnScroll";
 import {
   clearQuizAnswers,
   loadQuizAnswers,
@@ -69,11 +68,9 @@ export default function QuizPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [whichSupplements, setWhichSupplements] = useState("");
   const [savedPlan, setSavedPlan] = useState<QuizAnswers | null>(null);
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     setSavedPlan(loadQuizAnswers());
-    setReady(true);
   }, []);
 
   const question = questions[current];
@@ -115,16 +112,6 @@ export default function QuizPage() {
     setWhichSupplements("");
   }
 
-  if (!ready) {
-    return (
-      <>
-        <Navbar />
-        <main className="min-h-[40vh] bg-cream" />
-        <Footer />
-      </>
-    );
-  }
-
   return (
     <>
       <Navbar />
@@ -133,7 +120,7 @@ export default function QuizPage() {
         <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-10 sm:py-16">
           <div className="w-full max-w-2xl">
             {savedPlan ? (
-              <AnimateOnScroll animation="fade-up" className="text-center">
+              <div className="text-center">
                 <p className="text-leaf-500 text-xs font-bold tracking-[3px] uppercase mb-3">
                   Welcome back
                 </p>
@@ -157,9 +144,9 @@ export default function QuizPage() {
                 >
                   Retake quiz
                 </button>
-              </AnimateOnScroll>
+              </div>
             ) : (
-              <AnimateOnScroll animation="fade-up">
+              <div>
                 <div className="text-center mb-8 sm:mb-10">
                   <p className="text-leaf-500 text-xs font-bold tracking-[3px] uppercase mb-3">
                     2-Minute Quiz
@@ -244,7 +231,7 @@ export default function QuizPage() {
                       : "Next question →"}
                   </button>
                 </div>
-              </AnimateOnScroll>
+              </div>
             )}
           </div>
         </div>
