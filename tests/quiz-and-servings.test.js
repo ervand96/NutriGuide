@@ -29,7 +29,7 @@ describe("product servings / cost per serving", () => {
 
 describe("quiz recommendations", () => {
   it("maps sleep goal to magnesium + ashwagandha", () => {
-    const { picks, guide } = mapQuizToPicks({
+    const { picks, guide, keys, stackTotal } = mapQuizToPicks({
       goal: "sleep",
       gut: "no",
       budget: "$$",
@@ -37,13 +37,16 @@ describe("quiz recommendations", () => {
       savedAt: new Date().toISOString(),
     });
     assert.equal(picks.length, 2);
+    assert.deepEqual(keys, ["magnesium-glycinate", "ashwagandha-ksm66"]);
     assert.match(picks[0].name, /Magnesium/i);
     assert.match(picks[1].name, /Ashwagandha/i);
+    assert.match(picks[0].buttonText, /22% off/i);
     assert.match(guide.href, /magnesium/);
+    assert.match(stackTotal, /^\$/);
   });
 
   it("maps muscle goal to creatine + whey", () => {
-    const { picks } = mapQuizToPicks({
+    const { picks, partners } = mapQuizToPicks({
       goal: "muscle",
       gut: "no",
       budget: "$$$",
@@ -52,6 +55,7 @@ describe("quiz recommendations", () => {
     });
     assert.match(picks[0].name, /Creatine/i);
     assert.match(picks[1].name, /Whey/i);
+    assert.ok(partners.includes("myprotein"));
   });
 
   it("keeps one pick on lean budget", () => {
@@ -63,6 +67,19 @@ describe("quiz recommendations", () => {
       savedAt: new Date().toISOString(),
     });
     assert.equal(picks.length, 1);
+  });
+
+  it("builds shareable answers from URL params", async () => {
+    const { answersFromShareParams, mapSharedToPicks } = await import(
+      "../src/lib/quiz-recommendations.js"
+    );
+    const answers = answersFromShareParams({
+      goal: "stress",
+      product: "ashwagandha-ksm66",
+    });
+    assert.ok(answers);
+    const { picks } = mapSharedToPicks(answers);
+    assert.match(picks[0].name, /Ashwagandha/i);
   });
 });
 

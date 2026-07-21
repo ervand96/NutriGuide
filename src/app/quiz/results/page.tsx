@@ -1,27 +1,44 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import CategoryNavStrip from "@/components/CategoryNavStrip";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+import ProductShelf from "@/components/ProductShelf";
+import QuizResultsEmailCapture from "@/components/QuizResultsEmailCapture";
+import QuizShareResults, {
+  QuizStackShopButtons,
+} from "@/components/QuizShareResults";
 import {
+  answersFromShareParams,
   clearQuizAnswers,
   loadQuizAnswers,
   mapQuizToPicks,
+  mapSharedToPicks,
   type QuizAnswers,
 } from "@/lib/quiz-recommendations.js";
 
-export default function QuizResultsPage() {
+function QuizResultsInner() {
+  const searchParams = useSearchParams();
   const [answers, setAnswers] = useState<QuizAnswers | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setAnswers(loadQuizAnswers());
+    const shared = answersFromShareParams({
+      goal: searchParams.get("goal"),
+      stack: searchParams.get("stack"),
+      product: searchParams.get("product"),
+    });
+    if (shared) {
+      setAnswers(shared);
+    } else {
+      setAnswers(loadQuizAnswers());
+    }
     setReady(true);
-  }, []);
+  }, [searchParams]);
 
   if (!ready) {
     return (
@@ -56,7 +73,11 @@ export default function QuizResultsPage() {
     );
   }
 
-  const { picks, guide, headline } = mapQuizToPicks(answers);
+  const mapped = answers.fromShare
+    ? mapSharedToPicks(answers)
+    : mapQuizToPicks(answers);
+  const { picks, keys, guide, headline, stackTotal, partners, goal } = mapped;
+  const topName = picks[0]?.name || "";
 
   return (
     <>
@@ -64,7 +85,7 @@ export default function QuizResultsPage() {
       <CategoryNavStrip active="quiz" />
       <main className="bg-cream pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-          <AnimateOnScroll animation="fade-up">
+          <div>
             <p className="text-leaf-500 text-xs font-bold tracking-[3px] uppercase mb-3">
               Quiz results
             </p>
@@ -73,14 +94,25 @@ export default function QuizResultsPage() {
             </h1>
             <p className="text-gray-500 text-base sm:text-lg mb-8 max-w-2xl">
               Based on your goal
-              {answers.goal ? ` (${answers.goal.replace("_", " ")})` : ""}, gut
-              comfort, and budget — here are practical first picks. Not medical
-              advice.
+              {goal ? ` (${goal.replace("_", " ")})` : ""}, gut comfort, and
+              budget — here is a practical starter stack. Not medical advice.
             </p>
-          </AnimateOnScroll>
+          </div>
 
-          <div className="mb-10">
-            {picks.map((product) => (
+          {picks.length > 1 ? (
+            <div className="mb-8">
+              <ProductShelf
+                title="Your starter stack"
+                subtitle="Complementary picks matched to your quiz answers"
+                products={picks}
+                slugPrefix="quiz-stack"
+                showStoreButtons={false}
+              />
+            </div>
+          ) : null}
+
+          <div className="mb-6">
+            {(picks.length === 1 ? picks : picks.slice(0, 1)).map((product) => (
               <ProductCard
                 key={product.name}
                 product={product}
@@ -88,6 +120,22 @@ export default function QuizResultsPage() {
               />
             ))}
           </div>
+
+          <div className="mb-8 rounded-2xl border border-gray-100 bg-white p-5 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">
+                  Stack total
+                </p>
+                <p className="font-display font-black text-2xl sm:text-3xl text-bark">
+                  Total for this stack: {stackTotal}
+                </p>
+              </div>
+            </div>
+            <QuizStackShopButtons partners={partners} picks={picks} />
+          </div>
+
+          <QuizResultsEmailCapture goal={goal} recommendedProduct={topName} />
 
           <div className="bg-white border border-gray-100 rounded-2xl p-5 sm:p-7 mb-8">
             <h2 className="font-display font-bold text-xl text-bark mb-2">
@@ -104,24 +152,43 @@ export default function QuizResultsPage() {
             </Link>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Link
-              href="/quiz"
-              onClick={() => clearQuizAnswers()}
-              className="inline-flex min-h-[48px] items-center justify-center rounded-xl border-2 border-leaf-500 text-leaf-600 font-bold px-6 no-underline hover:bg-leaf-50"
-            >
-              Retake quiz
-            </Link>
-            <Link
-              href="/best-picks"
-              className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-leaf-500 text-white font-bold px-6 no-underline hover:bg-leaf-600"
-            >
-              Browse all top picks →
-            </Link>
+          <div className="flex flex-col gap-5">
+            <QuizShareResults goal={goal} keys={keys} />
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/quiz"
+                onClick={() => clearQuizAnswers()}
+                className="inline-flex min-h-[48px] items-center justify-center rounded-xl border-2 border-leaf-500 text-leaf-600 font-bold px-6 no-underline hover:bg-leaf-50"
+              >
+                Retake quiz
+              </Link>
+              <Link
+                href="/best-picks"
+                className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-leaf-500 text-white font-bold px-6 no-underline hover:bg-leaf-600"
+              >
+                Browse all top picks →
+              </Link>
+            </div>
           </div>
         </div>
       </main>
       <Footer />
     </>
+  );
+}
+
+export default function QuizResultsPage() {
+  return (
+    <Suspense
+      fallback={
+        <>
+          <Navbar />
+          <main className="min-h-[40vh] bg-cream" />
+          <Footer />
+        </>
+      }
+    >
+      <QuizResultsInner />
+    </Suspense>
   );
 }

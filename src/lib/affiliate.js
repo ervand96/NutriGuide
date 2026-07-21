@@ -1,5 +1,24 @@
 export const PARTNERS = ["iherb", "myprotein"];
 
+/** Featured Deals / CTA copy — keep in sync with homepage deal tags */
+export const IHERB_DISCOUNT_PCT = 22;
+export const IHERB_DISCOUNT_TAG = `Up to ${IHERB_DISCOUNT_PCT}% off`;
+export const MYPROTEIN_DISCOUNT_TAG = "Exclusive code applied";
+
+export function discountShopLabel(partner) {
+  if (String(partner).toLowerCase() === "myprotein") {
+    return "Shop this pick with code on MyProtein →";
+  }
+  return `Get ${IHERB_DISCOUNT_PCT}% off this pick on iHerb →`;
+}
+
+export function discountStackLabel(partner) {
+  if (String(partner).toLowerCase() === "myprotein") {
+    return "Shop this stack on MyProtein →";
+  }
+  return `Get ${IHERB_DISCOUNT_PCT}% off this stack on iHerb →`;
+}
+
 const MYPROTEIN_KEYWORDS = [
   "myprotein",
   "my protein",

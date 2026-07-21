@@ -54,10 +54,13 @@ export async function recordAffiliateClick(partner, source) {
   return entry;
 }
 
-export async function recordQuizLead(email, diet) {
+export async function recordQuizLead(email, diet, meta = {}) {
   const entry = {
     email: email.toLowerCase().trim(),
     diet,
+    source: meta.source || diet || "",
+    quiz_goal: meta.quiz_goal || "",
+    recommended_product: meta.recommended_product || "",
     time: new Date().toISOString(),
   };
 

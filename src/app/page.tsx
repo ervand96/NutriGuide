@@ -23,6 +23,10 @@ import {
   organizationJsonLd,
   websiteJsonLd,
 } from "@/lib/seo.js";
+import {
+  IHERB_DISCOUNT_TAG,
+  MYPROTEIN_DISCOUNT_TAG,
+} from "@/lib/affiliate.js";
 import Link from "next/link";
 
 const deals = [
@@ -31,14 +35,14 @@ const deals = [
     emoji: "🌿",
     title: "iHerb",
     desc: "Vitamins, supplements & natural products shipped worldwide. Use our link for the best available discount at checkout.",
-    tag: "Up to 22% off",
+    tag: IHERB_DISCOUNT_TAG,
   },
   {
     partner: "myprotein" as const,
     emoji: "🥤",
     title: "MyProtein",
     desc: "Protein powders, snacks & sports nutrition. Our code is pre-applied automatically when you click through.",
-    tag: "Exclusive code applied",
+    tag: MYPROTEIN_DISCOUNT_TAG,
   },
 ];
 

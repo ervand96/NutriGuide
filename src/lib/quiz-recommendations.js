@@ -2,7 +2,33 @@
  * Quiz answer → product recommendation mapping (no ML).
  */
 
+import {
+  discountShopLabel,
+  parseGoLink,
+} from "./affiliate.js";
+
 export const QUIZ_STORAGE_KEY = "ng_quiz_plan_v1";
+
+/** Canonical stack keys per goal (TZ B). Aliases normalize older share URLs. */
+export const STACK_MAP = {
+  stress: ["ashwagandha-ksm66", "magnesium-glycinate"],
+  sleep: ["magnesium-glycinate", "ashwagandha-ksm66"],
+  energy: ["vitamin-b12", "omega-3"],
+  weight_loss: ["electrolytes", "mct-oil"],
+  muscle: ["creatine", "whey-protein"],
+  heart: ["omega-3", "magnesium-glycinate"],
+};
+
+const KEY_ALIASES = {
+  ashwagandha: "ashwagandha-ksm66",
+  "ashwagandha-ksm66": "ashwagandha-ksm66",
+};
+
+function normalizePickKey(key = "") {
+  const k = String(key).trim().toLowerCase();
+  if (KEY_ALIASES[k]) return KEY_ALIASES[k];
+  return k;
+}
 
 const PICKS = {
   "magnesium-glycinate": {
@@ -15,13 +41,13 @@ const PICKS = {
       "A well-tolerated chelated magnesium often used for evening calm and sleep routines.",
     pros: ["Gentle on the stomach", "Strong value on iHerb", "Easy daily habit"],
     cons: ["Capsule count varies by bottle size"],
-    affiliateUrl: "/go/iherb?source=quiz-result&q=NOW%20Foods%20Magnesium%20Glycinate",
-    buttonText: "Shop this pick on iHerb",
+    affiliateUrl:
+      "/go/iherb?source=quiz-result&q=NOW%20Foods%20Magnesium%20Glycinate",
     highlight: true,
     imageUrl:
       "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now01289/u/62.jpg",
   },
-  ashwagandha: {
+  "ashwagandha-ksm66": {
     rank: 2,
     name: "NOW Foods, KSM-66 Ashwagandha, 600 mg, 90 Veg Capsules",
     badge: "Best for Stress",
@@ -29,11 +55,14 @@ const PICKS = {
     price: "$22.24",
     description:
       "Standardized KSM-66 root extract commonly used for stress and wind-down routines.",
-    pros: ["Clinically studied extract", "Clear 600 mg dose", "Vegetarian capsules"],
+    pros: [
+      "Clinically studied extract",
+      "Clear 600 mg dose",
+      "Vegetarian capsules",
+    ],
     cons: ["May feel strong for first-time users"],
     affiliateUrl:
       "/go/iherb?source=quiz-result&q=NOW%20Foods%20KSM-66%20Ashwagandha",
-    buttonText: "Shop this pick on iHerb",
     imageUrl: "/products/bottle-ashwagandha.jpg",
   },
   "vitamin-b12": {
@@ -47,7 +76,6 @@ const PICKS = {
     pros: ["Active B12 form", "Easy lozenge format", "Budget-friendly"],
     cons: ["Flavored lozenge may not suit everyone"],
     affiliateUrl: "/go/iherb?source=quiz-result&q=NOW%20Foods%20Methyl%20B-12",
-    buttonText: "Shop this pick on iHerb",
     highlight: true,
     imageUrl: "/products/bottle-zinc.jpg",
   },
@@ -61,8 +89,8 @@ const PICKS = {
       "High-potency fish oil for heart, brain, and everyday recovery support.",
     pros: ["High EPA/DHA", "Trusted purity standards", "Easy softgels"],
     cons: ["Premium price per bottle"],
-    affiliateUrl: "/go/iherb?source=quiz-result&q=Nordic%20Naturals%20Ultimate%20Omega",
-    buttonText: "Shop this pick on iHerb",
+    affiliateUrl:
+      "/go/iherb?source=quiz-result&q=Nordic%20Naturals%20Ultimate%20Omega",
     imageUrl: "/products/bottle-omega.jpg",
   },
   electrolytes: {
@@ -76,7 +104,6 @@ const PICKS = {
     pros: ["Portable sticks", "Fast mix", "Widely available"],
     cons: ["Contains sugar — not ideal for strict low-carb"],
     affiliateUrl: "/go/iherb?source=quiz-result&q=Liquid%20I.V.%20Hydration",
-    buttonText: "Shop this pick on iHerb",
     highlight: true,
     imageUrl: "/products/bottle-magnesium.jpg",
   },
@@ -91,7 +118,6 @@ const PICKS = {
     pros: ["Organic", "Versatile liquid format", "Popular keto staple"],
     cons: ["Start slow to avoid stomach upset"],
     affiliateUrl: "/go/iherb?source=quiz-result&q=Sports%20Research%20MCT%20Oil",
-    buttonText: "Shop this pick on iHerb",
     imageUrl: "/products/bottle-omega.jpg",
   },
   creatine: {
@@ -105,7 +131,6 @@ const PICKS = {
     pros: ["NSF / Informed Sport tested options", "Simple single ingredient"],
     cons: ["Higher price than bulk tubs"],
     affiliateUrl: "/go/myprotein?source=quiz-result&q=Creatine%20Monohydrate",
-    buttonText: "Shop this pick on MyProtein",
     highlight: true,
     imageUrl: "/products/bottle-creatine.jpg",
   },
@@ -120,10 +145,12 @@ const PICKS = {
     pros: ["Mixes well", "Broad flavor range", "Reliable brand"],
     cons: ["Not suitable for dairy-free diets"],
     affiliateUrl: "/go/myprotein?source=quiz-result&q=Whey%20Protein",
-    buttonText: "Shop this pick on MyProtein",
     imageUrl: "/products/bottle-creatine.jpg",
   },
 };
+
+/** Back-compat alias used by older keys / tests */
+PICKS.ashwagandha = PICKS["ashwagandha-ksm66"];
 
 const GUIDES = {
   sleep: {
@@ -152,56 +179,124 @@ const GUIDES = {
   },
 };
 
-export function mapQuizToPicks(answers) {
-  const goal = answers.goal || "sleep";
-  let keys = [];
+export function parsePriceNumber(price) {
+  const n = Number(String(price || "").replace(/[^0-9.]/g, ""));
+  return Number.isFinite(n) ? n : 0;
+}
 
-  switch (goal) {
-    case "sleep":
-      keys = ["magnesium-glycinate", "ashwagandha"];
-      break;
-    case "stress":
-      keys = ["ashwagandha", "magnesium-glycinate"];
-      break;
-    case "energy":
-      keys = ["vitamin-b12", "omega-3"];
-      break;
-    case "weight_loss":
-      keys = ["electrolytes", "mct-oil"];
-      break;
-    case "muscle":
-      keys = ["creatine", "whey-protein"];
-      break;
-    case "heart":
-      keys = ["omega-3", "magnesium-glycinate"];
-      break;
-    default:
-      keys = ["magnesium-glycinate", "omega-3"];
+export function formatStackTotal(picks = []) {
+  const sum = picks.reduce((acc, p) => acc + parsePriceNumber(p.price), 0);
+  return `$${sum.toFixed(2)}`;
+}
+
+export function partnersForPicks(picks = []) {
+  const set = new Set();
+  for (const p of picks) {
+    const { partner } = parseGoLink(p.affiliateUrl || "");
+    set.add(partner || "iherb");
   }
+  return [...set];
+}
 
-  // Gentle gut preference: prefer magnesium glycinate / avoid high-sugar electrolytes first
-  if (answers.gut === "yes" && keys[0] === "electrolytes") {
+function enrichPick(base, rank) {
+  const partner = parseGoLink(base.affiliateUrl || "").partner || "iherb";
+  return {
+    ...base,
+    rank,
+    highlight: rank === 1,
+    buttonText: discountShopLabel(partner),
+  };
+}
+
+export function picksFromKeys(keys = []) {
+  return keys
+    .map((raw, i) => {
+      const k = normalizePickKey(raw);
+      const p = PICKS[k] || PICKS[raw];
+      if (!p) return null;
+      return enrichPick(p, i + 1);
+    })
+    .filter(Boolean);
+}
+
+export function stackKeysForGoal(goal, { gut, budget } = {}) {
+  let keys = [...(STACK_MAP[goal] || STACK_MAP.sleep)];
+
+  if (gut === "yes" && keys[0] === "electrolytes") {
     keys = ["magnesium-glycinate", "mct-oil"];
   }
 
-  // Budget: keep first pick, ensure second is usually cheaper category
-  if (answers.budget === "$" && keys.length > 1) {
+  // Lean budget still gets a focused starter — full stack when mid/premium
+  if (budget === "$" && keys.length > 1) {
     keys = [keys[0]];
   }
 
-  const picks = keys
-    .map((k, i) => {
-      const p = PICKS[k];
-      if (!p) return null;
-      return { ...p, rank: i + 1, highlight: i === 0 };
-    })
-    .filter(Boolean);
+  return keys.map(normalizePickKey);
+}
+
+export function mapQuizToPicks(answers = {}) {
+  const goal = answers.goal || "sleep";
+  const keys = stackKeysForGoal(goal, answers);
+  const picks = picksFromKeys(keys);
 
   return {
     picks,
+    keys,
+    goal,
     guide: GUIDES[goal] || GUIDES.sleep,
-    headline: "Your personalized picks based on your answers",
+    headline: "Your personalized stack based on your answers",
+    stackTotal: formatStackTotal(picks),
+    partners: partnersForPicks(picks),
   };
+}
+
+/** Build answers from share URL (?goal=&stack= or ?product=) */
+export function answersFromShareParams(params = {}) {
+  const goal = String(params.goal || "").trim();
+  if (!goal || !STACK_MAP[goal]) return null;
+
+  const stackRaw = String(params.stack || params.product || "").trim();
+  const keys = stackRaw
+    ? stackRaw
+        .split(",")
+        .map((k) => normalizePickKey(k))
+        .filter(Boolean)
+    : stackKeysForGoal(goal, { gut: "no", budget: "$$" });
+
+  return {
+    goal,
+    gut: "no",
+    budget: "$$",
+    alreadySupplementing: "no",
+    whichSupplements: "",
+    shareKeys: keys,
+    fromShare: true,
+    savedAt: new Date().toISOString(),
+  };
+}
+
+export function mapSharedToPicks(answers) {
+  if (Array.isArray(answers?.shareKeys) && answers.shareKeys.length) {
+    const picks = picksFromKeys(answers.shareKeys);
+    const goal = answers.goal || "sleep";
+    return {
+      picks,
+      keys: answers.shareKeys,
+      goal,
+      guide: GUIDES[goal] || GUIDES.sleep,
+      headline: "Shared NutriGuide stack",
+      stackTotal: formatStackTotal(picks),
+      partners: partnersForPicks(picks),
+    };
+  }
+  return mapQuizToPicks(answers);
+}
+
+export function buildResultsSharePath(goal, keys = []) {
+  const q = new URLSearchParams();
+  q.set("goal", goal);
+  if (keys.length) q.set("stack", keys.join(","));
+  return `/quiz/results?${q.toString()}`;
 }
 
 export function saveQuizAnswers(answers) {
@@ -235,4 +330,17 @@ export function clearQuizAnswers() {
   } catch {
     /* ignore */
   }
+}
+
+/** Optional article → quiz goal prefill */
+export function quizPrefillForSlug(slug = "") {
+  const s = String(slug).toLowerCase();
+  if (s.includes("magnesium") || s.includes("sleep")) return "sleep";
+  if (s.includes("ashwagandha") || s.includes("stress")) return "stress";
+  if (s.includes("creatine") || s.includes("protein") || s.includes("muscle"))
+    return "muscle";
+  if (s.includes("electrolyte") || s.includes("mct")) return "weight_loss";
+  if (s.includes("b12") || s.includes("energy")) return "energy";
+  if (s.includes("omega") || s.includes("heart")) return "heart";
+  return null;
 }

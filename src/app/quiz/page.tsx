@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import CategoryNavStrip from "@/components/CategoryNavStrip";
@@ -61,8 +61,9 @@ const questions: Question[] = [
   },
 ];
 
-export default function QuizPage() {
+function QuizPageInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [selected, setSelected] = useState<string | null>(null);
@@ -70,8 +71,16 @@ export default function QuizPage() {
   const [savedPlan, setSavedPlan] = useState<QuizAnswers | null>(null);
 
   useEffect(() => {
-    setSavedPlan(loadQuizAnswers());
-  }, []);
+    const existing = loadQuizAnswers();
+    setSavedPlan(existing);
+
+    const prefill = searchParams.get("prefill");
+    const validGoal = questions[0].options.some((o) => o.value === prefill);
+    if (!existing && prefill && validGoal) {
+      setAnswers({ goal: prefill });
+      setCurrent(1);
+    }
+  }, [searchParams]);
 
   const question = questions[current];
   const progress = Math.round(((current + 1) / questions.length) * 100);
@@ -110,6 +119,13 @@ export default function QuizPage() {
     setAnswers({});
     setSelected(null);
     setWhichSupplements("");
+
+    const prefill = searchParams.get("prefill");
+    const validGoal = questions[0].options.some((o) => o.value === prefill);
+    if (prefill && validGoal) {
+      setAnswers({ goal: prefill });
+      setCurrent(1);
+    }
   }
 
   return (
@@ -165,8 +181,11 @@ export default function QuizPage() {
                   </div>
                   <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-leaf-500 rounded-full transition-all duration-500"
-                      style={{ width: `${progress}%` }}
+                      className="h-full bg-leaf-500 rounded-full"
+                      style={{
+                        width: `${progress}%`,
+                        transition: "width 0.3s ease",
+                      }}
                     />
                   </div>
                 </div>
@@ -238,5 +257,21 @@ export default function QuizPage() {
       </main>
       <Footer />
     </>
+  );
+}
+
+export default function QuizPage() {
+  return (
+    <Suspense
+      fallback={
+        <>
+          <Navbar />
+          <main className="min-h-[40vh] bg-cream" />
+          <Footer />
+        </>
+      }
+    >
+      <QuizPageInner />
+    </Suspense>
   );
 }

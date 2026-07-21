@@ -3,12 +3,14 @@ import Footer from "../../../../components/Footer";
 import RelatedArticles from "../../../../components/RelatedArticles";
 import ArticleShopCta from "../../../../components/ArticleShopCta";
 import ArticleMidCta from "../../../../components/ArticleMidCta";
+import QuizPromptCTA from "../../../../components/QuizPromptCTA";
 import ArticleBottomShop from "../../../../components/ArticleBottomShop";
 import ArticleTopPicks from "../../../../components/ArticleTopPicks";
 import ProductComparisonTable from "../../../../components/ProductComparisonTable";
 import HowWeTest from "../../../../components/HowWeTest";
 import DosageCalculator from "../../../../components/DosageCalculator";
 import { dosageKeyForSlug } from "@/lib/dosage.js";
+import { quizPrefillForSlug } from "@/lib/quiz-recommendations.js";
 import FaqAccordion from "../../../../components/FaqAccordion";
 import NewsletterStrip from "../../../../components/NewsletterStrip";
 import EmailCapturePopup from "../../../../components/EmailCapturePopup";
@@ -338,6 +340,8 @@ export default async function ArticlePage({
           <ShareButtons title={post.title} url={articleUrl} />
 
           <ArticleShopCta slug={params.slug} />
+
+          <QuizPromptCTA topic={quizPrefillForSlug(params.slug)} />
 
           {faqs.length > 0 && (
             <section className="mb-10">
