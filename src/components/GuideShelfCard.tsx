@@ -170,9 +170,11 @@ export default function GuideShelfCard({
 
         <div className="flex items-center gap-2 mb-1">
           <StarRow rating={product.rating} />
-          <span className="text-gray-400 text-xs font-medium">
-            {Number(reviews).toLocaleString()}
-          </span>
+          {reviews ? (
+            <span className="text-gray-400 text-xs font-medium">
+              {Number(reviews).toLocaleString()}
+            </span>
+          ) : null}
         </div>
         <p className="text-gray-400 text-[11px] mb-4 truncate">{soldHint}</p>
 

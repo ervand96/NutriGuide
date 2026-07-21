@@ -31,6 +31,34 @@ describe("product visual helpers", () => {
     assert.equal(count, "26000");
   });
 
+  it("keeps the same review count regardless of rank", () => {
+    const base = {
+      name: "NOW Foods, Magnesium Glycinate",
+      rating: 4.8,
+      description: "Chelated magnesium.",
+      pros: [],
+      cons: [],
+    };
+    const a = reviewCountFromProduct({ ...base, rank: 1 });
+    const b = reviewCountFromProduct({ ...base, rank: 3 });
+    assert.equal(a, b);
+    assert.ok(a);
+  });
+
+  it("prefers explicit reviewCount over invented values", () => {
+    assert.equal(
+      reviewCountFromProduct({
+        name: "X",
+        rating: 4.5,
+        reviewCount: "1234",
+        description: "",
+        pros: [],
+        cons: [],
+      }),
+      "1234",
+    );
+  });
+
   it("builds star display counts", () => {
     const s = starsDisplay(4.7);
     assert.equal(s.full, 4);

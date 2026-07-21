@@ -30,22 +30,40 @@ export function productVisual(name = "") {
 }
 
 export function reviewCountFromProduct(product) {
+  if (product?.reviewCount != null && product.reviewCount !== "") {
+    return String(product.reviewCount).replace(/,/g, "");
+  }
+
   const text = [
-    product.description,
-    ...(product.pros || []),
-    ...(product.cons || []),
+    product?.description,
+    ...(product?.pros || []),
+    ...(product?.cons || []),
   ].join(" ");
   const m = text.match(/([\d,]+)\+?\s*(?:customer\s*)?reviews?/i);
   if (m) return m[1].replace(/,/g, "");
-  const base = Math.round((product.rating || 4.5) * 1100 + (product.rank || 1) * 420);
-  return String(Math.round(base / 100) * 100);
+
+  // Stable placeholder from product name — never use shelf/frontmatter rank,
+  // or the same SKU shows different counts across blocks.
+  const key = String(product?.name || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+  if (!key) return null;
+
+  let hash = 2166136261;
+  for (let i = 0; i < key.length; i++) {
+    hash ^= key.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  const n = 1800 + (Math.abs(hash) % 41) * 100; // 1,800–5,800 step 100
+  return String(n);
 }
 
 export function soldHintFromProduct(product) {
-  const text = product.description || "";
+  const text = product?.description || "";
   const sold = text.match(/([\d,]+)\+\s*sold/i);
   if (sold) return `${sold[1]}+ sold recently`;
-  const reviews = Number(reviewCountFromProduct(product));
+  const reviews = Number(reviewCountFromProduct(product) || 0);
   if (reviews > 5000) return "Top seller on iHerb";
   if (reviews > 1000) return "Popular pick this month";
   return "Editor's choice";

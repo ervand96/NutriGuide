@@ -264,8 +264,8 @@ describe("site integration", () => {
     const html = await res.text();
     assert.match(html, new RegExp(post.title.slice(0, 20)));
     if (post.products?.length) {
-      assert.match(html, /Shop Our Top Picks|Top Picks/);
-      assert.match(html, /\/products\/|product-img\?name=/);
+      assert.match(html, /Full Product Reviews|Quick comparison/i);
+      assert.match(html, /\/products\/|product-img\?name=|images-iherb\.com/);
       assert.match(html, /Also check/i);
       assert.match(html, /Shop both of our trusted stores/i);
     }

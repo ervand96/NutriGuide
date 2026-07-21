@@ -22,4 +22,6 @@ export interface Product {
   imageUrl?: string;
   servingsPerContainer?: number;
   costPerServing?: string;
+  /** Optional real review count — preferred over placeholders */
+  reviewCount?: number | string;
 }

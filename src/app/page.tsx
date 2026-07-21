@@ -144,14 +144,6 @@ export default function Home() {
 
   const siteSchema = [organizationJsonLd(), websiteJsonLd(), faqSchema];
 
-  const topProducts = allPosts
-    .flatMap((post) =>
-      (post.products || []).map((p) => ({ ...p, postSlug: post.slug, postCategory: post.category })),
-    )
-    .filter((p) => p.rating)
-    .sort((a, b) => (b.rating || 0) - (a.rating || 0))
-    .slice(0, 6);
-
   const dietPosts = allPosts
     .filter((p) => p.category === "Diets")
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -162,6 +154,35 @@ export default function Home() {
     .filter((p) => p.category === "Supplements")
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
+  // Names already featured in CategoryGuides shelves — keep Top Rated distinct
+  const featuredGuideNames = new Set(
+    [...dietPosts.slice(0, 3), ...reviewPosts.slice(0, 3), ...supplementPosts.slice(0, 3)]
+      .map((p) => String(p.products?.[0]?.name || "").toLowerCase().trim())
+      .filter(Boolean),
+  );
+
+  const seenTopNames = new Set<string>();
+  const topProducts = allPosts
+    .flatMap((post) =>
+      (post.products || []).map((p) => ({
+        ...p,
+        postSlug: post.slug,
+        postCategory: post.category,
+      })),
+    )
+    .filter((p) => p.rating)
+    .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+    .filter((p) => {
+      const key = String(p.name || "")
+        .toLowerCase()
+        .trim();
+      if (!key || featuredGuideNames.has(key) || seenTopNames.has(key)) {
+        return false;
+      }
+      seenTopNames.add(key);
+      return true;
+    })
+    .slice(0, 6);
   return (
     <>
       <script

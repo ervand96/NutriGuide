@@ -5,7 +5,6 @@ import ArticleShopCta from "../../../../components/ArticleShopCta";
 import ArticleMidCta from "../../../../components/ArticleMidCta";
 import QuizPromptCTA from "../../../../components/QuizPromptCTA";
 import ArticleBottomShop from "../../../../components/ArticleBottomShop";
-import ArticleTopPicks from "../../../../components/ArticleTopPicks";
 import ProductComparisonTable from "../../../../components/ProductComparisonTable";
 import HowWeTest from "../../../../components/HowWeTest";
 import DosageCalculator from "../../../../components/DosageCalculator";
@@ -269,10 +268,6 @@ export default async function ArticlePage({
 
           {products.length > 0 && (
             <ProductComparisonTable products={products} slug={params.slug} />
-          )}
-
-          {products.length > 0 && (
-            <ArticleTopPicks products={products} slug={params.slug} />
           )}
 
           {doseSplit.found ? (

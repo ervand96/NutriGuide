@@ -122,16 +122,16 @@ export default function HeroCarousel() {
             </p>
             <div className="flex flex-col sm:flex-row flex-wrap gap-2.5 sm:gap-4 animate-[heroFade_1.3s_ease-out]">
               <Link
-                href="/category/reviews"
-                className="bg-white text-leaf-700 font-bold px-5 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:bg-leaf-50 transition-all duration-200 no-underline active:scale-[0.98] text-center shadow-lg shadow-bark/25 min-h-[48px] flex items-center justify-center"
+                href="/quiz"
+                className="cta-pulse bg-leaf-500 text-white font-bold px-5 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:bg-leaf-600 transition-all duration-200 no-underline active:scale-[0.98] text-center shadow-lg shadow-leaf-900/30 min-h-[52px] flex items-center justify-center text-base sm:text-lg"
               >
-                Browse Reviews →
+                Take the 2-Minute Quiz →
               </Link>
               <Link
-                href="/quiz"
+                href="/category/reviews"
                 className="border border-white/55 bg-white/10 backdrop-blur-sm text-white font-bold px-5 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:bg-white/20 transition-colors no-underline text-center min-h-[48px] flex items-center justify-center"
               >
-                Take 2-Minute Quiz
+                Browse Reviews
               </Link>
             </div>
             <div className="mt-3 sm:mt-4 grid grid-cols-2 sm:flex sm:flex-row gap-2 sm:gap-3 max-w-md animate-[heroFade_1.45s_ease-out]">
