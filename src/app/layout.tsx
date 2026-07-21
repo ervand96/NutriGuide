@@ -53,6 +53,9 @@ export const metadata: Metadata = {
   },
   verification: {
     google: "uqylzVectumXuyrmQ6We8IjpAhHXvYQrvdxS-0_HZ0I",
+    other: {
+      "p:domain_verify": "cbbb5a6e2bd35fd597a124cc1f78bcaf",
+    },
   },
   openGraph: {
     type: "website",
