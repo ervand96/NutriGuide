@@ -26,11 +26,21 @@ describe("static sitemap for Google Search Console", () => {
     assert.match(xml, /<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/);
     assert.match(xml, /\/best-picks/);
     assert.match(xml, /\/quiz/);
+    assert.match(xml, /\/promo-codes/);
     assert.ok((xml.match(/<url>/g) || []).length >= 10);
 
     const txt = readFileSync(join(root, "public", "sitemap.txt"), "utf8");
     assert.match(txt, /^https:\/\//m);
     assert.match(txt, /\/best-picks/);
     assert.ok(txt.trim().split("\n").length >= 10);
+
+    const indexXml = readFileSync(
+      join(root, "public", "sitemap_index.xml"),
+      "utf8",
+    );
+    assert.match(indexXml, /<sitemapindex /);
+    assert.match(indexXml, /\/sitemaps\/pages\.xml/);
+    assert.match(indexXml, /\/sitemap\.xml/);
+    assert.match(indexXml, /\/gsc-sitemap/);
   });
 });

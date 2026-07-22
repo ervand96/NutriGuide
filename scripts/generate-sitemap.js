@@ -88,6 +88,29 @@ writeFileSync(
 );
 writeFileSync(join(altDir, "index.xml"), xml, "utf8");
 
+// sitemapindex — preferred GSC entry point (lists child sitemaps)
+const indexXml = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>${escapeXml(`${SITE_URL}/sitemaps/pages.xml`)}</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${escapeXml(`${SITE_URL}/sitemap.xml`)}</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${escapeXml(`${SITE_URL}/gsc-sitemap`)}</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
+</sitemapindex>
+`;
+
+const indexPath = join(root, "public", "sitemap_index.xml");
+writeFileSync(indexPath, indexXml, "utf8");
+writeFileSync(join(altDir, "sitemap_index.xml"), indexXml, "utf8");
+
 console.log(`Wrote ${outPath} (${entries.length} URLs)`);
 console.log(`Wrote ${txtPath} (${entries.length} URLs)`);
 console.log(`Wrote ${altDir}/pages.xml (+ pages.txt) for GSC cache-bust`);
+console.log(`Wrote ${indexPath} (sitemap index)`);

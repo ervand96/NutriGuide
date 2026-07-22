@@ -7,23 +7,29 @@
 
 Файл у тебя **правильный**. Проблема в обработчике GSC / хостинге Vercel, не в содержимом.
 
-## Что поставить СЕЙЧАС (новый URL без лишних заголовков)
+## Что поставить СЕЙЧАС
 
 Подожди 1–2 минуты после деплоя, затем в поле Sitemap вставь:
+
+```
+sitemap_index.xml
+```
+
+Проверка: https://nutri-guide-indol.vercel.app/sitemap_index.xml
+
+Запасные варианты (по одному):
 
 ```
 gsc-sitemap
 ```
 
-Проверка: https://nutri-guide-indol.vercel.app/gsc-sitemap
-
-Запасной вариант:
+```
+sitemaps/pages.xml
+```
 
 ```
 gsc-urls
 ```
-
-https://nutri-guide-indol.vercel.app/gsc-urls
 
 ## Если снова «Не удалось обработать»
 
@@ -34,7 +40,7 @@ https://nutri-guide-indol.vercel.app/gsc-urls
 1. Search Console → **Проверка URL** (URL Inspection)
 2. Вставь `https://nutri-guide-indol.vercel.app/`
 3. **Запросить индексирование**
-4. Повтори для `/best-picks`, `/quiz`, 3 статей
+4. Повтори для `/best-picks`, `/quiz`, `/promo-codes`, 3 статей
 
 Индексация идёт и без успешного sitemap — через краулинг + ручные запросы.
 
