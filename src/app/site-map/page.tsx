@@ -89,7 +89,7 @@ export default function HtmlSitemapPage() {
             About →
           </Link>
           <a
-            href="/sitemap.xml"
+            href="/feed/sitemap.xml"
             className="text-leaf-600 no-underline hover:underline"
           >
             XML sitemap →

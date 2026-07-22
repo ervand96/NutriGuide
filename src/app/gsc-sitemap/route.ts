@@ -8,8 +8,10 @@ export async function GET() {
   return new Response(buildSitemapUrlsetXml(), {
     status: 200,
     headers: {
-      "Content-Type": "application/xml; charset=utf-8",
+      "Content-Type": "text/xml; charset=utf-8",
       "Cache-Control": "public, max-age=3600, s-maxage=3600",
+      "Access-Control-Allow-Origin": "*",
+      "X-Content-Type-Options": "nosniff",
     },
   });
 }

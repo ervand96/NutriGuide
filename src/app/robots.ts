@@ -16,12 +16,8 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/go/"],
       },
     ],
-    // Only App Router sitemaps — static public/*.xml get Content-Disposition on Vercel
-    sitemap: [
-      `${SITE_URL}/sitemap_index.xml`,
-      `${SITE_URL}/sitemap.xml`,
-      `${SITE_URL}/gsc-sitemap`,
-    ],
+    // Single primary sitemap — multiple entries can confuse GSC on vercel.app
+    sitemap: `${SITE_URL}/feed/sitemap.xml`,
     host,
   };
 }

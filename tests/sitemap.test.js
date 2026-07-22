@@ -41,7 +41,7 @@ describe("sitemap for Google Search Console", () => {
       "utf8",
     );
     assert.match(indexXml, /<sitemapindex /);
-    assert.match(indexXml, /\/sitemap\.xml/);
+    assert.match(indexXml, /\/feed\/sitemap\.xml/);
     // Single child only — duplicate urlsets break GSC processing
     assert.equal((indexXml.match(/<sitemap>/g) || []).length, 1);
     assert.doesNotMatch(indexXml, /\/sitemaps\/pages\.xml/);

@@ -1,14 +1,15 @@
-import { buildSitemapIndexXml } from "@/lib/sitemap-entries.js";
+import { buildSitemapUrlsetXml } from "@/lib/sitemap-entries.js";
 
 export const dynamic = "force-static";
 export const revalidate = 3600;
 
 /**
- * Sitemap index with clean headers (no Content-Disposition).
- * Points at a single urlset — duplicates confuse GSC processing.
+ * Fresh sitemap path for Google Search Console.
+ * Use this when /sitemap.xml or /sitemap_index.xml show «Couldn't fetch»
+ * (GSC caches failures; a new URL forces a real fetch).
  */
 export async function GET() {
-  return new Response(buildSitemapIndexXml("/feed/sitemap.xml"), {
+  return new Response(buildSitemapUrlsetXml(), {
     status: 200,
     headers: {
       "Content-Type": "text/xml; charset=utf-8",
