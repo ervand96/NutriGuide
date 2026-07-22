@@ -64,7 +64,7 @@ Keto is a tool, not a magic formula. It can work well for people who prefer savo
 
 Starting keto is manageable, but a few predictable issues show up in the first weeks. Planning for them makes the transition easier.
 
-**The keto flu.** Headaches, fatigue, and muscle cramps often appear as your body shifts from burning glucose to fat. They are usually linked to fluid and electrolyte loss, not a sign that keto is inherently harmful. Drink enough water, add salt to meals, and prioritize potassium and magnesium. [NOW Foods Effer-C](https://www.iherb.com) or a dedicated electrolyte powder from iHerb can help if whole foods alone are not enough. Most symptoms ease within a few days to two weeks.
+**The keto flu.** Headaches, fatigue, and muscle cramps often appear as your body shifts from burning glucose to fat. They are usually linked to fluid and electrolyte loss, not a sign that keto is inherently harmful. Drink enough water, add salt to meals, and prioritize potassium and magnesium. [NOW Foods Effer-C](/go/iherb?source=keto-effer-c&q=NOW%20Foods%20Effer-C) or a dedicated electrolyte powder from iHerb can help if whole foods alone are not enough. Most symptoms ease within a few days to two weeks.
 
 **Constipation.** Cutting grains and fruit reduces fiber intake for many people. Include low-carb vegetables at every meal — leafy greens, broccoli, cauliflower, and avocado all contribute fiber without pushing you over your carb limit. A tablespoon of psyllium husk stirred into water once daily is a simple fix available on iHerb. Stay hydrated; dehydration worsens constipation on any low-carb plan.
 
@@ -90,7 +90,7 @@ Keto can be effective for some people, but it is not appropriate for everyone. A
 
 **Potential side effects beyond the first weeks.** Some people see LDL cholesterol rise on a high-fat diet. Periodic lipid panels are reasonable if you plan to stay keto long term. Kidney stones occur in a small subset of users; adequate hydration and mineral intake reduce risk. Long-term data on very-low-carb diets spanning decades remain limited, so regular check-ups are prudent.
 
-**Nutrient gaps.** Restricting fruit, grains, and legumes can lower intake of fiber, potassium, magnesium, and certain B vitamins. A varied vegetable intake covers much of this, but a basic multivitamin from iHerb — such as [California Gold Nutrition Multivitamin](https://www.iherb.com) — can act as a safety net during the transition. Magnesium glycinate is also worth considering if leg cramps persist despite electrolyte adjustments.
+**Nutrient gaps.** Restricting fruit, grains, and legumes can lower intake of fiber, potassium, magnesium, and certain B vitamins. A varied vegetable intake covers much of this, but a basic multivitamin from iHerb — such as [California Gold Nutrition Multivitamin](/go/iherb?source=keto-multivitamin&q=California%20Gold%20Nutrition%20Multivitamin) — can act as a safety net during the transition. Magnesium glycinate is also worth considering if leg cramps persist despite electrolyte adjustments.
 
 **When to talk to your doctor before starting:**
 - You take any prescription medication, especially for diabetes, blood pressure, or mental health

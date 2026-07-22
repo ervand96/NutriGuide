@@ -18,13 +18,28 @@ describe("affiliate partners", () => {
     assert.equal(isValidPartner("noom"), false);
   });
 
-  it("builds iHerb URL with rcode", () => {
+  it("builds iHerb URL with rcode first and no UTM", () => {
     const url = buildAffiliateUrl("iherb", "vitamin d", {
       IHERB_RCODE: "TEST123",
     });
-    assert.match(url, /^https:\/\/www\.iherb\.com\/search/);
+    assert.match(url, /^https:\/\/www\.iherb\.com\/search\?/);
     assert.match(url, /rcode=TEST123/);
-    assert.match(url, /vitamin/);
+    assert.match(url, /kw=vitamin/);
+    assert.ok(!url.includes("utm_"));
+  });
+
+  it("supports regional iHerb host via IHERB_HOST", () => {
+    const url = buildAffiliateUrl("iherb", null, {
+      IHERB_RCODE: "TEST123",
+      IHERB_HOST: "am.iherb.com",
+    });
+    assert.equal(url, "https://am.iherb.com/?rcode=TEST123");
+  });
+
+  it("skips UTM on iHerb destinations", async () => {
+    const { appendUtm } = await import("../src/lib/affiliate.js");
+    const base = "https://www.iherb.com/?rcode=TEST123";
+    assert.equal(appendUtm(base, "home", "iherb"), base);
   });
 
   it("builds MyProtein URL with search when query provided", () => {

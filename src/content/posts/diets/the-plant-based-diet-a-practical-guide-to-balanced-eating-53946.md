@@ -68,7 +68,7 @@ Switching to a plant-based diet is straightforward in principle, but a few recur
 
 **Feeling hungry between meals.** Plant-based meals can be lower in calories if they lack fat or fiber. Add avocado, nuts, seeds, or olive oil to meals, and include legumes rather than relying only on vegetables. A handful of almonds or a spoonful of nut butter with fruit makes a satisfying snack.
 
-**Missing vitamin B12.** B12 is not reliably found in unfortified plant foods. Take a dedicated supplement rather than guessing. [NOW Foods B-12](https://www.iherb.com) provides methylcobalamin in a simple daily dose and is inexpensive to maintain long term.
+**Missing vitamin B12.** B12 is not reliably found in unfortified plant foods. Take a dedicated supplement rather than guessing. [NOW Foods B-12](/go/iherb?source=plant-based-b12&q=NOW%20Foods%20B-12) provides methylcobalamin in a simple daily dose and is inexpensive to maintain long term.
 
 **Low iron or fatigue.** Plant iron (non-heme iron) absorbs less efficiently than iron from meat. Pair iron-rich foods — spinach, lentils, fortified cereals — with vitamin C sources like citrus, bell peppers, or strawberries. Cooking in cast iron can add a small amount of dietary iron as well.
 

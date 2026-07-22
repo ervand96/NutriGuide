@@ -26,7 +26,8 @@ export async function GET(
 
   const targetUrl = appendUtm(buildAffiliateUrl(partner, query), source, partner);
 
-  const response = NextResponse.redirect(targetUrl);
+  // 302 so browsers treat it as a normal affiliate hop (not method-preserving 307)
+  const response = NextResponse.redirect(targetUrl, 302);
 
   response.cookies.set("nutriguide_ref_source", source, {
     maxAge: 60 * 60 * 24 * 30,

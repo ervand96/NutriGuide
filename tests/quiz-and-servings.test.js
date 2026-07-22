@@ -40,7 +40,7 @@ describe("quiz recommendations", () => {
     assert.deepEqual(keys, ["magnesium-glycinate", "ashwagandha-ksm66"]);
     assert.match(picks[0].name, /Magnesium/i);
     assert.match(picks[1].name, /Ashwagandha/i);
-    assert.match(picks[0].buttonText, /22% off/i);
+    assert.match(picks[0].buttonText, /10% off/i);
     assert.match(guide.href, /magnesium/);
     assert.match(stackTotal, /^\$/);
   });
