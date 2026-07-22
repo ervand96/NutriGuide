@@ -1,116 +1,38 @@
-import { writeFileSync, mkdirSync } from "node:fs";
+import { writeFileSync, mkdirSync, unlinkSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { getAllPosts } from "../src/lib/posts.js";
-import { SITE_URL } from "../src/lib/seo.js";
+import {
+  buildSitemapIndexXml,
+  buildSitemapUrlsetXml,
+  getSitemapEntries,
+} from "../src/lib/sitemap-entries.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const outPath = join(root, "public", "sitemap.xml");
+const publicDir = join(root, "public");
+const altDir = join(publicDir, "sitemaps");
 
-/** Google prefers simple YYYY-MM-DD; avoid Z / milliseconds parse failures */
-function toLastmod(value) {
-  const d = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(d.getTime())) {
-    return new Date().toISOString().slice(0, 10);
-  }
-  return d.toISOString().slice(0, 10);
-}
+const entries = getSitemapEntries();
+const xml = buildSitemapUrlsetXml(entries);
+const indexXml = buildSitemapIndexXml("/sitemap.xml");
+const txt = `${entries.map((e) => e.loc).join("\n")}\n`;
 
-function escapeXml(str) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&apos;");
-}
-
-const staticPaths = [
-  "",
-  "/best-picks",
-  "/quiz",
-  "/promo-codes",
-  "/site-map",
-  "/category/diets",
-  "/category/reviews",
-  "/category/supplements",
-  "/about",
-  "/contact",
-  "/privacy-policy",
-  "/affiliate-disclosure",
-];
-
-const posts = getAllPosts();
-const today = toLastmod(new Date());
-
-const entries = [
-  ...staticPaths.map((path) => ({
-    loc: `${SITE_URL}${path}`,
-    lastmod: today,
-  })),
-  ...posts.map((post) => ({
-    loc: `${SITE_URL}/category/${post.category.toLowerCase()}/${post.slug}`,
-    lastmod: toLastmod(post.date),
-  })),
-];
-
-// Minimal valid sitemap — only loc + lastmod (Google ignores priority/changefreq)
-const body = entries
-  .map(
-    (e) => `  <url>
-    <loc>${escapeXml(e.loc)}</loc>
-    <lastmod>${e.lastmod}</lastmod>
-  </url>`,
-  )
-  .join("\n");
-
-const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${body}
-</urlset>
-`;
-
-mkdirSync(dirname(outPath), { recursive: true });
-writeFileSync(outPath, xml, "utf8");
-
-const txtPath = join(root, "public", "sitemap.txt");
-writeFileSync(txtPath, `${entries.map((e) => e.loc).join("\n")}\n`, "utf8");
-
-// Alternate paths — GSC often caches "Couldn't fetch" for /sitemap.xml on Vercel;
-// submitting a NEW path forces a fresh Google fetch.
-const altDir = join(root, "public", "sitemaps");
 mkdirSync(altDir, { recursive: true });
+
+// Backup copies under /sitemaps/ only — do NOT write public/sitemap.xml or
+// public/sitemap_index.xml. Those paths are App Router handlers so Vercel does
+// not attach Content-Disposition (which breaks Google Search Console).
 writeFileSync(join(altDir, "pages.xml"), xml, "utf8");
-writeFileSync(
-  join(altDir, "pages.txt"),
-  `${entries.map((e) => e.loc).join("\n")}\n`,
-  "utf8",
-);
+writeFileSync(join(altDir, "pages.txt"), txt, "utf8");
 writeFileSync(join(altDir, "index.xml"), xml, "utf8");
-
-// sitemapindex — preferred GSC entry point (lists child sitemaps)
-const indexXml = `<?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap>
-    <loc>${escapeXml(`${SITE_URL}/sitemaps/pages.xml`)}</loc>
-    <lastmod>${today}</lastmod>
-  </sitemap>
-  <sitemap>
-    <loc>${escapeXml(`${SITE_URL}/sitemap.xml`)}</loc>
-    <lastmod>${today}</lastmod>
-  </sitemap>
-  <sitemap>
-    <loc>${escapeXml(`${SITE_URL}/gsc-sitemap`)}</loc>
-    <lastmod>${today}</lastmod>
-  </sitemap>
-</sitemapindex>
-`;
-
-const indexPath = join(root, "public", "sitemap_index.xml");
-writeFileSync(indexPath, indexXml, "utf8");
 writeFileSync(join(altDir, "sitemap_index.xml"), indexXml, "utf8");
 
-console.log(`Wrote ${outPath} (${entries.length} URLs)`);
-console.log(`Wrote ${txtPath} (${entries.length} URLs)`);
-console.log(`Wrote ${altDir}/pages.xml (+ pages.txt) for GSC cache-bust`);
-console.log(`Wrote ${indexPath} (sitemap index)`);
+for (const name of ["sitemap.xml", "sitemap.txt", "sitemap_index.xml"]) {
+  const path = join(publicDir, name);
+  if (existsSync(path)) {
+    unlinkSync(path);
+    console.log(`Removed ${path} (served by App Router)`);
+  }
+}
+
+console.log(`Wrote ${altDir}/pages.xml (${entries.length} URLs)`);
+console.log(`Wrote ${altDir}/sitemap_index.xml (index → /sitemap.xml only)`);

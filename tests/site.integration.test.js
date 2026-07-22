@@ -140,7 +140,7 @@ describe("site integration", () => {
     assert.match(xml, /<item>/);
   });
 
-  it("sitemap includes best-picks and priority hints", async () => {
+  it("sitemap includes best-picks and quiz without priority hints", async () => {
     const res = await fetchOk(`${BASE}/sitemap.xml`);
     assert.equal(res.status, 200);
     const xml = await res.text();

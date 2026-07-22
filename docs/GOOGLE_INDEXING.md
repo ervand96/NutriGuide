@@ -1,49 +1,48 @@
-# Почему «Открыть файл» работает, а статус «Не удалось обработать»
+# Google Search Console — sitemaps
 
-Это **разные шаги Google**:
+## What was broken
 
-1. **Скачать** файл → у тебя ОК (кнопка «Открыть файл Sitemap» показывает список URL)
-2. **Разобрать** файл внутри Search Console → тут часто падает на `*.vercel.app`
+On Vercel, files under `public/*.xml` are served with:
 
-Файл у тебя **правильный**. Проблема в обработчике GSC / хостинге Vercel, не в содержимом.
+```
+Content-Disposition: inline; filename="sitemap.xml"
+```
 
-## Что поставить СЕЙЧАС
+Google Search Console often **downloads** that file but then **fails to process** it. Duplicate children inside a sitemap index (same URLs listed 3×) also hurts processing.
 
-Подожди 1–2 минуты после деплоя, затем в поле Sitemap вставь:
+## What to submit in GSC
+
+After deploy, use **one** of these (prefer the first):
 
 ```
 sitemap_index.xml
 ```
 
-Проверка: https://nutri-guide-indol.vercel.app/sitemap_index.xml
-
-Запасные варианты (по одному):
+```
+sitemap.xml
+```
 
 ```
 gsc-sitemap
 ```
 
-```
-sitemaps/pages.xml
-```
+These are App Router responses **without** `Content-Disposition`.
 
-```
-gsc-urls
-```
+Do **not** submit `sitemaps/pages.xml` — that static backup still has the Vercel header.
 
-## Если снова «Не удалось обработать»
+## Verify
 
-Это известный глюк GSC на Vercel. **Sitemap тогда не критичен.**
+- https://nutri-guide-indol.vercel.app/sitemap_index.xml
+- https://nutri-guide-indol.vercel.app/sitemap.xml
+- https://nutri-guide-indol.vercel.app/robots.txt
 
-Делай так (бесплатно и реально работает):
+`sitemap_index.xml` should list **only** `/sitemap.xml`.
 
-1. Search Console → **Проверка URL** (URL Inspection)
-2. Вставь `https://nutri-guide-indol.vercel.app/`
-3. **Запросить индексирование**
-4. Повтори для `/best-picks`, `/quiz`, `/promo-codes`, 3 статей
+## If GSC still says «Couldn't process»
 
-Индексация идёт и без успешного sitemap — через краулинг + ручные запросы.
+Known quirk on `*.vercel.app`. Sitemap is then optional:
 
-## Позже (самое сильное лекарство)
+1. Search Console → **URL Inspection**
+2. Request indexing for `/`, `/best-picks`, `/quiz`, `/promo-codes`, and a few articles
 
-Подключи **свой домен** вместо `vercel.app` — у GSC с кастомным доменом sitemap обычно проходит нормально.
+Best long-term fix: attach a **custom domain** (GSC + sitemaps usually work cleanly there).
