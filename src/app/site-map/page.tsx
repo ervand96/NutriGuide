@@ -40,6 +40,10 @@ export default function HtmlSitemapPage() {
           or the{" "}
           <Link href="/quiz" className="text-leaf-600 font-semibold">
             diet quiz
+          </Link>{" "}
+          or{" "}
+          <Link href="/promo-codes" className="text-leaf-600 font-semibold">
+            promo codes
           </Link>
           .
         </p>
@@ -77,6 +81,9 @@ export default function HtmlSitemapPage() {
           </Link>
           <Link href="/quiz" className="text-leaf-600 no-underline hover:underline">
             Quiz →
+          </Link>
+          <Link href="/promo-codes" className="text-leaf-600 no-underline hover:underline">
+            Promo Codes →
           </Link>
           <Link href="/about" className="text-leaf-600 no-underline hover:underline">
             About →

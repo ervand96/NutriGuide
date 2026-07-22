@@ -68,6 +68,12 @@ export default function Footer() {
                 >
                   Diet Quiz
                 </a>
+                <a
+                  href="/promo-codes"
+                  className="text-gray-400 hover:text-leaf-500 text-sm transition-colors no-underline py-0.5"
+                >
+                  Promo Codes
+                </a>
               </div>
             </div>
             <div>

@@ -29,6 +29,7 @@ const staticPaths = [
   "",
   "/best-picks",
   "/quiz",
+  "/promo-codes",
   "/site-map",
   "/category/diets",
   "/category/reviews",

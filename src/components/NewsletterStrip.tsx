@@ -3,7 +3,17 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 
-export default function NewsletterStrip() {
+export default function NewsletterStrip({
+  eyebrow = "Free weekly email",
+  title = "Get weekly pick alerts",
+  subtitle = "New reviews, stack ideas, and iHerb / MyProtein deal drops — once a week. No spam. Unsubscribe anytime.",
+  diet = "newsletter",
+}: {
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  diet?: string;
+}) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">(
     "idle",
@@ -17,7 +27,7 @@ export default function NewsletterStrip() {
       const res = await fetch("/api/quiz-lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, diet: "newsletter" }),
+        body: JSON.stringify({ email, diet }),
       });
       if (!res.ok) throw new Error("fail");
       setStatus("ok");
@@ -31,14 +41,13 @@ export default function NewsletterStrip() {
     <section className="bg-gradient-to-b from-leaf-50 to-cream border-y border-leaf-100 py-12 sm:py-16 px-4 sm:px-6">
       <div className="max-w-2xl mx-auto text-center">
         <p className="text-leaf-600 text-xs font-bold uppercase tracking-widest mb-2">
-          Free weekly email
+          {eyebrow}
         </p>
         <h2 className="font-display font-black text-2xl sm:text-3xl text-bark mb-2">
-          Get weekly pick alerts
+          {title}
         </h2>
         <p className="text-gray-500 text-sm sm:text-base mb-6 leading-relaxed">
-          New reviews, stack ideas, and iHerb / MyProtein deal drops — once a
-          week. No spam. Unsubscribe anytime.
+          {subtitle}
         </p>
 
         {status === "ok" ? (

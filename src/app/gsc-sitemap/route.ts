@@ -10,6 +10,7 @@ function buildEntries() {
     "",
     "/best-picks",
     "/quiz",
+    "/promo-codes",
     "/site-map",
     "/category/diets",
     "/category/reviews",

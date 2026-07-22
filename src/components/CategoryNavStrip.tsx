@@ -6,12 +6,13 @@ const items = [
   { href: "/category/reviews", label: "Reviews", emoji: "⭐" },
   { href: "/category/supplements", label: "Supplements", emoji: "💊" },
   { href: "/quiz", label: "Quiz", emoji: "🧭" },
+  { href: "/promo-codes", label: "Codes", emoji: "🏷️" },
 ];
 
 export default function CategoryNavStrip({
   active,
 }: {
-  active?: "diets" | "reviews" | "supplements" | "quiz";
+  active?: "diets" | "reviews" | "supplements" | "quiz" | "promo-codes";
 }) {
   return (
     <nav

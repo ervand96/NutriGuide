@@ -10,6 +10,7 @@ const links = [
   { href: "/category/reviews", label: "Reviews" },
   { href: "/category/supplements", label: "Supplements" },
   { href: "/quiz", label: "Quiz" },
+  { href: "/promo-codes", label: "Codes" },
 ];
 
 export default function Navbar() {
