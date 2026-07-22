@@ -8,6 +8,16 @@ import { recordAffiliateClick } from "@/lib/affiliate-clicks";
 
 type Partner = "iherb" | "myprotein";
 
+function visitorCountry(req: Request) {
+  // Vercel / Cloudflare edge headers (first match wins)
+  return (
+    req.headers.get("x-vercel-ip-country") ||
+    req.headers.get("cf-ipcountry") ||
+    req.headers.get("x-country-code") ||
+    ""
+  );
+}
+
 export async function GET(
   req: Request,
   { params }: { params: { partner: string } },
@@ -21,10 +31,15 @@ export async function GET(
   const source =
     searchParams.get("source") || searchParams.get("diet") || "unknown";
   const query = searchParams.get("q");
+  const country = visitorCountry(req);
 
   await recordAffiliateClick(partner, source);
 
-  const targetUrl = appendUtm(buildAffiliateUrl(partner, query), source, partner);
+  const targetUrl = appendUtm(
+    buildAffiliateUrl(partner, query, process.env, { country }),
+    source,
+    partner,
+  );
 
   // 302 so browsers treat it as a normal affiliate hop (not method-preserving 307)
   const response = NextResponse.redirect(targetUrl, 302);

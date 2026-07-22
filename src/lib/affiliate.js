@@ -39,17 +39,86 @@ export function isValidPartner(partner) {
   return PARTNERS.includes(partner?.toLowerCase());
 }
 
+/**
+ * Map visitor country → iHerb regional host so rcode lands on the same
+ * storefront they shop on (avoids www→am/uk strip races). Unknown → www.
+ */
+export const IHERB_COUNTRY_HOSTS = {
+  US: "www.iherb.com",
+  GB: "uk.iherb.com",
+  UK: "uk.iherb.com",
+  AM: "am.iherb.com",
+  AU: "au.iherb.com",
+  CA: "ca.iherb.com",
+  DE: "de.iherb.com",
+  FR: "fr.iherb.com",
+  IT: "it.iherb.com",
+  ES: "es.iherb.com",
+  NL: "nl.iherb.com",
+  SE: "se.iherb.com",
+  NO: "no.iherb.com",
+  DK: "dk.iherb.com",
+  FI: "fi.iherb.com",
+  IE: "ie.iherb.com",
+  NZ: "nz.iherb.com",
+  SG: "sg.iherb.com",
+  HK: "hk.iherb.com",
+  TW: "tw.iherb.com",
+  JP: "jp.iherb.com",
+  KR: "kr.iherb.com",
+  MX: "mx.iherb.com",
+  BR: "br.iherb.com",
+  IL: "il.iherb.com",
+  AE: "ae.iherb.com",
+  SA: "sa.iherb.com",
+  TR: "tr.iherb.com",
+  RU: "ru.iherb.com",
+  UA: "ua.iherb.com",
+  PL: "pl.iherb.com",
+  CZ: "cz.iherb.com",
+  RO: "ro.iherb.com",
+  HU: "hu.iherb.com",
+  AT: "at.iherb.com",
+  CH: "ch.iherb.com",
+  BE: "be.iherb.com",
+  PT: "pt.iherb.com",
+  GR: "gr.iherb.com",
+  PH: "ph.iherb.com",
+  MY: "my.iherb.com",
+  TH: "th.iherb.com",
+  VN: "vn.iherb.com",
+  IN: "in.iherb.com",
+  CL: "cl.iherb.com",
+  CO: "co.iherb.com",
+  PE: "pe.iherb.com",
+  AR: "ar.iherb.com",
+  ZA: "za.iherb.com",
+};
+
+export function iherbHostForCountry(countryCode, env = process.env) {
+  // Explicit override always wins (testing / forced storefront)
+  const forced = String(env.IHERB_HOST || "")
+    .trim()
+    .replace(/^https?:\/\//, "")
+    .replace(/\/$/, "");
+  if (forced) return forced;
+
+  const cc = String(countryCode || "")
+    .trim()
+    .toUpperCase();
+  return IHERB_COUNTRY_HOSTS[cc] || "www.iherb.com";
+}
+
 /** Prefer clean Rewards links — UTM on iHerb can confuse geo redirects. */
-export function buildAffiliateUrl(partner, query, env = process.env) {
+export function buildAffiliateUrl(
+  partner,
+  query,
+  env = process.env,
+  options = {},
+) {
   const IHERB_CODE = String(env.IHERB_RCODE || "QXH0410").trim();
   const MY_PROTEIN = String(env.MY_PROTEIN_RCODE || "ERVAND-R5").trim();
-  // Optional regional host (e.g. am.iherb.com) so rcode applies on the
-  // storefront users actually land on after geo IP redirect.
-  const iherbHost =
-    String(env.IHERB_HOST || "www.iherb.com")
-      .trim()
-      .replace(/^https?:\/\//, "")
-      .replace(/\/$/, "") || "www.iherb.com";
+  const iherbHost = iherbHostForCountry(options.country, env);
   const p = partner?.toLowerCase();
 
   switch (p) {
@@ -59,8 +128,6 @@ export function buildAffiliateUrl(partner, query, env = process.env) {
         : `https://www.myprotein.com/c/referrals/?applyCode=${encodeURIComponent(MY_PROTEIN)}`;
     case "iherb":
     default: {
-      // rcode first — iHerb geo-redirect (www → am/uk/…) keeps attribution via
-      // cookies when the param is present on the first hit.
       const params = new URLSearchParams();
       params.set("rcode", IHERB_CODE);
       if (query) {

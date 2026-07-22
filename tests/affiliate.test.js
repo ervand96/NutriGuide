@@ -36,6 +36,25 @@ describe("affiliate partners", () => {
     assert.equal(url, "https://am.iherb.com/?rcode=TEST123");
   });
 
+  it("picks storefront from visitor country when IHERB_HOST unset", async () => {
+    const { iherbHostForCountry, buildAffiliateUrl } = await import(
+      "../src/lib/affiliate.js"
+    );
+    assert.equal(iherbHostForCountry("US", {}), "www.iherb.com");
+    assert.equal(iherbHostForCountry("GB", {}), "uk.iherb.com");
+    assert.equal(iherbHostForCountry("AM", {}), "am.iherb.com");
+    assert.equal(iherbHostForCountry("ZZ", {}), "www.iherb.com");
+
+    const uk = buildAffiliateUrl(
+      "iherb",
+      "magnesium",
+      { IHERB_RCODE: "TEST123" },
+      { country: "GB" },
+    );
+    assert.match(uk, /^https:\/\/uk\.iherb\.com\/search\?/);
+    assert.match(uk, /rcode=TEST123/);
+  });
+
   it("skips UTM on iHerb destinations", async () => {
     const { appendUtm } = await import("../src/lib/affiliate.js");
     const base = "https://www.iherb.com/?rcode=TEST123";
