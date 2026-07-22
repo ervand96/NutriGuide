@@ -10,14 +10,9 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/api/", "/go/"],
       },
-      {
-        userAgent: "Googlebot",
-        allow: "/",
-        disallow: ["/api/", "/go/"],
-      },
     ],
-    // Single primary sitemap — multiple entries can confuse GSC on vercel.app
-    sitemap: `${SITE_URL}/feed/sitemap.xml`,
+    // Cleanest fetch path (no ETag/304, no Content-Disposition in practice)
+    sitemap: `${SITE_URL}/gsc-sitemap`,
     host,
   };
 }

@@ -13,7 +13,7 @@ const altDir = join(publicDir, "sitemaps");
 
 const entries = getSitemapEntries();
 const xml = buildSitemapUrlsetXml(entries);
-const indexXml = buildSitemapIndexXml("/feed/sitemap.xml");
+const indexXml = buildSitemapIndexXml("/gsc-sitemap");
 const txt = `${entries.map((e) => e.loc).join("\n")}\n`;
 
 mkdirSync(altDir, { recursive: true });
@@ -35,4 +35,4 @@ for (const name of ["sitemap.xml", "sitemap.txt", "sitemap_index.xml"]) {
 }
 
 console.log(`Wrote ${altDir}/pages.xml (${entries.length} URLs)`);
-console.log(`Wrote ${altDir}/sitemap_index.xml (index → /feed/sitemap.xml only)`);
+console.log(`Wrote ${altDir}/sitemap_index.xml (index → /gsc-sitemap only)`);

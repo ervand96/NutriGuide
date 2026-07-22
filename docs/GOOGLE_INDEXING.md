@@ -1,51 +1,53 @@
 # Google Search Console — sitemaps
 
-## Статус «Не получено» / Couldn't fetch
+## Важно: «Не получено» на vercel.app
 
-Это **не значит**, что файл битый. На `*.vercel.app` GSC часто кэширует неудачную попытку скачивания, даже когда URL открывается в браузере с HTTP 200.
+Если URL открывается в браузере с **HTTP 200** и валидным XML — **код сайта в порядке**.
 
-### Что сделать сейчас (по шагам)
+На `*.vercel.app` Google Search Console часто показывает «Не получено» / Couldn't fetch **днями или неделями**, даже когда файл доступен. Это известная связка GSC + Vercel, не «сломанный sitemap».
 
-1. В Search Console → Sitemaps → удали старую запись `sitemap_index.xml` (три точки → Удалить).
-2. Подожди ~2 минуты после деплоя.
-3. Добавь **новый** путь (ещё не в кэше GSC):
+### Что проверить у себя (1 минута)
 
-```
-feed/sitemap.xml
-```
+1. Property в GSC = именно  
+   `https://nutri-guide-indol.vercel.app`  
+   (не `http://`, не другой поддомен).
+2. В браузере открывается:  
+   https://nutri-guide-indol.vercel.app/gsc-sitemap
+3. **Не** добавляй trailing slash (`...xml/`) — на этом сайте он даёт **308 redirect**, GSC это часто считает «Не получено».
 
-Проверка в браузере: https://nutri-guide-indol.vercel.app/feed/sitemap.xml
+### Что отправить в GSC
 
-Если снова «Не получено», попробуй cache-bust варианты (John Mueller / Next.js community):
-
-```
-feed/sitemap.xml/
-```
-
-или
+Удали все старые записи sitemap. Добавь **только**:
 
 ```
-gsc-sitemap?v=2
+gsc-sitemap
 ```
 
-4. Обнови страницу Sitemaps через несколько часов — статус меняется не мгновенно.
+Запасной (nested Next.js path):
 
-## Рабочие URL на сайте
+```
+sitemap/sitemap.xml
+```
 
-| URL | Назначение |
-|-----|------------|
-| `/feed/sitemap.xml` | **Основной** для GSC (свежий путь) |
-| `/sitemap.xml` | App Router urlset |
-| `/gsc-sitemap` | Запасной urlset |
-| `/sitemap_index.xml` | Index → указывает на `/feed/sitemap.xml` |
+Текстовый вариант:
 
-`robots.txt` объявляет только `/feed/sitemap.xml`.
+```
+gsc-urls
+```
 
-## Если снова не проходит
+Статус может остаться «Не получено» ещё долго — это нормально для vercel.app.
 
-На `vercel.app` sitemap часто **не критичен**. Индексация:
+### Индексация БЕЗ sitemap (делай сейчас)
 
-1. URL Inspection → главная → «Запросить индексирование»
-2. То же для `/best-picks`, `/quiz`, `/promo-codes`, 2–3 статей
+Sitemap на preview-домене **не обязателен** для попадания в Google:
 
-Надёжное лекарство позже: **свой домен** вместо `*.vercel.app`.
+1. Search Console → **Проверка URL**
+2. Вставь `https://nutri-guide-indol.vercel.app/`
+3. **Запросить индексирование**
+4. Повтори для `/best-picks`, `/quiz`, `/promo-codes`, 3–5 статей
+
+Опционально: `npm run indexnow` (Bing/Yandex).
+
+### Настоящее лекарство
+
+Подключи **свой домен** к Vercel и заново добавь property в GSC. На кастомном домене sitemap обычно проходит нормально.

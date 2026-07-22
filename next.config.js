@@ -21,18 +21,23 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    // Root /sitemap.xml → clean handler (no MetadataRoute ETag/304)
+    return [{ source: "/sitemap.xml", destination: "/gsc-sitemap" }];
+  },
   async headers() {
-    // Help Google Search Console fetch sitemaps on Vercel (CORS + explicit XML type)
     const sitemapHeaders = [
       { key: "Content-Type", value: "text/xml; charset=utf-8" },
+      { key: "Cache-Control", value: "no-store, max-age=0, must-revalidate" },
+      { key: "CDN-Cache-Control", value: "no-store" },
       { key: "Access-Control-Allow-Origin", value: "*" },
       { key: "X-Content-Type-Options", value: "nosniff" },
     ];
     return [
-      { source: "/sitemap.xml", headers: sitemapHeaders },
-      { source: "/sitemap_index.xml", headers: sitemapHeaders },
       { source: "/gsc-sitemap", headers: sitemapHeaders },
       { source: "/feed/sitemap.xml", headers: sitemapHeaders },
+      { source: "/sitemap_index.xml", headers: sitemapHeaders },
+      { source: "/sitemap/sitemap.xml", headers: sitemapHeaders },
     ];
   },
   webpack: (config) => {
